@@ -1,2 +1,7 @@
 # TSC_SAP_TCI
-coenxion de sap con node en typescript
+Conexion de sap con node en typescript
+
+Ejecutar: 
+npm install
+node dist/index
+nodemon dist/index (si tienes nodemon instalado)
