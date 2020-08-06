@@ -1,5 +1,6 @@
 import express = require('express');
 import path from "path";
+import bodyParser from 'body-parser';
 
 export default class Server {
 
@@ -9,6 +10,7 @@ export default class Server {
     constructor(port:number){
         this.port = port;
         this.app = express();
+        this.app.use(bodyParser.json());
     }
 
     static init (port:number) {

@@ -5,10 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const path_1 = __importDefault(require("path"));
+const body_parser_1 = __importDefault(require("body-parser"));
 class Server {
     constructor(port) {
         this.port = port;
         this.app = express();
+        this.app.use(body_parser_1.default.json());
     }
     static init(port) {
         return new Server(port);
