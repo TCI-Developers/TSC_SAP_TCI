@@ -45,4 +45,30 @@ router.get('/proveedores', (req, res) => {
         }));
     }));
 });
+router.post('/precio', (req, res) => {
+    const client = new node_rfc_1.Client(sap_1.abapSystem);
+    const body = req.body;
+    const args = {
+        FECHA: "07.08.2020",
+        USUARIO: "Manuel",
+        PROVEEDOR: "100021",
+        OPERACION: "1",
+        MATERIAL: "",
+        GRUPO_MATERIAL: "001",
+        PRECIO: "31.30",
+        MONEDA: "MXN",
+        CORTE: "6333",
+        ORDEN_COMPRA: "85643"
+    };
+    client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
+        (yield err) ? res.json({ ok: false, message: err }) : null;
+        client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
+            (yield err) ? res.json({ ok: false, message: err }) : null;
+            let data = yield result["IT_PROVEEDORES"];
+            res.json({
+                result
+            });
+        }));
+    }));
+});
 exports.default = router;

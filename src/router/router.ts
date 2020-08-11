@@ -53,4 +53,39 @@ router.get('/proveedores', (req:Request, res:Response) => {
     });   
 });
 
+router.post('/acuerdo', (req:Request, res:Response) => {
+
+    const client = new Client(abapSystem);
+    const body = req.body;
+    const args = {
+        FECHA: "07.08.2020",
+        USUARIO: "Manuel",
+        PROVEEDOR: "100021",
+        OPERACION: "1",
+        MATERIAL: "",
+        GRUPO_MATERIAL: "001",
+        PRECIO: "31.30",
+        MONEDA: "MXN",
+        CORTE: "6333",
+        ORDEN_COMPRA: "85643"
+    };
+
+    res.json({message: "Data recibida", body});
+
+    client.connect( async (result:any, err:any) => {
+
+        await err ? res.json({ ok:false, message: err}) : null;
+
+        client.invoke('Z_RFC_VA_PRECIOACUERDO', body, async (err:any, result:any) => {        
+        
+            await err ? res.json({ ok: false, message: err }) : null;
+
+            res.json({
+                message: "Respuesta de SAP",
+                result
+            });
+        });
+    });   
+});
+
 export default router;
