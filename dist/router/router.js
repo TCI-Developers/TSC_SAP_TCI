@@ -45,7 +45,7 @@ router.get('/proveedores', (req, res) => {
         }));
     }));
 });
-router.post('/precio', (req, res) => {
+router.post('/acuerdo', (req, res) => {
     const client = new node_rfc_1.Client(sap_1.abapSystem);
     const body = req.body;
     const args = {
@@ -60,12 +60,13 @@ router.post('/precio', (req, res) => {
         CORTE: "6333",
         ORDEN_COMPRA: "85643"
     };
+    res.json({ message: "Data recibida", body });
     client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
         (yield err) ? res.json({ ok: false, message: err }) : null;
-        client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
+        client.invoke('Z_RFC_VA_PRECIOACUERDO', body, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
             (yield err) ? res.json({ ok: false, message: err }) : null;
-            let data = yield result["IT_PROVEEDORES"];
             res.json({
+                message: "Respuesta de SAP",
                 result
             });
         }));
