@@ -1,6 +1,7 @@
 import express = require('express');
 import path from "path";
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 export default class Server {
 
@@ -11,6 +12,7 @@ export default class Server {
         this.port = port;
         this.app = express();
         this.app.use(bodyParser.json());
+        this.app.use(cors());
     }
 
     static init (port:number) {

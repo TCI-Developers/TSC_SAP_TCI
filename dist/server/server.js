@@ -6,11 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const path_1 = __importDefault(require("path"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
 class Server {
     constructor(port) {
         this.port = port;
         this.app = express();
         this.app.use(body_parser_1.default.json());
+        this.app.use(cors_1.default());
     }
     static init(port) {
         return new Server(port);
