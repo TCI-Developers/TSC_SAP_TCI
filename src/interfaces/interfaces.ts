@@ -9,6 +9,18 @@ export interface Proveedores {
   KALSK: string;
 }
 
+export interface Materiales {
+  MATNR :string;
+  MTART :string;
+  MATKL :string;
+  MEINS :string;
+  BRGEW :string;
+  NTGEW :string;
+  SPRAS :string;
+  MAKTX :string;
+  MAKTG :string;
+}
+
 export interface Responses {
   data: Datum[];
   fields: Field[];
