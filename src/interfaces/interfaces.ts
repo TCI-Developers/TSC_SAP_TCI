@@ -21,42 +21,30 @@ export interface Materiales {
   MAKTG :string;
 }
 
-export interface Responses {
-  data: Datum[];
-  fields: Field[];
-  metadata: Metadata;
-}
-
-export interface Metadata {
-  numFields: number;
-  numRecords: number;
-  skip: number;
-  totalRecords: number;
-}
-
-export interface Field {
-  id: number;
-  label: string;
-  type: string;
-}
-
-export interface Datum {
+export interface Acuerdo {
   '29': _29;
-  '51': _51;
-  '58': _51;
-  '74': _29;
-  '651': _651;
-  '657': _51;
-  '667': _651;
-  '669': _51;
+  '667': _667;
+  '669': _669;
+  '675': _669;
+  '676': _676;
+  '677': _669;
 }
 
-export interface _651 {
-  value: string[];
+export interface _676 {
+  value: Value;
 }
 
-export interface _51 {
+export interface Value {
+  email: string;
+  id: string;
+}
+
+export interface _669 {
   value: string;
+}
+
+export interface _667 {
+  value: string[];
 }
 
 export interface _29 {
