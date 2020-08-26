@@ -1,4 +1,6 @@
 import { XMLHttpRequest } from 'xmlhttprequest';
+import { Client } from "node-rfc";
+import { abapSystem } from "../sap/sap";
 
 export const headers = {
     'QB-Realm-Hostname': 'aortizdemontellanoarevalo.quickbase.com',
