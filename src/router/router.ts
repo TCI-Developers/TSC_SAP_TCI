@@ -43,7 +43,7 @@ router.get('/acuerdo/:fecha', (req:Request, res:Response) => {
         result.length < 1 ? res.json('No hay acuerdos que mandar') : null;
         
         result.forEach(value => {
-            value['677']['value'] === '1' ? postAcuerdo(value, args2, res) : postBandeado(value, args2, res);
+            value['677']['value'] === '1' ? postAcuerdo(value, args2, res) : postBandeado(value, res);
         });
     }, 
     errors => {
@@ -115,11 +115,14 @@ function postBandeado(value:any, res:Response) {
             OPERACION       : String(value['677']['value']),
             MATERIAL        : codigoPrecio[0],
             GRUPO_MATERIAL  : "",
-            PRECIO          : String(codigoPrecio[1]+".00").substring(0,5),
+            //PRECIO          : String(codigoPrecio[1]+".00").substring(0,5),
+            PRECIO          : codigoPrecio[1],
             MONEDA          : String(value['669']['value']),
             CORTE           : "",
             ORDEN_COMPRA    : ""
         };
+
+        res.json(args);
 
         args.FECHA     == ""  ? res.json('No se mando Fecha') : 
         args.USUARIO   == ""  ? res.json('No se mando Usuario') :
@@ -151,6 +154,10 @@ function postBandeado(value:any, res:Response) {
 }
 
 function postAcuerdo(value:any, args2:any, res:Response){
+    let valor = String(value['29']['value']).split('.');
+    let precio = valor[0]+'.'+valor[1]+0;
+    valor.length > 1 ? precio : precio = valor[0];
+
     const args = {
         FECHA           : String(value['675']['value']),
         USUARIO         : String(value['676']['value']['email']),
@@ -158,7 +165,7 @@ function postAcuerdo(value:any, args2:any, res:Response){
         OPERACION       : String(value['677']['value']),
         MATERIAL        : "",
         GRUPO_MATERIAL  : "001",
-        PRECIO          : String(value['29']['value']+".00").substring(0,5),
+        PRECIO          : String(precio).substring(0,5),
         MONEDA          : String(value['669']['value']),
         CORTE           : "",
         ORDEN_COMPRA    : ""

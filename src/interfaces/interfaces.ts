@@ -9,6 +9,18 @@ export interface Proveedores {
   KALSK: string;
 }
 
+export interface Facturadores {
+  LIFNR: string;
+  LAND1: string;
+  NAME1: string;
+  NAME2: string;
+  ORT01: string;
+  EKORG: string;
+  LIFN2: string;
+  PARVW: string;
+  DEFPA: string;
+}
+
 export interface Materiales {
   MATNR :string;
   MTART :string;

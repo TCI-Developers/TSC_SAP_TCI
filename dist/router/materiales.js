@@ -25,7 +25,7 @@ materiales.get('/materiales', (req, res) => __awaiter(void 0, void 0, void 0, fu
         client.invoke('Z_RFC_TBL_CATALOG_MAT', {}, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
             (yield err) ? res.json({ ok: false, message: err }) : null;
             data = yield result["IT_MATERIALES"];
-            data = data.filter(mat => (mat.MTART == "ZROH" || mat.MTART == "ZHAL"));
+            data = data.filter(mat => (mat.MTART == "ZROH" || mat.MTART == "ZUNB"));
             data.forEach((value) => __awaiter(void 0, void 0, void 0, function* () {
                 arregloM.push({
                     "6": { "value": value.MATNR },
@@ -47,7 +47,7 @@ materiales.get('/materiales', (req, res) => __awaiter(void 0, void 0, void 0, fu
                 method: 'POST',
                 headers: utils_1.headers,
                 body: args
-            }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata', 'totalNumberOfRecordsProcessed'));
+            }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
             obs$.subscribe(respuesta => res.json({ creados_modificados: respuesta }), err => res.json(err));
         }));
     }));
