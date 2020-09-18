@@ -7,6 +7,21 @@ export interface Proveedores {
   EKORG: string;
   ZTERM: string;
   KALSK: string;
+  IND_SECTOR  :string;
+  TEXT        :string;
+}
+
+export interface Cuadrillas {
+  LIFNR       :string;
+  LAND1       :string;
+  NAME1       :string;
+  NAME2       :string;
+  ORT01       :string;
+  EKORG       :string;
+  ZTERM       :string;
+  KALSK       :string;
+  IND_SECTOR  :string;
+  TEXT        :string;
 }
 
 export interface Facturadores {

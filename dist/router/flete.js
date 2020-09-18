@@ -29,7 +29,7 @@ flete.get('/flete/:record', (req, res) => {
             'I_PROVEEDOR': resp[0]['1046']['value'],
             'I_FECHA_CORTE': resp[0]['1029']['value'],
             'I_TEST': "",
-            'I_IDCORTE': resp[0]['3']['value'],
+            'I_IDCORTE': String(resp[0]['3']['value']),
             'IT_DATA': [{
                     'SERVICIO': resp[0]['1043']['value'],
                     'CANTIDAD': "1",
@@ -45,8 +45,8 @@ flete.get('/flete/:record', (req, res) => {
         client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
             client.invoke("Z_RFC_VA_ENTRADAFLOTILLA", IT_DATA, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
                 err ? res.json(err) : null;
-                res.json(result);
-                //String(result['E_ORDEN_COMPRA']).length > 0 ? postBanderaTCI(res, result, record) : res.json(result['IT_MESSAGE_WARNING']);
+                //res.json(result);
+                String(result['E_ORDEN_COMPRA']).length > 0 ? postBanderaTCI(res, result, record) : res.json(result['IT_MESSAGE_WARNING']);
             }));
         }));
     });
@@ -58,6 +58,7 @@ function postBanderaTCI(res, result, record) {
         "data": [{
                 "1061": { "value": true },
                 "3": { "value": record },
+                "1072": { "value": result.E_ORDEN_COMPRA },
             }]
     };
     ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => res.json({ resp, result }), err => res.json(err.response));

@@ -6,6 +6,7 @@ import facturador from './router/facturadores';
 import agranel from './router/agranel';
 import flete from './router/flete';
 import flotilla from './router/flotilla';
+import vinculacion from './router/vinculacion';
 require('dotenv').config();
 
  const port = process.env.PORT || 3005;
@@ -17,6 +18,7 @@ require('dotenv').config();
  server.app.use(agranel);
  server.app.use(flete);
  server.app.use(flotilla);
+ server.app.use(vinculacion);
 
  server.start( () =>{
      console.log('Servidor corriendo '+port);

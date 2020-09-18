@@ -25,7 +25,7 @@ flete.get('/flete/:record', (req:Request, res:Response) => {
             'I_PROVEEDOR'   : resp[0]['1046']['value'],
             'I_FECHA_CORTE' : resp[0]['1029']['value'],
             'I_TEST'        : "",
-            'I_IDCORTE'     : resp[0]['3']['value'],
+            'I_IDCORTE'     : String(resp[0]['3']['value']),
                 'IT_DATA': [{
                 'SERVICIO'      : resp[0]['1043']['value'],
                 'CANTIDAD'      : "1",
@@ -42,8 +42,8 @@ flete.get('/flete/:record', (req:Request, res:Response) => {
         client.connect( async (result:any, err:any) => {
             client.invoke("Z_RFC_VA_ENTRADAFLOTILLA", IT_DATA, async (err:any, result:any) => {
                 err ? res.json(err) : null;
-                res.json(result);
-                //String(result['E_ORDEN_COMPRA']).length > 0 ? postBanderaTCI(res, result, record) : res.json(result['IT_MESSAGE_WARNING']);
+                //res.json(result);
+                String(result['E_ORDEN_COMPRA']).length > 0 ? postBanderaTCI(res, result, record) : res.json(result['IT_MESSAGE_WARNING']);
             });
         });
     });
@@ -57,6 +57,7 @@ function postBanderaTCI(res:Response, result:any, record:any){
         "data": [{
             "1061"   : { "value":  true },
             "3"      : { "value":  record },
+            "1072"   : { "value":  result.E_ORDEN_COMPRA },
         }]
     };
     

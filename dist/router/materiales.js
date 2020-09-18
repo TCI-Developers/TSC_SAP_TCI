@@ -24,8 +24,9 @@ materiales.get('/materiales', (req, res) => __awaiter(void 0, void 0, void 0, fu
         (yield err) ? res.json({ ok: false, message: err }) : null;
         client.invoke('Z_RFC_TBL_CATALOG_MAT', {}, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
             (yield err) ? res.json({ ok: false, message: err }) : null;
+            //res.json(result);
             data = yield result["IT_MATERIALES"];
-            data = data.filter(mat => (mat.MTART == "ZROH" || mat.MTART == "ZUNB"));
+            data = data.filter(mat => (mat.MTART == "ZROH" || mat.MTART == "ZUNB" || mat.MTART == "ZHAL"));
             data.forEach((value) => __awaiter(void 0, void 0, void 0, function* () {
                 arregloM.push({
                     "6": { "value": value.MATNR },

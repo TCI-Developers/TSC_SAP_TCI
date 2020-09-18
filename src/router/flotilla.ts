@@ -9,15 +9,15 @@ const flotilla = Router();
 flotilla.get('/flotilla/:record/:proveedores', (req:Request, res:Response) => {
     const record        = req.params.record;
     const proveedores   = req.params.proveedores.split("-");
-    let data:any[] = [];
 
     for (const item of proveedores) {
         
     const body = {
         "from": "bqdcp8je5",
-        "select": [ 651, 658, 14, 654, 644 ],
+        "select": [ 651, 658, 14, 654, 644, 3 ],
         "where": `{14.EX.${record}}AND{651.EX.${item}}`
     }
+
 
     const url = 'https://api.quickbase.com/v1/records/query';
 
@@ -26,19 +26,21 @@ flotilla.get('/flotilla/:record/:proveedores', (req:Request, res:Response) => {
         retry(5),
         pluck('response', 'data')
     ).subscribe((resp:any[]) => {
-        data = [];
+
         let IT_DATA:any = null;
         let importe = null;
+        let ids:any[] = [];
 
         for (const item of resp) {
+            ids.push(item['3']['value']);
             IT_DATA = {
                 'I_PROVEEDOR'   : item['651']['value'],
                 'I_FECHA_CORTE' : item['658']['value'],
                 'I_TEST'        : "",
-                'I_IDCORTE'     : item['14']['value'],
+                'I_IDCORTE'     : String(item['14']['value']),
                     'IT_DATA': [{
                     'SERVICIO'      : item['654']['value'],
-                    'CANTIDAD'      : "1",
+                    'CANTIDAD'      : "1.00",
                     'PROVEEDOR'     : item['651']['value'],
                     'UMEDIDA'       : "SER",
                     'IMPORTE'       : importe += item['644']['value'],
@@ -48,35 +50,40 @@ flotilla.get('/flotilla/:record/:proveedores', (req:Request, res:Response) => {
             };
         }
 
-        //res.json(IT_DATA);
-
         const client = new Client(abapSystem);
+
         client.connect( async (result:any, err:any) => {
-            client.invoke("Z_RFC_VA_ENTRADAFLETE", IT_DATA, async (err:any, result:any) => {
+            client.invoke("Z_RFC_VA_ENTRADAFLETE", IT_DATA , async (err:any, result:any) => {
+
                 err ? res.json(err) : null;
-                res.json(result);
-                //String(result['E_ORDEN_COMPRA']).length > 0 ? postBanderaTCI(res, result, record) : res.json(result['IT_MESSAGE_WARNING']);
+                
+                String(result['E_ORDEN_COMPRA']).length > 0 ? ( postBanderaTCI(res, result, ids) ) : res.json(result['IT_MESSAGE_WARNING']);
             });
         });
     });
     }
 });
 
-function postBanderaTCI(res:Response, result:any, record:any){
+function postBanderaTCI(res:Response, result:any, ids:any[]) {
     const url = 'https://api.quickbase.com/v1/records';
-    const args = {
-        "to"  : "bqdcp8ghy",
-        "data": [{
-            "1062"   : { "value":  true },
-            "3"      : { "value":  record },
-        }]
-    };
+
+    for (const iterator of ids) {
+
+        const args = {
+            "to"  : "bqdcp8je5",
+            "data": [{
+                "3"  : { "value":  iterator },
+                "676" : { "value":  result.E_ORDEN_COMPRA }
+            }]
+        };
+        ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
+        //ajax({ url, method: 'POST', body: args }).pipe(
+            timeout(60000),
+            retry(5),
+            pluck('response', 'metadata')
+        ).subscribe(resp => res.json({ resp, result }), err => res.json(err.response) );
+    }
     
-    ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
-        timeout(60000),
-        retry(5),
-        pluck('response', 'metadata')
-    ).subscribe(resp => res.json({ resp, result }), err => res.json(err.response) );
 }
 
 export default flotilla;
