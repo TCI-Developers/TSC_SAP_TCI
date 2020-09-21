@@ -53,12 +53,14 @@ agranel.get('/agranel/:record', (req:Request, res:Response) => {
                 }]
             };
 
+            //res.json(IT_DATA);
+
             const client = new Client(abapSystem);
 
             client.connect( async (result:any, err:any) => {
                 client.invoke("Z_RFC_VA_ENTRADAAGRANEL", IT_DATA, async (err:any, result:any) => {
                     err ? res.json(err) : null;
-                    
+                    res.json(result);
                     String(result['E_ORDEN_COMPRA']).length > 0 ? ( postBanderaTCI(res, result, record), postOrdenCompraTCI(res, result, recordHuerta ) ) : res.json(result);
                 });
             });

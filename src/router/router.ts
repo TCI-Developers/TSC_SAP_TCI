@@ -122,7 +122,7 @@ function postBandeado(value:any, res:Response) {
             ORDEN_COMPRA    : ""
         };
 
-        res.json(args);
+        //res.json(args);
 
         args.FECHA     == ""  ? res.json('No se mando Fecha') : 
         args.USUARIO   == ""  ? res.json('No se mando Usuario') :

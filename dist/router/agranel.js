@@ -51,10 +51,12 @@ agranel.get('/agranel/:record', (req, res) => {
                         'TIPO_FRUTA': resp[0]['1034']['value'][0],
                     }]
             };
+            //res.json(IT_DATA);
             const client = new node_rfc_1.Client(sap_1.abapSystem);
             client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
                 client.invoke("Z_RFC_VA_ENTRADAAGRANEL", IT_DATA, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
                     err ? res.json(err) : null;
+                    res.json(result);
                     String(result['E_ORDEN_COMPRA']).length > 0 ? (postBanderaTCI(res, result, record), postOrdenCompraTCI(res, result, recordHuerta)) : res.json(result);
                 }));
             }));

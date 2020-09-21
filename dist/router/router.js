@@ -109,7 +109,7 @@ function postBandeado(value, res) {
             CORTE: "",
             ORDEN_COMPRA: ""
         };
-        res.json(args);
+        //res.json(args);
         args.FECHA == "" ? res.json('No se mando Fecha') :
             args.USUARIO == "" ? res.json('No se mando Usuario') :
                 args.PROVEEDOR == "" ? res.json('No se mando Proveedor') :
