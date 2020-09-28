@@ -7,6 +7,7 @@ import agranel from './router/agranel';
 import flete from './router/flete';
 import flotilla from './router/flotilla';
 import vinculacion from './router/vinculacion';
+import act from './router/actualizarPrecio';
 require('dotenv').config();
 
  const port = process.env.PORT || 3005;
@@ -19,6 +20,7 @@ require('dotenv').config();
  server.app.use(flete);
  server.app.use(flotilla);
  server.app.use(vinculacion);
+ server.app.use(act);
 
  server.start( () =>{
      console.log('Servidor corriendo '+port);

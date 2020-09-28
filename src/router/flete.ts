@@ -65,7 +65,7 @@ function postBanderaTCI(res:Response, result:any, record:any){
         timeout(60000),
         retry(5),
         pluck('response', 'metadata')
-    ).subscribe(resp => res.json({ resp, result }), err => res.json(err.response) );
+    ).subscribe(resp => res.json(result['IT_MENSAJE_EXITOSOS']), err => res.json(err.response) );
 }
 
 export default flete;

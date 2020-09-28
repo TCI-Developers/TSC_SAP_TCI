@@ -70,7 +70,7 @@ function postBanderaTCI(res, result, ids) {
         };
         ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(
         //ajax({ url, method: 'POST', body: args }).pipe(
-        operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => res.json({ resp, result }), err => res.json(err.response));
+        operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => res.json(result['IT_MENSAJE_EXITOSOS']), err => res.json(err.response));
     }
 }
 exports.default = flotilla;

@@ -10,9 +10,9 @@ const agranel = Router();
 agranel.get('/agranel/:record', (req:Request, res:Response) => {
     const record = req.params.record;
     const body = {
-        "from": "bqdcp8ghy",
-        "select": [ 1029, 1022, 1021, 1030, 1024, 1026, 1064, 1014, 1034, 1065],
-        "where": `{3.EX.${record}}`
+        "from": "bqhds58u2",
+        "select": [ 54, 53, 52, 51, 32, 15, 6, 8, 24, 55, 3 ],
+        "where": `{15.EX.${record}}`
     }
     const url = 'https://api.quickbase.com/v1/records/query';
 
@@ -20,51 +20,38 @@ agranel.get('/agranel/:record', (req:Request, res:Response) => {
         timeout(60000),
         retry(5),
         pluck('response', 'data')
-    ).subscribe(resp => {
+    ).subscribe((resp:any[]) => {
 
-        let aux:any[] = [];
-        let huertas = null;
-        let IT_DATA:any = null;
+        for (const iterator of resp) {
+        let recordHuerta =  iterator['3']['value'];
 
-        resp[0]['1064']['value'].forEach((element:any) => {
-            aux.push(element);
-        });
-
-        for (const iterator of aux) {
-
-            huertas = String(iterator).split('+');
-            let recordHuerta = huertas[3];
-
-            IT_DATA = {
-                'I_FECHA_CORTE' : resp[0]['1029']['value'],
-                'I_FACTURADOR'  : resp[0]['1022']['value'],
-                'I_PROVEEDOR'   : resp[0]['1021']['value'],
-                'I_IDCORTE'     : resp[0]['1030']['value'],
-                    'IT_DATA': [{
-                    'MATERIAL'      : resp[0]['1024']['value'][0],
-                    'CANTIDAD'      : huertas[2],
-                    'LOTE_PROV'     : resp[0]['1026']['value'][0],
-                    'PROVEEDOR'     : resp[0]['1021']['value'],
-                    'ALMACEN'       : "",
-                    'NO_HUERTA'     : huertas[0],
-                    'NOM_HUERTA'    : huertas[1],
-                    'AGRICULTOR'    : resp[0]['1014']['value'][0],
-                    'TIPO_FRUTA'    : resp[0]['1034']['value'][0],
-                }]
-            };
-
-            //res.json(IT_DATA);
+        let IT_DATA = {
+            'I_FECHA_CORTE' : iterator['54']['value'],
+            'I_FACTURADOR'  : iterator['53']['value'] || "",
+            'I_PROVEEDOR'   : iterator['52']['value'],
+            'I_IDCORTE'     : String(iterator['51']['value']),
+                'IT_DATA': [{
+                'MATERIAL'      : "000000006000000030",
+                'CANTIDAD'      : Number(iterator['32']['value']).toFixed(2),
+                'LOTE_PROV'     : String(iterator['15']['value']) || "",
+                'PROVEEDOR'     : iterator['52']['value'],
+                'ALMACEN'       : "",
+                'NO_HUERTA'     : iterator['6']['value'],
+                'NOM_HUERTA'    : iterator['8']['value'],
+                'AGRICULTOR'    : iterator['24']['value'],
+                'TIPO_FRUTA'    : iterator['55']['value'][0],
+            }]
+        };
 
             const client = new Client(abapSystem);
-
-            client.connect( async (result:any, err:any) => {
+            client.connect( (result:any, err:any) => {
                 client.invoke("Z_RFC_VA_ENTRADAAGRANEL", IT_DATA, async (err:any, result:any) => {
                     err ? res.json(err) : null;
-                    res.json(result);
-                    String(result['E_ORDEN_COMPRA']).length > 0 ? ( postBanderaTCI(res, result, record), postOrdenCompraTCI(res, result, recordHuerta ) ) : res.json(result);
+                    String(result['E_ORDEN_COMPRA']).length > 0 ?  postOrdenCompraTCI(res, result, recordHuerta ) : res.json(result);
                 });
             });
         }
+        //res.json(IT_DATA);
     });
 });
 
@@ -82,7 +69,7 @@ function postBanderaTCI(res:Response, result:any, record:any) {
         timeout(60000),
         retry(5),
         pluck('response', 'metadata')
-    ).subscribe(resp => res.json({ resp, result }), err => res.json(err.response) );
+    ).subscribe(resp => res.json({SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp}), err => res.json(err.response) );
 }
 
 function postOrdenCompraTCI(res:Response, result:any, record:any) {
@@ -100,7 +87,7 @@ function postOrdenCompraTCI(res:Response, result:any, record:any) {
         timeout(60000),
         retry(5),
         pluck('response', 'metadata')
-    ).subscribe(resp => res.json({ resp, result }), err => res.json(err.response) ); 
+    ).subscribe(resp =>  res.json({SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp}), err => res.json(err.response) ); 
 }
 
 export default agranel;

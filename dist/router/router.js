@@ -56,10 +56,10 @@ router.get('/acuerdo1/:record', (req, res) => {
     const record = req.params.record;
     const argsAcuerdos = {
         "from": "bqdcp8fbc",
-        "select": [675, 676, 658, 677, 29, 669, 678],
+        "select": [675, 676, 658, 677, 29, 669, 678, 701, 699],
         "where": `{3.EX.${record}}AND{489.EX.true}AND{680.EX.false}`
     };
-    const argsValidacion = {
+    const argsValidacionAcuerdo = {
         "to": "bqdcp8fbc",
         "data": [{
                 "680": {
@@ -74,7 +74,9 @@ router.get('/acuerdo1/:record', (req, res) => {
     obs$.subscribe((result) => {
         result.length < 1 ? res.json('No hay acuerdos que mandar') : null;
         result.forEach(value => {
-            value['677']['value'] === '1' ? postAcuerdo(value, argsValidacion, res) : postBandeado(value, res);
+            value['677']['value'] === '1' ? postAcuerdo(value, argsValidacionAcuerdo, res) :
+                value['677']['value'] === '0' ? postBandeado(value, res) :
+                    value['677']['value'] === '2' ? postPrecioXCorte(value, res) : null;
         });
     }, errors => {
         res.json(errors);
@@ -122,9 +124,9 @@ function postBandeado(value, res) {
             client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (error, resultado) => __awaiter(this, void 0, void 0, function* () {
                 error ? res.json({ ok: false, message: error }) : null;
                 const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsValidacion }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
-                String(resultado['MENSAJE']).substring(0, 3) === '200' ? obs$.subscribe(respuesta => res.json({ respuesta, resultado }), err => res.json(err)) :
-                    String(resultado['MENSAJE']).substring(0, 3) === '201' ? obs$.subscribe(respuesta => res.json({ respuesta, resultado }), err => res.json(err)) :
-                        String(resultado['MENSAJE']).substring(0, 3) === '202' ? obs$.subscribe(respuesta => res.json({ respuesta, resultado }), err => res.json(err)) : res.json(resultado);
+                String(resultado['MENSAJE']).substring(0, 3) === '200' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) :
+                    String(resultado['MENSAJE']).substring(0, 3) === '201' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) :
+                        String(resultado['MENSAJE']).substring(0, 3) === '202' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) : res.json(resultado);
             }));
         });
     });
@@ -163,8 +165,60 @@ function postAcuerdo(value, args2, res) {
                 headers: utils_1.headers,
                 body: args2
             }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
-            String(resultado['MENSAJE']).substring(0, 3) === '100' ? obs$.subscribe(resp => res.json({ resp, resultado }), err => res.json(err)) :
-                String(resultado['MENSAJE']).substring(0, 3) === '101' ? obs$.subscribe(resp => res.json({ resp, resultado }), err => res.json(err)) : res.json(resultado);
+            String(resultado['MENSAJE']).substring(0, 3) === '100' ? obs$.subscribe(resp => res.json(resultado['MENSAJE']), err => res.json(err)) :
+                String(resultado['MENSAJE']).substring(0, 3) === '101' ? obs$.subscribe(resp => res.json(resultado['MENSAJE']), err => res.json(err)) : res.json(resultado);
+        });
+    });
+}
+function postPrecioXCorte(value, res) {
+    let valor = null;
+    value['701']['value'].forEach((item) => {
+        valor = String(item).split('-');
+        const argsValidacionMateriales = {
+            "to": "bqr9nfpuk",
+            "data": [{
+                    "16": {
+                        "value": "true"
+                    },
+                    "3": {
+                        "value": `${valor[2]}`
+                    }
+                }]
+        };
+        const args = {
+            FECHA: String(value['675']['value']),
+            USUARIO: String(value['676']['value']['email']),
+            PROVEEDOR: String(value['658']['value']),
+            OPERACION: String(value['677']['value']),
+            MATERIAL: valor[0],
+            GRUPO_MATERIAL: "",
+            PRECIO: String(Number(valor[1]).toFixed(2)),
+            MONEDA: String(value['669']['value']),
+            CORTE: "",
+            ORDEN_COMPRA: String(value['699']['value'])
+        };
+        args.FECHA == "" ? res.json('No se mando Fecha') :
+            args.USUARIO == "" ? res.json('No se mando Usuario') :
+                args.PROVEEDOR == "" ? res.json('No se mando Proveedor') :
+                    args.OPERACION == "" ? res.json('No se mando Operacion') :
+                        args.PRECIO == "" ? res.json('No se mando Precio') :
+                            args.MONEDA == "" ? res.json('No se mando Moneda') : null;
+        const client = new node_rfc_1.Client(sap_1.abapSystem);
+        client.connect((resul, er) => {
+            er ? res.json({ ok: false, message: er }) : null;
+            client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (error, resultado) => {
+                error ? res.json({ ok: false, message: error }) : null;
+                const obs$ = ajax_1.ajax({
+                    createXHR: utils_1.createXHR,
+                    url: 'https://api.quickbase.com/v1/records',
+                    method: 'POST',
+                    headers: utils_1.headers,
+                    body: argsValidacionMateriales
+                }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
+                //obs$.subscribe(resp => res.json({ resp, resultado }) );
+                String(resultado['MENSAJE']).substring(0, 3) === '300' ? obs$.subscribe(resp => res.json({ resp, resultado }), err => res.json(err)) :
+                    String(resultado['MENSAJE']).substring(0, 3) === '301' ? obs$.subscribe(resp => res.json({ resp, resultado }), err => res.json(err)) : res.json(resultado);
+            });
         });
     });
 }

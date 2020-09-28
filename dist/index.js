@@ -12,6 +12,7 @@ const agranel_1 = __importDefault(require("./router/agranel"));
 const flete_1 = __importDefault(require("./router/flete"));
 const flotilla_1 = __importDefault(require("./router/flotilla"));
 const vinculacion_1 = __importDefault(require("./router/vinculacion"));
+const actualizarPrecio_1 = __importDefault(require("./router/actualizarPrecio"));
 require('dotenv').config();
 const port = process.env.PORT || 3005;
 const server = server_1.default.init(Number(port));
@@ -23,6 +24,7 @@ server.app.use(agranel_1.default);
 server.app.use(flete_1.default);
 server.app.use(flotilla_1.default);
 server.app.use(vinculacion_1.default);
+server.app.use(actualizarPrecio_1.default);
 server.start(() => {
     console.log('Servidor corriendo ' + port);
 });
