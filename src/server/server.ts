@@ -19,7 +19,7 @@ export default class Server {
         return new Server(port);
     }
 
-    start( callback:() => void){
+    start( callback:() => void) {
         this.app.listen(this.port, callback);
         this.publicFolder();
     }

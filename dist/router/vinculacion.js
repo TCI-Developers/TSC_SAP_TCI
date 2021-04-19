@@ -9,10 +9,6 @@ vinculacion.get('/vinculacion/:idProductor/:nombres', (req, res) => {
     const huertas = req.params.nombres.split(';');
     const record = req.params.idProductor;
     let huertasF = [];
-    for (let iterator of huertas) {
-        iterator = iterator.replace('-', ' ');
-        huertasF.push(iterator.replace('-', ' '));
-    }
     for (const iterator of huertasF) {
         const url = 'https://api.quickbase.com/v1/records';
         const args = {

@@ -40,24 +40,24 @@ materiales.get('/materiales', async (req:Request, res:Response) => {
                 });
             });
           
-            const args = {
-                "to"  : "bqrxem5py",
-                "data": arregloM
-            };
-   
-            const obs$ = ajax({
-                createXHR,
-                url: 'https://api.quickbase.com/v1/records',
-                method: 'POST',
-                headers,
-                body: args
-            }).pipe(
-                timeout(60000),
-                retry(5),
-                pluck('response', 'metadata')
-            );
+                const args = {
+                    "to"  : "bqrxem5py",
+                    "data": arregloM
+                };
     
-               obs$.subscribe(respuesta => res.json({ creados_modificados: respuesta }), err => res.json(err));
+                const obs$ = ajax({
+                    createXHR,
+                    url: 'https://api.quickbase.com/v1/records',
+                    method: 'POST',
+                    headers,
+                    body: args
+                }).pipe(
+                    timeout(60000),
+                    retry(5),
+                    pluck('response', 'metadata')
+                );
+    
+                obs$.subscribe(respuesta => res.json({ creados_modificados: respuesta }), err => res.json(err));
             });
     });
 

@@ -15,9 +15,8 @@ flotilla.get('/flotilla/:record/:proveedores', (req:Request, res:Response) => {
     const body = {
         "from": "bqdcp8je5",
         "select": [ 651, 658, 14, 654, 644, 3 ],
-        "where": `{14.EX.${record}}AND{651.EX.${item}}`
+        "where": `{14.EX.${record}}AND{651.EX.${item}}AND{676.EX.''}AND{182.EX.''}`
     }
-
 
     const url = 'https://api.quickbase.com/v1/records/query';
 

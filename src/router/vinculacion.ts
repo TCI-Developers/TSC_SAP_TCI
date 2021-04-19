@@ -11,11 +11,6 @@ vinculacion.get('/vinculacion/:idProductor/:nombres', (req:Request, res:Response
 
         let huertasF:any[] = [];
 
-        for (let iterator of huertas) {
-            iterator = iterator.replace('-',' ');
-            huertasF.push(iterator.replace('-',' '));
-        }
-
         for (const iterator of huertasF) {
             const url = 'https://api.quickbase.com/v1/records';
             const args = {

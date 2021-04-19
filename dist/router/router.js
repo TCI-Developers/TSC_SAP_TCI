@@ -17,40 +17,48 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 let arregloAll = [];
 const router = express_1.Router();
-router.get('/acuerdo/:fecha', (req, res) => {
+/*router.get('/acuerdo/:fecha', (req:Request, res:Response) => {
     const fecha = req.params.fecha;
     const args1 = {
         "from": "bqdcp8fbc",
-        "select": [675, 676, 658, 677, 29, 669, 678],
+        "select": [ 675, 676, 658, 677, 29, 669, 678],
         "where": `{58.EX.${fecha}}AND{489.EX.true}AND{680.EX.false}`
-    };
+    }
     const args2 = {
-        "to": "bqdcp8fbc",
+        "to"  : "bqdcp8fbc",
         "data": [{
-                "680": {
-                    "value": "true"
-                },
-                "681": {
-                    "value": `${fecha}`
-                }
-            }]
+            "680":{
+                "value": "true"
+            },
+            "681":{
+                "value": `${fecha}`
+            }
+        }]
     };
-    const obs$ = ajax_1.ajax({
-        createXHR: utils_1.createXHR,
+
+    const obs$ = ajax({
+        createXHR,
         url: 'https://api.quickbase.com/v1/records/query',
         method: 'POST',
-        headers: utils_1.headers,
+        headers,
         body: args1
-    }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data'));
-    obs$.subscribe((result) => {
+    }).pipe(
+        timeout(60000),
+        retry(5),
+        pluck('response', 'data')
+    );
+    
+    obs$.subscribe((result:any[]) => {
         result.length < 1 ? res.json('No hay acuerdos que mandar') : null;
+        
         result.forEach(value => {
             value['677']['value'] === '1' ? postAcuerdo(value, args2, res) : postBandeado(value, res);
         });
-    }, errors => {
+    },
+    errors => {
         res.json(errors);
     });
-});
+});*/
 router.get('/acuerdo1/:record', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records/query';
     const record = req.params.record;
@@ -73,6 +81,7 @@ router.get('/acuerdo1/:record', (req, res) => {
     const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsAcuerdos }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data'));
     obs$.subscribe((result) => {
         result.length < 1 ? res.json('No hay acuerdos que mandar') : null;
+        //res.json(result);
         result.forEach(value => {
             value['677']['value'] === '1' ? postAcuerdo(value, argsValidacionAcuerdo, res) :
                 value['677']['value'] === '0' ? postBandeado(value, res) :

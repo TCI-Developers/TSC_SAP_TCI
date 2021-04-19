@@ -11,7 +11,7 @@ agranel.get('/agranel/:record', (req:Request, res:Response) => {
     const record = req.params.record;
     const body = {
         "from": "bqhds58u2",
-        "select": [ 54, 53, 52, 51, 32, 15, 6, 8, 24, 55, 3 ],
+        "select": [ 54, 53, 52, 51, 32, 15, 6, 8, 24, 55, 3, 58, 59 ],
         "where": `{15.EX.${record}}`
     }
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -40,8 +40,12 @@ agranel.get('/agranel/:record', (req:Request, res:Response) => {
                 'NOM_HUERTA'    : iterator['8']['value'],
                 'AGRICULTOR'    : iterator['24']['value'],
                 'TIPO_FRUTA'    : iterator['55']['value'][0],
+                'CORTE_FRUTA'   : iterator['58']['value'],
+                'TIPO_CORTE'    : iterator['59']['value']
             }]
         };
+
+        //res.json(IT_DATA);
 
             const client = new Client(abapSystem);
             client.connect( (result:any, err:any) => {
@@ -51,7 +55,6 @@ agranel.get('/agranel/:record', (req:Request, res:Response) => {
                 });
             });
         }
-        //res.json(IT_DATA);
     });
 });
 
@@ -74,20 +77,42 @@ function postBanderaTCI(res:Response, result:any, record:any) {
 
 function postOrdenCompraTCI(res:Response, result:any, record:any) {
     const url = 'https://api.quickbase.com/v1/records';
+    const lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" ");
        
     const args = {
         "to"  : "bqhds58u2",
         "data": [{
             "3"  : { "value":  record },
-            "35" : { "value":  result.E_ORDEN_COMPRA }
+            "35" : { "value":  result.E_ORDEN_COMPRA },
+            "61" : { "value":  lote[2] }
+        }]
+    };
+    
+    //res.json({SAP: result, TCI: resp.response.metadata})
+
+    ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
+        timeout(60000),
+        retry(5),
+        //pluck('response', 'metadata')
+    ).subscribe(resp => postLoteSAP(res, lote[2], record, result), err => res.json(err.response) ); 
+}
+
+const postLoteSAP = async (res:Response, lote:any, record:any, result:any) => {
+    const url = 'https://api.quickbase.com/v1/records';
+       
+    const args = {
+        "to"  : "lote",
+        "data": [{
+            "6"  : { "value":  record },
+            "7"  : { "value":  lote }
         }]
     };
     
     ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
         timeout(60000),
         retry(5),
-        pluck('response', 'metadata')
-    ).subscribe(resp =>  res.json({SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp}), err => res.json(err.response) ); 
+        //pluck('response', 'metadata')
+    ).subscribe(resp =>  res.json({SAP: result, TCI: resp.response.metadata}), err => res.json(err.response) ); 
 }
 
 export default agranel;

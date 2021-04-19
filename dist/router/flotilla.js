@@ -23,7 +23,7 @@ flotilla.get('/flotilla/:record/:proveedores', (req, res) => {
         const body = {
             "from": "bqdcp8je5",
             "select": [651, 658, 14, 654, 644, 3],
-            "where": `{14.EX.${record}}AND{651.EX.${item}}`
+            "where": `{14.EX.${record}}AND{651.EX.${item}}AND{676.EX.''}AND{182.EX.''}`
         };
         const url = 'https://api.quickbase.com/v1/records/query';
         ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data')).subscribe((resp) => {

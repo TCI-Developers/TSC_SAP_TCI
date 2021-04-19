@@ -20,7 +20,7 @@ agranel.get('/agranel/:record', (req, res) => {
     const record = req.params.record;
     const body = {
         "from": "bqhds58u2",
-        "select": [54, 53, 52, 51, 32, 15, 6, 8, 24, 55, 3],
+        "select": [54, 53, 52, 51, 32, 15, 6, 8, 24, 55, 3, 58, 59],
         "where": `{15.EX.${record}}`
     };
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -42,8 +42,11 @@ agranel.get('/agranel/:record', (req, res) => {
                         'NOM_HUERTA': iterator['8']['value'],
                         'AGRICULTOR': iterator['24']['value'],
                         'TIPO_FRUTA': iterator['55']['value'][0],
+                        'CORTE_FRUTA': iterator['58']['value'],
+                        'TIPO_CORTE': iterator['59']['value']
                     }]
             };
+            //res.json(IT_DATA);
             const client = new node_rfc_1.Client(sap_1.abapSystem);
             client.connect((result, err) => {
                 client.invoke("Z_RFC_VA_ENTRADAAGRANEL", IT_DATA, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
@@ -52,7 +55,6 @@ agranel.get('/agranel/:record', (req, res) => {
                 }));
             });
         }
-        //res.json(IT_DATA);
     });
 });
 function postBanderaTCI(res, result, record) {
@@ -68,13 +70,27 @@ function postBanderaTCI(res, result, record) {
 }
 function postOrdenCompraTCI(res, result, record) {
     const url = 'https://api.quickbase.com/v1/records';
+    const lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" ");
     const args = {
         "to": "bqhds58u2",
         "data": [{
                 "3": { "value": record },
-                "35": { "value": result.E_ORDEN_COMPRA }
+                "35": { "value": result.E_ORDEN_COMPRA },
+                "61": { "value": lote[2] }
             }]
     };
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => res.json({ SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp }), err => res.json(err.response));
+    //res.json({SAP: result, TCI: resp.response.metadata})
+    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5)).subscribe(resp => postLoteSAP(res, lote[2], record, result), err => res.json(err.response));
 }
+const postLoteSAP = (res, lote, record, result) => __awaiter(void 0, void 0, void 0, function* () {
+    const url = 'https://api.quickbase.com/v1/records';
+    const args = {
+        "to": "lote",
+        "data": [{
+                "6": { "value": record },
+                "7": { "value": lote }
+            }]
+    };
+    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5)).subscribe(resp => res.json({ SAP: result, TCI: resp.response.metadata }), err => res.json(err.response));
+});
 exports.default = agranel;

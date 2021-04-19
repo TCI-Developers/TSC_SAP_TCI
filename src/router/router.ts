@@ -8,7 +8,7 @@ import { headers, createXHR } from "../utils/utils";
 let arregloAll:any[] = [];
 const router = Router();
 
-router.get('/acuerdo/:fecha', (req:Request, res:Response) => {
+/*router.get('/acuerdo/:fecha', (req:Request, res:Response) => {
     const fecha = req.params.fecha;
     const args1 = {
         "from": "bqdcp8fbc",
@@ -49,7 +49,7 @@ router.get('/acuerdo/:fecha', (req:Request, res:Response) => {
     errors => {
         res.json(errors);
     });
-});
+});*/
 
 router.get('/acuerdo1/:record', (req:Request, res:Response) => {
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -79,6 +79,8 @@ router.get('/acuerdo1/:record', (req:Request, res:Response) => {
     
     obs$.subscribe((result:any[]) => {
         result.length < 1 ? res.json('No hay acuerdos que mandar') : null;
+
+        //res.json(result);
 
         result.forEach(value => {
             value['677']['value'] === '1' ?  postAcuerdo(value, argsValidacionAcuerdo, res) :
