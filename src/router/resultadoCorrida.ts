@@ -10,6 +10,7 @@ const resultadoCorrida = Router();
 resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel', (req:Request, res:Response) => {
 
     const ordenCompra:string = req.params.ordenCompraAgranel;
+    
 
     const client = new Client(abapSystem);
 
@@ -24,9 +25,32 @@ resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel', (req:Request, res:
 
             await err ? res.json({ ok: false, message: err }) : null;
 
-            res.json(result);
+            postResultado(res, result);
         });
     }); 
 });
+
+function postResultado(res:Response, result:any) {
+    const url = 'https://api.quickbase.com/v1/records';
+       
+    const args = {
+        "to"  : "brhh5xmxa",
+        "data": [{
+            "6"     : { "value":  result.EBELN },
+            "7"     : { "value":  result.EBELP },
+            "11"    : { "value":  result.MATNR },
+            "8"     : { "value":  result.MENGE },
+            "9"     : { "value":  result.MEINS },
+            "12"    : { "value":  result.CHARG },
+            "10"    : { "value":  result.BUDAT }
+        }]
+    };
+
+    ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
+        timeout(60000),
+        retry(5),
+        //pluck('response', 'metadata')
+    ).subscribe(resp => res.json({SAP: result, TCI: resp.response.metadata}) ); 
+}
 
 export default resultadoCorrida;
