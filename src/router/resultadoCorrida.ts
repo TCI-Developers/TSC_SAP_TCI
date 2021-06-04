@@ -10,7 +10,7 @@ const resultadoCorrida = Router();
 resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel', (req:Request, res:Response) => {
 
     const ordenCompra:string = req.params.ordenCompraAgranel;
-    
+    let   arregloResult:any[] = [];
 
     const client = new Client(abapSystem);
 
@@ -25,28 +25,34 @@ resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel', (req:Request, res:
 
             await err ? res.json({ ok: false, message: err }) : null;
 
-            postResultado(res, result);
+            let resultadosCrotes:any[] = await result['IT_RESULTOC'];
+
+            resultadosCrotes.forEach(it => {
+                arregloResult.push({
+                    "6"     : { "value":  it.EBELN },
+                    "7"     : { "value":  it.EBELP },
+                    "11"    : { "value":  it.MATNR },
+                    "8"     : { "value":  it.MENGE },
+                    "9"     : { "value":  it.MEINS },
+                    "12"    : { "value":  it.CHARG },
+                    "10"    : { "value":  it.BUDAT }
+                });
+            });
+
+            postResultado(res, arregloResult);
         });
     }); 
 });
 
-function postResultado(res:Response, result:any) {
+function postResultado(res:Response, result:any[]) {
     const url = 'https://api.quickbase.com/v1/records';
-       
-    const args = {
+
+    const argSResultCorte = {
         "to"  : "brhh5xmxa",
-        "data": [{
-            "6"     : { "value":  result.EBELN },
-            "7"     : { "value":  result.EBELP },
-            "11"    : { "value":  result.MATNR },
-            "8"     : { "value":  result.MENGE },
-            "9"     : { "value":  result.MEINS },
-            "12"    : { "value":  result.CHARG },
-            "10"    : { "value":  result.BUDAT }
-        }]
+        "data": result
     };
 
-    ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
+    ajax({ createXHR, url, method: 'POST', headers, body: argSResultCorte }).pipe(
         timeout(60000),
         retry(5),
         //pluck('response', 'metadata')
