@@ -33,11 +33,6 @@ embarque.get('/embarque/:fecha', (req, res) => {
                 arregloM.push({
                     "74": { "value": value.VBELN },
                     "75": { "value": value.VBELV },
-                    // "76":  { "value": value.POSNV },
-                    // "77":  { "value": value.POSNN },
-                    // "78": { "value": value.VBTYP_N },
-                    // "79": { "value": value.RFMNG },
-                    // "80": { "value": value.MEINS }
                 });
             }));
             const argsVentas = {

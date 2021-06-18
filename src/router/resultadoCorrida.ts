@@ -40,7 +40,8 @@ resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel', (req:Request, res:
                     "8"     : { "value":  it.MENGE },
                     "9"     : { "value":  it.MEINS },
                     "12"    : { "value":  it.CHARG },
-                    "10"    : { "value":  dia+"-"+mes+"-"+anio }
+                    "10"    : { "value":  dia+"-"+mes+"-"+anio },
+                    "14"    : { "value":  it.EBELN+"-"+it.EBELP }
                 });
             });
 

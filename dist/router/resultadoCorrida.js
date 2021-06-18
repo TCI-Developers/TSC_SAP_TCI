@@ -29,6 +29,9 @@ resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel', (req, res) => {
             (yield err) ? res.json({ ok: false, message: err }) : null;
             let resultadosCrotes = yield result['IT_RESULTOC'];
             resultadosCrotes.forEach(it => {
+                let anio = it.BUDAT.substring(0, 4);
+                let mes = it.BUDAT.substring(4, 6);
+                let dia = it.BUDAT.substring(6, 8);
                 arregloResult.push({
                     "6": { "value": it.EBELN },
                     "7": { "value": it.EBELP },
@@ -36,7 +39,8 @@ resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel', (req, res) => {
                     "8": { "value": it.MENGE },
                     "9": { "value": it.MEINS },
                     "12": { "value": it.CHARG },
-                    "10": { "value": it.BUDAT }
+                    "10": { "value": dia + "-" + mes + "-" + anio },
+                    "14": { "value": it.EBELN + "-" + it.EBELP }
                 });
             });
             postResultado(res, arregloResult);
