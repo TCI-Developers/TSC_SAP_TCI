@@ -26,7 +26,7 @@ materiales.get('/materiales', (req, res) => __awaiter(void 0, void 0, void 0, fu
             (yield err) ? res.json({ ok: false, message: err }) : null;
             //res.json(result);
             data = yield result["IT_MATERIALES"];
-            data = data.filter(mat => (mat.MTART == "ZROH" || mat.MTART == "ZUNB" || mat.MTART == "ZHAL"));
+            // data = data.filter(mat => (mat.MTART == "ZROH" || mat.MTART == "ZUNB" || mat.MTART == "ZHAL") );
             data.forEach((value) => __awaiter(void 0, void 0, void 0, function* () {
                 arregloM.push({
                     "6": { "value": value.MATNR },
@@ -49,7 +49,7 @@ materiales.get('/materiales', (req, res) => __awaiter(void 0, void 0, void 0, fu
                 headers: utils_1.headers,
                 body: args
             }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
-            obs$.subscribe(respuesta => res.json({ creados_modificados: respuesta }), err => res.json(err));
+            obs$.subscribe((respuesta) => res.json({ creados_modificados: respuesta }), (err) => res.json(err));
         }));
     }));
 }));
