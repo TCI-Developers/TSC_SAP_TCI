@@ -26,7 +26,7 @@ materiales.get('/materiales', async (req:Request, res:Response) => {
 
             data = await result["IT_MATERIALES"];
 
-            data = data.filter(mat => (mat.MTART == "ZROH" || mat.MTART == "ZUNB" || mat.MTART == "ZHAL") );
+            // data = data.filter(mat => (mat.MTART == "ZROH" || mat.MTART == "ZUNB" || mat.MTART == "ZHAL") );
 
             data.forEach(async (value) => {
                 arregloM.push({
@@ -57,7 +57,7 @@ materiales.get('/materiales', async (req:Request, res:Response) => {
                     pluck('response', 'metadata')
                 );
     
-                obs$.subscribe(respuesta => res.json({ creados_modificados: respuesta }), err => res.json(err));
+                obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
             });
     });
 
