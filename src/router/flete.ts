@@ -10,7 +10,7 @@ flete.get('/flete/:record', (req:Request, res:Response) => {
     const record = req.params.record;
     const body = {
         "from": "bqdcp8ghy",
-        "select": [ 1046, 1029, 3, 1043, 1051 ],
+        "select": [ 1046, 1029, 3, 1043, 1051, 1091, 1092 ],
         "where": `{3.EX.${record}}`
     }
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -25,8 +25,10 @@ flete.get('/flete/:record', (req:Request, res:Response) => {
             'I_PROVEEDOR'   : resp[0]['1046']['value'],
             'I_FECHA_CORTE' : resp[0]['1029']['value'],
             'I_TEST'        : "",
+            'I_CENTRO'      : resp[0]['1091']['value'],
+            'I_EKORG'       : resp[0]['1092']['value'],
             'I_IDCORTE'     : String(resp[0]['3']['value']),
-                'IT_DATA': [{
+            'IT_DATA': [{
                 'SERVICIO'      : resp[0]['1043']['value'],
                 'CANTIDAD'      : "1",
                 'PROVEEDOR'     : resp[0]['1046']['value'],

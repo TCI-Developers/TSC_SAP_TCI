@@ -14,7 +14,7 @@ flotilla.get('/flotilla/:record/:proveedores', (req:Request, res:Response) => {
         
     const body = {
         "from": "bqdcp8je5",
-        "select": [ 651, 658, 14, 654, 644, 3 ],
+        "select": [ 651, 658, 14, 654, 644, 3, 699, 700 ],
         "where": `{14.EX.${record}}AND{651.EX.${item}}AND{676.EX.''}AND{182.EX.''}`
     }
 
@@ -37,7 +37,9 @@ flotilla.get('/flotilla/:record/:proveedores', (req:Request, res:Response) => {
                 'I_FECHA_CORTE' : item['658']['value'],
                 'I_TEST'        : "",
                 'I_IDCORTE'     : String(item['14']['value']),
-                    'IT_DATA': [{
+                'I_CENTRO'      : item['699']['value'],
+                'I_EKORG'       : item['700']['value'],
+                'IT_DATA': [{
                     'SERVICIO'      : item['654']['value'],
                     'CANTIDAD'      : "1.00",
                     'PROVEEDOR'     : item['651']['value'],

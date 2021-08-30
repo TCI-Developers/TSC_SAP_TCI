@@ -22,7 +22,7 @@ flotilla.get('/flotilla/:record/:proveedores', (req, res) => {
     for (const item of proveedores) {
         const body = {
             "from": "bqdcp8je5",
-            "select": [651, 658, 14, 654, 644, 3],
+            "select": [651, 658, 14, 654, 644, 3, 699, 700],
             "where": `{14.EX.${record}}AND{651.EX.${item}}AND{676.EX.''}AND{182.EX.''}`
         };
         const url = 'https://api.quickbase.com/v1/records/query';
@@ -37,6 +37,8 @@ flotilla.get('/flotilla/:record/:proveedores', (req, res) => {
                     'I_FECHA_CORTE': item['658']['value'],
                     'I_TEST': "",
                     'I_IDCORTE': String(item['14']['value']),
+                    'I_CENTRO': item['699']['value'],
+                    'I_EKORG': item['700']['value'],
                     'IT_DATA': [{
                             'SERVICIO': item['654']['value'],
                             'CANTIDAD': "1.00",

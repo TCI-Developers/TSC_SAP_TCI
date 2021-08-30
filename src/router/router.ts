@@ -56,7 +56,7 @@ router.get('/acuerdo1/:record', (req:Request, res:Response) => {
     const record = req.params.record;
     const argsAcuerdos = {
         "from": "bqdcp8fbc",
-        "select": [ 675, 676, 658, 677, 29, 669, 678, 701, 699],
+        "select": [ 675, 676, 658, 677, 29, 669, 678, 701, 699, 718, 719],
         "where": `{3.EX.${record}}AND{489.EX.true}AND{680.EX.false}`
     }
     const argsValidacionAcuerdo = {
@@ -79,8 +79,6 @@ router.get('/acuerdo1/:record', (req:Request, res:Response) => {
     
     obs$.subscribe((result:any[]) => {
         result.length < 1 ? res.json('No hay acuerdos que mandar') : null;
-
-        //res.json(result);
 
         result.forEach(value => {
             value['677']['value'] === '1' ?  postAcuerdo(value, argsValidacionAcuerdo, res) :
@@ -123,7 +121,9 @@ function postBandeado(value:any, res:Response) {
             PRECIO          : codigoPrecio[1],
             MONEDA          : String(value['669']['value']),
             CORTE           : "",
-            ORDEN_COMPRA    : ""
+            ORDEN_COMPRA    : "",
+            CENTRO          : String(value['718']['value']),
+            ORG_COMPRAS     : String(value['719']['value']),
         };
 
         //res.json(args);
@@ -140,18 +140,18 @@ function postBandeado(value:any, res:Response) {
 
         er ? res.json({ ok:false, message: er}) : null;
 
-        client.invoke('Z_RFC_VA_PRECIOACUERDO', args, async (error:any, resultado:any) => {
-            error ? res.json({ ok: false, message: error }) : null;
+            client.invoke('Z_RFC_VA_PRECIOACUERDO', args, async (error:any, resultado:any) => {
+                error ? res.json({ ok: false, message: error }) : null;
 
-            const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: argsValidacion }).pipe(
-                timeout(60000),
-                retry(5),
-                pluck('response', 'metadata')
-            );
+                const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: argsValidacion }).pipe(
+                    timeout(60000),
+                    retry(5),
+                    pluck('response', 'metadata')
+                );
 
-            String(resultado['MENSAJE']).substring(0,3) === '200' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) :
-            String(resultado['MENSAJE']).substring(0,3) === '201' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) :
-            String(resultado['MENSAJE']).substring(0,3) === '202' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) : res.json(resultado);
+                String(resultado['MENSAJE']).substring(0,3) === '200' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) :
+                String(resultado['MENSAJE']).substring(0,3) === '201' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) :
+                String(resultado['MENSAJE']).substring(0,3) === '202' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) : res.json(resultado);
             });
         });
     });
@@ -172,7 +172,9 @@ function postAcuerdo(value:any, args2:any, res:Response){
         PRECIO          : String(precio).substring(0,5),
         MONEDA          : String(value['669']['value']),
         CORTE           : "",
-        ORDEN_COMPRA    : ""
+        ORDEN_COMPRA    : "",
+        CENTRO          : String(value['718']['value']),
+        ORG_COMPRAS     : String(value['719']['value']),
     };
 
     args.FECHA     == ""  ? res.json('No se mando Fecha') : 
@@ -236,7 +238,9 @@ function postPrecioXCorte(value:any, res:Response) {
             PRECIO          : String(Number(valor[1]).toFixed(2)),
             MONEDA          : String(value['669']['value']),
             CORTE           : "",
-            ORDEN_COMPRA    : String(value['699']['value'])
+            ORDEN_COMPRA    : String(value['699']['value']),
+            CENTRO          : String(value['718']['value']),
+            ORG_COMPRAS     : String(value['719']['value']),
         };
 
         args.FECHA     == ""  ? res.json('No se mando Fecha') : 

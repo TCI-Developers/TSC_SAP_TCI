@@ -11,7 +11,7 @@ agranel.get('/agranel/:record', (req:Request, res:Response) => {
     const record = req.params.record;
     const body = {
         "from": "bqhds58u2",
-        "select": [ 54, 53, 52, 51, 32, 15, 6, 8, 24, 55, 3, 58, 59 ],
+        "select": [ 54, 53, 52, 51, 32, 15, 6, 8, 24, 55, 3, 58, 59, 68, 69 ],
         "where": `{15.EX.${record}}`
     }
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -30,7 +30,9 @@ agranel.get('/agranel/:record', (req:Request, res:Response) => {
             'I_FACTURADOR'  : iterator['53']['value'] || "",
             'I_PROVEEDOR'   : iterator['52']['value'],
             'I_IDCORTE'     : String(iterator['51']['value']),
-                'IT_DATA': [{
+            'CENTRO'        : iterator['68']['value'],
+            'ORG_COMPRAS'   : iterator['69']['value'],
+            'IT_DATA': [{
                 'MATERIAL'      : "000000006000000030",
                 'CANTIDAD'      : Number(iterator['32']['value']).toFixed(2),
                 'LOTE_PROV'     : String(iterator['15']['value']) || "",

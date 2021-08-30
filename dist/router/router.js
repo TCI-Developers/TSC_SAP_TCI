@@ -64,7 +64,7 @@ router.get('/acuerdo1/:record', (req, res) => {
     const record = req.params.record;
     const argsAcuerdos = {
         "from": "bqdcp8fbc",
-        "select": [675, 676, 658, 677, 29, 669, 678, 701, 699],
+        "select": [675, 676, 658, 677, 29, 669, 678, 701, 699, 718, 719],
         "where": `{3.EX.${record}}AND{489.EX.true}AND{680.EX.false}`
     };
     const argsValidacionAcuerdo = {
@@ -81,7 +81,6 @@ router.get('/acuerdo1/:record', (req, res) => {
     const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsAcuerdos }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data'));
     obs$.subscribe((result) => {
         result.length < 1 ? res.json('No hay acuerdos que mandar') : null;
-        //res.json(result);
         result.forEach(value => {
             value['677']['value'] === '1' ? postAcuerdo(value, argsValidacionAcuerdo, res) :
                 value['677']['value'] === '0' ? postBandeado(value, res) :
@@ -118,7 +117,9 @@ function postBandeado(value, res) {
             PRECIO: codigoPrecio[1],
             MONEDA: String(value['669']['value']),
             CORTE: "",
-            ORDEN_COMPRA: ""
+            ORDEN_COMPRA: "",
+            CENTRO: String(value['718']['value']),
+            ORG_COMPRAS: String(value['719']['value']),
         };
         //res.json(args);
         args.FECHA == "" ? res.json('No se mando Fecha') :
@@ -154,7 +155,9 @@ function postAcuerdo(value, args2, res) {
         PRECIO: String(precio).substring(0, 5),
         MONEDA: String(value['669']['value']),
         CORTE: "",
-        ORDEN_COMPRA: ""
+        ORDEN_COMPRA: "",
+        CENTRO: String(value['718']['value']),
+        ORG_COMPRAS: String(value['719']['value']),
     };
     args.FECHA == "" ? res.json('No se mando Fecha') :
         args.USUARIO == "" ? res.json('No se mando Usuario') :
@@ -204,7 +207,9 @@ function postPrecioXCorte(value, res) {
             PRECIO: String(Number(valor[1]).toFixed(2)),
             MONEDA: String(value['669']['value']),
             CORTE: "",
-            ORDEN_COMPRA: String(value['699']['value'])
+            ORDEN_COMPRA: String(value['699']['value']),
+            CENTRO: String(value['718']['value']),
+            ORG_COMPRAS: String(value['719']['value']),
         };
         args.FECHA == "" ? res.json('No se mando Fecha') :
             args.USUARIO == "" ? res.json('No se mando Usuario') :
