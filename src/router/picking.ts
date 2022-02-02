@@ -1,14 +1,14 @@
 import { Router, Request, Response } from "express";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
-import { headers, createXHR } from "../utils/utils";
+import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
-import { abapSystem } from "../sap/sap";
+import { abapSystem, abapSystemTest } from "../sap/sap";
 import { detallesEmbarque } from "../interfaces/interfaces";
 
 const picking = Router();
 
-picking.get('/picking/:fecha/:idEmbarque', (req:Request, res:Response) => {
+picking.get('/picking/:fecha/:idEmbarque/:type', (req:Request, res:Response) => {
 
     const url       = 'https://api.quickbase.com/v1/records';
     let fecha       = req.params.fecha;
@@ -17,8 +17,13 @@ picking.get('/picking/:fecha/:idEmbarque', (req:Request, res:Response) => {
     const args = {
         I_FECHA  : fecha
     };
-
-    const client = new Client(abapSystem);
+    let table:string = '';
+    const type = req.params.type;
+    let client:any = null;
+    type == 'prod' ? 
+    (client = new Client(abapSystem), table = String(Tables.T_Picking_prod)) : 
+    type == 'test' ? 
+   ( client = new Client(abapSystemTest), table = String(Tables.T_Picking_test)) : null;
     let   arregloM:any[] = [];
 
     client.connect( async (result:any, err:any) => {
@@ -61,7 +66,7 @@ picking.get('/picking/:fecha/:idEmbarque', (req:Request, res:Response) => {
             });
 
             const argsVentas = {
-                "to"  : "bq2942w6n",
+                "to"  : table,
                 "data": arregloM
             };
 

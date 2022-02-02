@@ -16,6 +16,7 @@ import detalleEmbarque from './router/detalleEmbarque';
 import picking from './router/picking';
 import cliente from './router/cliente';
 import resultadoCorrida from './router/resultadoCorrida';
+import ordenesGastos from './router/ordenesGastos';
 require('dotenv').config();
 
  const port = process.env.PORT || 3005;
@@ -38,6 +39,7 @@ require('dotenv').config();
  server.app.use(picking);
  server.app.use(cliente);
  server.app.use(resultadoCorrida);
+ server.app.use(ordenesGastos);
 
  server.start( () =>{
      console.log('Servidor corriendo '+port);

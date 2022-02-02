@@ -1,19 +1,24 @@
 import { Router, Request, Response } from "express";
 import { Client } from "node-rfc";
-import { abapSystem } from "../sap/sap";
+import { abapSystem, abapSystemTest } from "../sap/sap";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
-import { headers, createXHR } from "../utils/utils";
+import { headers, createXHR, Tables } from "../utils/utils";
 import { Embalaje } from "../interfaces/interfaces";
 
 const embalaje = Router();
 
-embalaje.get('/embalaje', (req:Request, res:Response) => {
+embalaje.get('/embalaje/:type', (req:Request, res:Response) => {
 
     let   data:Embalaje[] = [];
     let   arregloM:any[] = [];
-
-    const client = new Client(abapSystem);
+    const type = req.params.type;
+    let table:string = '';
+    let client:any = null;
+    type == 'prod' ? 
+    (client = new Client(abapSystem), table = String(Tables.T_Productos_prod)) : 
+    type == 'test' ? 
+   ( client = new Client(abapSystemTest), table = String(Tables.T_Productos_test)) : null;
 
     client.connect( async (result:any, err:any) => {
         await err ? res.json({ ok:false, message: err}) : null;;
@@ -33,7 +38,7 @@ embalaje.get('/embalaje', (req:Request, res:Response) => {
             });
 
             const args = {
-                "to"  : "bqdcp8nhd",
+                "to"  : table,
                 "data": arregloM
             };
 

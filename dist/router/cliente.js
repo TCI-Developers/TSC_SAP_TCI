@@ -16,10 +16,16 @@ const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const cliente = express_1.Router();
-cliente.get('/cliente/:embarque', (req, res) => {
+cliente.get('/cliente/:embarque/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records';
     const embarque = req.params.embarque;
-    const client = new node_rfc_1.Client(sap_1.abapSystem);
+    const type = req.params.type;
+    let client = null;
+    let table = '';
+    type == 'prod' ?
+        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Embarques_prod)) :
+        type == 'test' ?
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Embarques_test)) : null;
     client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
         (yield err) ? res.json({ ok: false, message: err }) : null;
         const args = {
@@ -40,7 +46,7 @@ cliente.get('/cliente/:embarque', (req, res) => {
                 });
             }));
             const argsVentas = {
-                "to": "bqdcp865h",
+                "to": table,
                 "data": arregloM
             };
             ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => res.json({ registros_creados: resp }), err => res.json(err.response));

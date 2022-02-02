@@ -1,18 +1,25 @@
 import { Router, Request, Response } from "express";
 import { Client } from "node-rfc";
-import { abapSystem } from "../sap/sap";
+import { abapSystem, abapSystemTest } from "../sap/sap";
 import { Materiales } from "../interfaces/interfaces";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
-import { headers, createXHR } from "../utils/utils";
+import { headers, createXHR, Tables } from "../utils/utils";
 
 const materiales = Router();
 
-materiales.get('/materiales', async (req:Request, res:Response) => {
+materiales.get('/materiales/:type', async (req:Request, res:Response) => {
 
-    const client = new Client(abapSystem);
+    let client:any = null;
     let   data:Materiales[] = [];
     let   arregloM:any[] = [];
+    let table:string = '';
+    const type   = req.params.type;
+
+    type == 'prod' ? 
+    (client = new Client(abapSystem), table = String(Tables.T_Materiales_prod) ) :
+    type == 'test' ? 
+    (client = new Client(abapSystemTest), table = String(Tables.T_Materiales_test)) : null;
 
     client.connect( async (result:any, err:any) => {
 
@@ -41,7 +48,7 @@ materiales.get('/materiales', async (req:Request, res:Response) => {
             });
           
                 const args = {
-                    "to"  : "bqrxem5py",
+                    "to"  : table,
                     "data": arregloM
                 };
     

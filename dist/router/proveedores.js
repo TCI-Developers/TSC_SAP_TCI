@@ -16,9 +16,23 @@ const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const proveedor = express_1.Router();
-proveedor.get('/proveedores/:id', (req, res) => {
+proveedor.get('/proveedores/:id/:type', (req, res) => {
     const id = req.params.id;
-    const client = new node_rfc_1.Client(sap_1.abapSystem);
+    const type = req.params.type;
+    let table1 = '';
+    let table2 = '';
+    let table3 = '';
+    let client = null;
+    type == 'prod' ?
+        (client = new node_rfc_1.Client(sap_1.abapSystem),
+            table1 = String(utils_1.Tables.T_Productor_prod),
+            table2 = String(utils_1.Tables.T_Cuadrillas_prod),
+            table3 = String(utils_1.Tables.T_Transportes_prod)) :
+        type == 'test' ?
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest),
+                table1 = String(utils_1.Tables.T_Productor_test),
+                table2 = String(utils_1.Tables.T_Cuadrillas_test),
+                table3 = String(utils_1.Tables.T_Transportes_test)) : null;
     let arregloM = [];
     let arregloC = [];
     let arregloT = [];
@@ -28,6 +42,7 @@ proveedor.get('/proveedores/:id', (req, res) => {
         //client.invoke("Z_RFC_ENTRY_VA_FRESH", { 'IT_POSTING_BOX': [body] }, async (err:any, result:any) => {
         client.invoke('Z_RFC_TBL_CATALOG_PRO', {}, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
             (yield err) ? res.json({ ok: false, message: err }) : null;
+            //return res.json(result);
             let proveedores = yield result["IT_PROVEEDORES"];
             proveedores.forEach((value) => __awaiter(void 0, void 0, void 0, function* () {
                 if (value.IND_SECTOR == "") {
@@ -69,18 +84,18 @@ proveedor.get('/proveedores/:id', (req, res) => {
                 }
             }));
             const argsFacturadores = {
-                "to": "bqdcp8k48",
+                "to": table1,
                 "data": arregloM
             };
             const argsCuadrilla = {
-                "to": "bqdcp8k4f",
+                "to": table2,
                 "data": arregloC
             };
             const argsTransporte = {
-                "to": "bqmyekd8t",
+                "to": table3,
                 "data": arregloT
             };
-            //res.json(result);
+            //res.json(proveedores);
             const obs1$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata', 'unchangedRecordIds'));
             const obs2$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsCuadrilla }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata', 'unchangedRecordIds'));
             const obs3$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsTransporte }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response'));

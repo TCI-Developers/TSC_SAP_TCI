@@ -7,11 +7,18 @@ const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const act = express_1.Router();
-act.get('/actualizarPrecio/:record', (req, res) => {
+act.get('/actualizarPrecio/:record/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records/query';
     const record = req.params.record;
+    const type = req.params.type;
+    let client = null;
+    let table = '';
+    type == 'prod' ?
+        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Acuerdos_prod)) :
+        type == 'test' ?
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Acuerdos_test)) : null;
     const args = {
-        "from": "bqdcp8fbc",
+        "from": table,
         "select": [699, 688],
         "where": `{3.EX.${record}}`
     };
@@ -21,7 +28,6 @@ act.get('/actualizarPrecio/:record', (req, res) => {
             I_FACTURADOR: resp[0]['688']['value'],
             I_ORDEN_COMPRA: resp[0]['699']['value'][0]
         };
-        const client = new node_rfc_1.Client(sap_1.abapSystem);
         client.connect((resul, er) => {
             er ? res.json({ ok: false, message: er }) : null;
             client.invoke('Z_RFC_VA_ACTUALIZARFACT', args, (error, resultado) => {
@@ -33,7 +39,7 @@ act.get('/actualizarPrecio/:record', (req, res) => {
 });
 function validacionActualizarPreicon(record, result, res) {
     const argsActualizarPrecio = {
-        "to": "bqdcp8fbc",
+        "to": String(utils_1.Tables.T_Acuerdos_prod),
         "data": [{
                 "703": {
                     "value": "true"

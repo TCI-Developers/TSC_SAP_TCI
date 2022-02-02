@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.abapSystem = void 0;
+exports.abapSystemTest = exports.abapSystem = void 0;
 require('dotenv').config();
 exports.abapSystem = {
     user: String(process.env.TCI_SAP_USER),
@@ -9,4 +9,12 @@ exports.abapSystem = {
     sysnr: String(process.env.TCI_SAP_SYSNR),
     client: String(process.env.TCI_SAP_CLIENT),
     lang: String(process.env.TCI_SAP_LANG),
+};
+exports.abapSystemTest = {
+    user: String(process.env.TCI_SAP_USER_TEST),
+    passwd: String(process.env.TCI_SAP_PASS_TEST),
+    ashost: String(process.env.TCI_SAP_ASHOST_TEST),
+    sysnr: String(process.env.TCI_SAP_SYSNR_TEST),
+    client: String(process.env.TCI_SAP_CLIENT_TEST),
+    lang: String(process.env.TCI_SAP_LANG_TEST),
 };

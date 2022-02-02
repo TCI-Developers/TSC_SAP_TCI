@@ -15,36 +15,42 @@ const sap_1 = require("../sap/sap");
 const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
-const embalaje = express_1.Router();
-embalaje.get('/embalaje/:type', (req, res) => {
-    let data = [];
-    let arregloM = [];
+const ordenesGastos = express_1.Router();
+ordenesGastos.get('/ordenesGastos/:type', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const type = req.params.type;
     let table = '';
     let client = null;
     type == 'prod' ?
-        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Productos_prod)) :
+        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Ordenes_Fletes_prod)) :
         type == 'test' ?
-            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Productos_test)) : null;
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Ordenes_Fletes_test)) : null;
+    let data = [];
+    let arregloM = [];
     client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
         (yield err) ? res.json({ ok: false, message: err }) : null;
-        ;
-        client.invoke('Z_RFC_NORMA_EMBALAJE', {}, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
+        client.invoke('Z_RFC_ORDENESGASTOS', {}, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
             (yield err) ? res.json({ ok: false, message: err }) : null;
-            data = yield result["IT_PACKPS"];
+            data = yield result["IT_ZORDENESGTOS"];
+            res.json(data);
             data.forEach((value) => __awaiter(void 0, void 0, void 0, function* () {
                 arregloM.push({
-                    "6": { "value": value.CONTENT },
-                    "7": { "value": value.POBJID },
-                    "43": { "value": value.PACKNR }
+                    "6": { "value": value.AUFNR },
+                    "7": { "value": value.KTEXT },
                 });
             }));
             const args = {
                 "to": table,
                 "data": arregloM
             };
-            ajax_1.ajax({ createXHR: utils_1.createXHR, url: 'https://api.quickbase.com/v1/records', method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(respuesta => res.json({ creados_modificados: respuesta }), err => res.json(err));
+            const obs$ = ajax_1.ajax({
+                createXHR: utils_1.createXHR,
+                url: 'https://api.quickbase.com/v1/records',
+                method: 'POST',
+                headers: utils_1.headers,
+                body: args
+            }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
+            obs$.subscribe((respuesta) => res.json({ creados_modificados: respuesta }), (err) => res.json(err));
         }));
     }));
-});
-exports.default = embalaje;
+}));
+exports.default = ordenesGastos;

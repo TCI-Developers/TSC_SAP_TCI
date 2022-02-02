@@ -16,10 +16,16 @@ const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const materiales = express_1.Router();
-materiales.get('/materiales', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const client = new node_rfc_1.Client(sap_1.abapSystem);
+materiales.get('/materiales/:type', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let client = null;
     let data = [];
     let arregloM = [];
+    let table = '';
+    const type = req.params.type;
+    type == 'prod' ?
+        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Materiales_prod)) :
+        type == 'test' ?
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Materiales_test)) : null;
     client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
         (yield err) ? res.json({ ok: false, message: err }) : null;
         client.invoke('Z_RFC_TBL_CATALOG_MAT', {}, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
@@ -39,7 +45,7 @@ materiales.get('/materiales', (req, res) => __awaiter(void 0, void 0, void 0, fu
                 });
             }));
             const args = {
-                "to": "bqrxem5py",
+                "to": table,
                 "data": arregloM
             };
             const obs$ = ajax_1.ajax({

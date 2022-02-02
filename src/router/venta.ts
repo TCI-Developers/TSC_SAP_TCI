@@ -1,20 +1,26 @@
 import { Router, Request, Response } from "express";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
-import { headers, createXHR } from "../utils/utils";
+import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
-import { abapSystem } from "../sap/sap";
+import { abapSystem, abapSystemTest } from "../sap/sap";
 import { Venta } from "../interfaces/interfaces";
 
 const venta = Router();
 
-venta.get('/venta/:fecha', (req:Request, res:Response) => {
+venta.get('/venta/:fecha/:type', (req:Request, res:Response) => {
     const url = 'https://api.quickbase.com/v1/records';
     let fecha = req.params.fecha;
     const args = {
         I_FECHA  : fecha
     };
-    const client = new Client(abapSystem);
+    const type = req.params.type;
+    let client:any = null;
+    let table:string = '';
+    type == 'prod' ? 
+    (client = new Client(abapSystem), table = String(Tables.T_Ventas_prod)) : 
+    type == 'test' ? 
+   ( client = new Client(abapSystemTest), table = String(Tables.T_Ventas_test)) : null;
     let   arregloM:any[] = [];
 
     client.connect( async (result:any, err:any) => {
@@ -42,7 +48,7 @@ venta.get('/venta/:fecha', (req:Request, res:Response) => {
             });
 
             const argsVentas = {
-                "to"  : "bqzqzavaz",
+                "to"  : table,
                 "data": arregloM
             };
 

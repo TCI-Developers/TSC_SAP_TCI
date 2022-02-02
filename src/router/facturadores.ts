@@ -1,17 +1,23 @@
 import { Router, Request, Response } from "express";
 import { Client } from "node-rfc";
-import { abapSystem } from "../sap/sap";
+import { abapSystem, abapSystemTest } from "../sap/sap";
 import { Proveedores, Facturadores } from "../interfaces/interfaces";
-import { headers, createXHR } from "../utils/utils";
+import { headers, createXHR, Tables } from "../utils/utils";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
 //client.invoke("Z_RFC_ENTRY_VA_FRESH", { 'IT_POSTING_BOX': [body] }, async (err:any, result:any) => {
 
 const facturador = Router();
 
-facturador.get('/facturadores', (req:Request, res:Response) => {
+facturador.get('/facturadores/:type', (req:Request, res:Response) => {
     const url = 'https://api.quickbase.com/v1/records';
-    const client = new Client(abapSystem);
+    const type = req.params.type;
+    let table:string = '';
+    let client:any = null;
+    type == 'prod' ? 
+    (client = new Client(abapSystem), table = String(Tables.T_Benefeciarios_prod)) : 
+    type == 'test' ? 
+   ( client = new Client(abapSystemTest), table = String(Tables.T_Benefeciarios_test)) : null;
     let   arregloM:any[] = [];
 
     client.connect( async (result:any, err:any) => {
@@ -39,7 +45,7 @@ facturador.get('/facturadores', (req:Request, res:Response) => {
             });
 
             const argsFacturadores = {
-                "to"  : "bqdcp8m24",
+                "to"  : table,
                 "data": arregloM
             };
 

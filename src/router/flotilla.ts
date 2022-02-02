@@ -1,19 +1,25 @@
 import { Router, Request, Response } from "express";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
-import { headers, createXHR } from "../utils/utils";
+import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
-import { abapSystem } from "../sap/sap";
+import { abapSystem, abapSystemTest } from "../sap/sap";
 const flotilla = Router();
 
-flotilla.get('/flotilla/:record/:proveedores', (req:Request, res:Response) => {
+flotilla.get('/flotilla/:record/:proveedores/:type', (req:Request, res:Response) => {
     const record        = req.params.record;
     const proveedores   = req.params.proveedores.split("-");
-
+    const type = req.params.type;
+    let table:string = '';
+    let client:any = null;
+    type == 'prod' ? 
+    (client = new Client(abapSystem), table = String(Tables.T_Detalle_Corte_prod)) : 
+    type == 'test' ? 
+   ( client = new Client(abapSystemTest), table = String(Tables.T_Detalle_Corte_test)) : null;
     for (const item of proveedores) {
         
     const body = {
-        "from": "bqdcp8je5",
+        "from": table,
         "select": [ 651, 658, 14, 654, 644, 3, 699, 700 ],
         "where": `{14.EX.${record}}AND{651.EX.${item}}AND{676.EX.''}AND{182.EX.''}`
     }
@@ -46,32 +52,30 @@ flotilla.get('/flotilla/:record/:proveedores', (req:Request, res:Response) => {
                     'UMEDIDA'       : "SER",
                     'IMPORTE'       : importe += item['644']['value'],
                     'GPO_ARTICULO'  : "",
-                    'CENTRO'        : "1100"
+                    'CENTRO'        : "1100",
                 }]
             };
         }
-
-        const client = new Client(abapSystem);
 
         client.connect( async (result:any, err:any) => {
             client.invoke("Z_RFC_VA_ENTRADAFLETE", IT_DATA , async (err:any, result:any) => {
 
                 err ? res.json(err) : null;
                 
-                String(result['E_ORDEN_COMPRA']).length > 0 ? ( postBanderaTCI(res, result, ids) ) : res.json(result['IT_MESSAGE_WARNING']);
+                String(result['E_ORDEN_COMPRA']).length > 0 ? ( postBanderaTCI(res, result, ids, table) ) : res.json(result['IT_MESSAGE_WARNING']);
             });
         });
     });
     }
 });
 
-function postBanderaTCI(res:Response, result:any, ids:any[]) {
+function postBanderaTCI(res:Response, result:any, ids:any[], table:string) {
     const url = 'https://api.quickbase.com/v1/records';
 
     for (const iterator of ids) {
 
         const args = {
-            "to"  : "bqdcp8je5",
+            "to"  : table,
             "data": [{
                 "3"  : { "value":  iterator },
                 "676" : { "value":  result.E_ORDEN_COMPRA }

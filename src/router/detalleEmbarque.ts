@@ -1,28 +1,28 @@
 import { Router, Request, Response } from "express";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
-import { headers, createXHR } from "../utils/utils";
+import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
-import { abapSystem } from "../sap/sap";
+import { abapSystem, abapSystemTest } from "../sap/sap";
 import { Embarque } from "../interfaces/interfaces";
 
 const detalleEmbarque = Router();
 
-detalleEmbarque.get('/detalleEmbarque/:fecha/:idEmbarque', async (req:Request, res:Response) => {
+detalleEmbarque.get('/detalleEmbarque/:fecha/:idEmbarque/:type', async (req:Request, res:Response) => {
 
     let fecha       = req.params.fecha;
     let idEmbarque  = req.params.idEmbarque;
-
+    const type = req.params.type;
+    let table:string = '';
     const args = {
         I_FECHA  : fecha
     };
 
-    getDetallesEmbarque(res, idEmbarque, args);
-
-});
-
-function getDetallesEmbarque(res:Response, idEmbarque:string, args:any) {
-    const client = new Client(abapSystem)
+    let client:any = null;
+    type == 'prod' ? 
+    (client = new Client(abapSystem), table = String(Tables.T_Det_Embarques_prod)) : 
+    type == 'test' ? 
+   ( client = new Client(abapSystemTest), table = String(Tables.T_Det_Embarques_test)) : null;
 
     client.connect( async (result:any, err:any) => {
 
@@ -32,13 +32,14 @@ function getDetallesEmbarque(res:Response, idEmbarque:string, args:any) {
         
             await err ? res.json({ ok: false, message: err }) : null;
 
-            postDetalleEmbarque(result, idEmbarque, res);
+            postDetalleEmbarque(result, idEmbarque, res, table);
 
         });
     });
-} 
 
-function postDetalleEmbarque(result:any, idEmbarque:string, res:Response) {
+});
+
+function postDetalleEmbarque(result:any, idEmbarque:string, res:Response, table:string) {
     let   arregloM:any[] = [];
     const url = 'https://api.quickbase.com/v1/records';
     let embarques:Embarque[] = result["IT_EMBARQUEVTA"];
@@ -53,7 +54,7 @@ function postDetalleEmbarque(result:any, idEmbarque:string, res:Response) {
     });
 
     const argsVentas = {
-        "to"  : "bqdcp865m",
+        "to"  : table,
         "data": arregloM
     };
 

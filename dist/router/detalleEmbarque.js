@@ -16,25 +16,28 @@ const utils_1 = require("../utils/utils");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
 const detalleEmbarque = express_1.Router();
-detalleEmbarque.get('/detalleEmbarque/:fecha/:idEmbarque', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+detalleEmbarque.get('/detalleEmbarque/:fecha/:idEmbarque/:type', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let fecha = req.params.fecha;
     let idEmbarque = req.params.idEmbarque;
+    const type = req.params.type;
+    let table = '';
     const args = {
         I_FECHA: fecha
     };
-    getDetallesEmbarque(res, idEmbarque, args);
-}));
-function getDetallesEmbarque(res, idEmbarque, args) {
-    const client = new node_rfc_1.Client(sap_1.abapSystem);
-    client.connect((result, err) => __awaiter(this, void 0, void 0, function* () {
+    let client = null;
+    type == 'prod' ?
+        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Det_Embarques_prod)) :
+        type == 'test' ?
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Det_Embarques_test)) : null;
+    client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
         (yield err) ? res.json({ ok: false, message: err }) : null;
-        client.invoke('Z_RFC_PICKINGSELLFRESH', args, (err, result) => __awaiter(this, void 0, void 0, function* () {
+        client.invoke('Z_RFC_PICKINGSELLFRESH', args, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
             (yield err) ? res.json({ ok: false, message: err }) : null;
-            postDetalleEmbarque(result, idEmbarque, res);
+            postDetalleEmbarque(result, idEmbarque, res, table);
         }));
     }));
-}
-function postDetalleEmbarque(result, idEmbarque, res) {
+}));
+function postDetalleEmbarque(result, idEmbarque, res, table) {
     let arregloM = [];
     const url = 'https://api.quickbase.com/v1/records';
     let embarques = result["IT_EMBARQUEVTA"];
@@ -46,7 +49,7 @@ function postDetalleEmbarque(result, idEmbarque, res) {
         });
     }));
     const argsVentas = {
-        "to": "bqdcp865m",
+        "to": table,
         "data": arregloM
     };
     if (arregloM.length < 1) {

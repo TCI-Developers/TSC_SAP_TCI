@@ -1,18 +1,24 @@
 import { Router, Request, Response } from "express";
 import { Client } from "node-rfc";
-import { abapSystem } from "../sap/sap";
+import { abapSystem, abapSystemTest } from "../sap/sap";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
-import { headers, createXHR } from "../utils/utils";
+import { headers, createXHR, Tables } from "../utils/utils";
 
 const resultadoCorrida = Router();
 
-resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel', (req:Request, res:Response) => {
+resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel/:type', (req:Request, res:Response) => {
 
     const ordenCompra:string = req.params.ordenCompraAgranel;
     let   arregloResult:any[] = [];
 
-    const client = new Client(abapSystem);
+    const type = req.params.type;
+    let client:any = null;
+    let table:string = '';
+    type == 'prod' ? 
+    (client = new Client(abapSystem), table = String(Tables.T_Resultado_Corrida_prod)) : 
+    type == 'test' ? 
+   ( client = new Client(abapSystemTest), table = String(Tables.T_Resultado_Corrida_test)) : null;
 
     client.connect( async (result:any, err:any) => {
         await err ? res.json({ ok:false, message: err}) : null;
@@ -45,16 +51,16 @@ resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel', (req:Request, res:
                 });
             });
 
-            postResultado(res, arregloResult);
+            postResultado(res, arregloResult, table);
         });
     }); 
 });
 
-function postResultado(res:Response, result:any[]) {
+function postResultado(res:Response, result:any[], table:string) {
     const url = 'https://api.quickbase.com/v1/records';
 
     const argSResultCorte = {
-        "to"  : "brhh5xmxa",
+        "to"  : table,
         "data": result
     };
 

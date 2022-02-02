@@ -16,14 +16,20 @@ const utils_1 = require("../utils/utils");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
 const picking = express_1.Router();
-picking.get('/picking/:fecha/:idEmbarque', (req, res) => {
+picking.get('/picking/:fecha/:idEmbarque/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records';
     let fecha = req.params.fecha;
     let idEmbarque = req.params.idEmbarque;
     const args = {
         I_FECHA: fecha
     };
-    const client = new node_rfc_1.Client(sap_1.abapSystem);
+    let table = '';
+    const type = req.params.type;
+    let client = null;
+    type == 'prod' ?
+        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Picking_prod)) :
+        type == 'test' ?
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Picking_test)) : null;
     let arregloM = [];
     client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
         (yield err) ? res.json({ ok: false, message: err }) : null;
@@ -56,7 +62,7 @@ picking.get('/picking/:fecha/:idEmbarque', (req, res) => {
                 });
             }));
             const argsVentas = {
-                "to": "bq2942w6n",
+                "to": table,
                 "data": arregloM
             };
             // res.json(argsVentas);

@@ -1,16 +1,31 @@
 import { Router, Request, Response } from "express";
 import { Client } from "node-rfc";
-import { abapSystem } from "../sap/sap";
+import { abapSystem, abapSystemTest } from "../sap/sap";
 import { Cuadrillas, Proveedores } from "../interfaces/interfaces";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
-import { headers, createXHR } from "../utils/utils";
+import { headers, createXHR, Tables } from "../utils/utils";
 
 const proveedor = Router();
 
-proveedor.get('/proveedores/:id', (req:Request, res:Response) => {
+proveedor.get('/proveedores/:id/:type', (req:Request, res:Response) => {
     const id = req.params.id;
-    const client = new Client(abapSystem);
+    const type = req.params.type;
+    let table1:string = '';
+    let table2:string = '';
+    let table3:string = '';
+    let client:any = null;
+    type == 'prod' ? 
+    (client = new Client(abapSystem),
+     table1 = String(Tables.T_Productor_prod),
+     table2 = String(Tables.T_Cuadrillas_prod),
+     table3 = String(Tables.T_Transportes_prod)
+     ) : 
+    type == 'test' ? 
+   ( client = new Client(abapSystemTest),
+        table1 = String(Tables.T_Productor_test),
+        table2 = String(Tables.T_Cuadrillas_test),
+        table3 = String(Tables.T_Transportes_test)) : null;
     let   arregloM:any[] = [];
     let   arregloC:any[] = [];
     let   arregloT:any[] = [];
@@ -24,6 +39,8 @@ proveedor.get('/proveedores/:id', (req:Request, res:Response) => {
         client.invoke('Z_RFC_TBL_CATALOG_PRO', { }, async (err:any, result:any) => {        
         
             await err ? res.json({ ok: false, message: err }) : null;
+
+            //return res.json(result);
 
             let proveedores  :Proveedores[]  = await result["IT_PROVEEDORES"];
 
@@ -67,21 +84,21 @@ proveedor.get('/proveedores/:id', (req:Request, res:Response) => {
             });
 
             const argsFacturadores = {
-                "to"  : "bqdcp8k48",
+                "to"  :  table1,
                 "data": arregloM
             };
 
             const argsCuadrilla = {
-                "to"  : "bqdcp8k4f",
+                "to"  : table2,
                 "data": arregloC
             };
 
             const argsTransporte = {
-                "to"  : "bqmyekd8t",
+                "to"  : table3,
                 "data": arregloT
             };
 
-            //res.json(result);
+            //res.json(proveedores);
 
             const obs1$ = ajax({ createXHR, url, method: 'POST', headers, body: argsFacturadores }).pipe(
                 timeout(60000),

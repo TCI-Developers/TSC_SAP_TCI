@@ -17,9 +17,15 @@ const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 //client.invoke("Z_RFC_ENTRY_VA_FRESH", { 'IT_POSTING_BOX': [body] }, async (err:any, result:any) => {
 const facturador = express_1.Router();
-facturador.get('/facturadores', (req, res) => {
+facturador.get('/facturadores/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records';
-    const client = new node_rfc_1.Client(sap_1.abapSystem);
+    const type = req.params.type;
+    let table = '';
+    let client = null;
+    type == 'prod' ?
+        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Benefeciarios_prod)) :
+        type == 'test' ?
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Benefeciarios_test)) : null;
     let arregloM = [];
     client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
         (yield err) ? res.json({ ok: false, message: err }) : null;
@@ -40,7 +46,7 @@ facturador.get('/facturadores', (req, res) => {
                 });
             }));
             const argsFacturadores = {
-                "to": "bqdcp8m24",
+                "to": table,
                 "data": arregloM
             };
             const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata', 'unchangedRecordIds'));

@@ -21,6 +21,7 @@ const detalleEmbarque_1 = __importDefault(require("./router/detalleEmbarque"));
 const picking_1 = __importDefault(require("./router/picking"));
 const cliente_1 = __importDefault(require("./router/cliente"));
 const resultadoCorrida_1 = __importDefault(require("./router/resultadoCorrida"));
+const ordenesGastos_1 = __importDefault(require("./router/ordenesGastos"));
 require('dotenv').config();
 const port = process.env.PORT || 3005;
 const server = server_1.default.init(Number(port));
@@ -41,6 +42,7 @@ server.app.use(detalleEmbarque_1.default);
 server.app.use(picking_1.default);
 server.app.use(cliente_1.default);
 server.app.use(resultadoCorrida_1.default);
+server.app.use(ordenesGastos_1.default);
 server.start(() => {
     console.log('Servidor corriendo ' + port);
 });

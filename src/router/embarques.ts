@@ -1,20 +1,26 @@
 import { Router, Request, Response } from "express";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
-import { headers, createXHR } from "../utils/utils";
+import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
-import { abapSystem } from "../sap/sap";
+import { abapSystem, abapSystemTest } from "../sap/sap";
 import { Embarque } from "../interfaces/interfaces";
 
 const embarque = Router();
 
-embarque.get('/embarque/:fecha', (req:Request, res:Response) => {
+embarque.get('/embarque/:fecha/:type', (req:Request, res:Response) => {
     const url = 'https://api.quickbase.com/v1/records';
     let fecha = req.params.fecha;
+    const type = req.params.type;
     const args = {
         I_FECHA  : fecha
     };
-    const client = new Client(abapSystem);
+    let table:string ='';
+    let client:any = null;
+    type == 'prod' ? 
+    (client = new Client(abapSystem), table = String(Tables.T_Embarques_prod)) : 
+    type == 'test' ? 
+   ( client = new Client(abapSystemTest), table = String(Tables.T_Embarques_test)) : null;
     let   arregloM:any[] = [];
 
     client.connect( async (result:any, err:any) => {
@@ -40,7 +46,7 @@ embarque.get('/embarque/:fecha', (req:Request, res:Response) => {
             });
 
             const argsVentas = {
-                "to"  : "bqdcp865h",
+                "to"  : table,
                 "data": arregloM
             };
 

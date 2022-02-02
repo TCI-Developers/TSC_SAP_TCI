@@ -20,12 +20,12 @@ const router = express_1.Router();
 /*router.get('/acuerdo/:fecha', (req:Request, res:Response) => {
     const fecha = req.params.fecha;
     const args1 = {
-        "from": "bqdcp8fbc",
+        "from": String(Tables.T_Acuerdos_prod),
         "select": [ 675, 676, 658, 677, 29, 669, 678],
         "where": `{58.EX.${fecha}}AND{489.EX.true}AND{680.EX.false}`
     }
     const args2 = {
-        "to"  : "bqdcp8fbc",
+        "to"  : String(Tables.T_Acuerdos_prod),
         "data": [{
             "680":{
                 "value": "true"
@@ -59,16 +59,28 @@ const router = express_1.Router();
         res.json(errors);
     });
 });*/
-router.get('/acuerdo1/:record', (req, res) => {
+router.get('/acuerdo1/:record/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records/query';
     const record = req.params.record;
+    const type = req.params.type;
+    let client = null;
+    let table = '';
+    let tableBanda = '';
+    type == 'prod' ?
+        (client = new node_rfc_1.Client(sap_1.abapSystem),
+            table = String(utils_1.Tables.T_Acuerdos_prod),
+            tableBanda = String(utils_1.Tables.T_Precios_Banda_prod)) :
+        type == 'test' ?
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest),
+                table = String(utils_1.Tables.T_Acuerdos_test),
+                tableBanda = String(utils_1.Tables.T_Precios_Banda_test)) : null;
     const argsAcuerdos = {
-        "from": "bqdcp8fbc",
+        "from": table,
         "select": [675, 676, 658, 677, 29, 669, 678, 701, 699, 718, 719],
         "where": `{3.EX.${record}}AND{489.EX.true}AND{680.EX.false}`
     };
     const argsValidacionAcuerdo = {
-        "to": "bqdcp8fbc",
+        "to": table,
         "data": [{
                 "680": {
                     "value": "true"
@@ -80,23 +92,24 @@ router.get('/acuerdo1/:record', (req, res) => {
     };
     const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsAcuerdos }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data'));
     obs$.subscribe((result) => {
+        //return res.json(result);
         result.length < 1 ? res.json('No hay acuerdos que mandar') : null;
         result.forEach(value => {
-            value['677']['value'] === '1' ? postAcuerdo(value, argsValidacionAcuerdo, res) :
-                value['677']['value'] === '0' ? postBandeado(value, res) :
-                    value['677']['value'] === '2' ? postPrecioXCorte(value, res) : null;
+            value['677']['value'] === '1' ? postAcuerdo(value, argsValidacionAcuerdo, res, client) :
+                value['677']['value'] === '0' ? postBandeado(value, res, client, tableBanda) :
+                    value['677']['value'] === '2' ? postPrecioXCorte(value, res, client, tableBanda) : null;
         });
     }, errors => {
         res.json(errors);
     });
 });
-function postBandeado(value, res) {
+function postBandeado(value, res, client, tableBanda) {
     let arregloP = value['678']['value'];
     const url = 'https://api.quickbase.com/v1/records';
     arregloP.forEach((val) => {
         let codigoPrecio = val.split("-");
         const argsValidacion = {
-            "to": "bqr9nfpuk",
+            "to": tableBanda,
             "data": [{
                     "16": {
                         "value": "true"
@@ -128,7 +141,6 @@ function postBandeado(value, res) {
                     args.OPERACION == "" ? res.json('No se mando Operacion') :
                         args.PRECIO == "" ? res.json('No se mando Precio') :
                             args.MONEDA == "" ? res.json('No se mando Moneda') : null;
-        const client = new node_rfc_1.Client(sap_1.abapSystem);
         client.connect((resul, er) => {
             er ? res.json({ ok: false, message: er }) : null;
             client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (error, resultado) => __awaiter(this, void 0, void 0, function* () {
@@ -141,7 +153,7 @@ function postBandeado(value, res) {
         });
     });
 }
-function postAcuerdo(value, args2, res) {
+function postAcuerdo(value, args2, res, client) {
     let valor = String(value['29']['value']).split('.');
     let precio = valor[0] + '.' + valor[1] + 0;
     valor.length > 1 ? precio : precio = valor[0];
@@ -165,7 +177,6 @@ function postAcuerdo(value, args2, res) {
                 args.OPERACION == "" ? res.json('No se mando Operacion') :
                     args.PRECIO == "" ? res.json('No se mando Precio') :
                         args.MONEDA == "" ? res.json('No se mando Moneda') : null;
-    const client = new node_rfc_1.Client(sap_1.abapSystem);
     client.connect((resul, er) => {
         er ? res.json({ ok: false, message: er }) : null;
         client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (error, resultado) => {
@@ -182,12 +193,12 @@ function postAcuerdo(value, args2, res) {
         });
     });
 }
-function postPrecioXCorte(value, res) {
+function postPrecioXCorte(value, res, client, tableBAnda) {
     let valor = null;
     value['701']['value'].forEach((item) => {
         valor = String(item).split('-');
         const argsValidacionMateriales = {
-            "to": "bqr9nfpuk",
+            "to": tableBAnda,
             "data": [{
                     "16": {
                         "value": "true"
@@ -217,7 +228,6 @@ function postPrecioXCorte(value, res) {
                     args.OPERACION == "" ? res.json('No se mando Operacion') :
                         args.PRECIO == "" ? res.json('No se mando Precio') :
                             args.MONEDA == "" ? res.json('No se mando Moneda') : null;
-        const client = new node_rfc_1.Client(sap_1.abapSystem);
         client.connect((resul, er) => {
             er ? res.json({ ok: false, message: er }) : null;
             client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (error, resultado) => {

@@ -16,13 +16,19 @@ const utils_1 = require("../utils/utils");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
 const embarque = express_1.Router();
-embarque.get('/embarque/:fecha', (req, res) => {
+embarque.get('/embarque/:fecha/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records';
     let fecha = req.params.fecha;
+    const type = req.params.type;
     const args = {
         I_FECHA: fecha
     };
-    const client = new node_rfc_1.Client(sap_1.abapSystem);
+    let table = '';
+    let client = null;
+    type == 'prod' ?
+        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Embarques_prod)) :
+        type == 'test' ?
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Embarques_test)) : null;
     let arregloM = [];
     client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
         (yield err) ? res.json({ ok: false, message: err }) : null;
@@ -36,7 +42,7 @@ embarque.get('/embarque/:fecha', (req, res) => {
                 });
             }));
             const argsVentas = {
-                "to": "bqdcp865h",
+                "to": table,
                 "data": arregloM
             };
             // res.json(argsVentas);
