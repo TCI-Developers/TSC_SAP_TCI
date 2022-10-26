@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const node_rfc_1 = require("node-rfc");
@@ -15,7 +18,9 @@ const sap_1 = require("../sap/sap");
 const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
+const path_1 = __importDefault(require("path"));
 const proveedor = express_1.Router();
+const pathViews = path_1.default.resolve(__dirname, '../views');
 proveedor.get('/proveedores/:id/:type', (req, res) => {
     const id = req.params.id;
     const type = req.params.type;
@@ -45,7 +50,32 @@ proveedor.get('/proveedores/:id/:type', (req, res) => {
             //return res.json(result);
             let proveedores = yield result["IT_PROVEEDORES"];
             proveedores.forEach((value) => __awaiter(void 0, void 0, void 0, function* () {
-                if (value.IND_SECTOR == "") {
+                if (value.J_1KFTIND == "Cuadrillas y fletes") {
+                    //cuadrillas
+                    arregloC.push({
+                        "176": { "value": value.LIFNR },
+                        "177": { "value": value.LAND1 },
+                        "7": { "value": value.NAME1 },
+                        //"72": { "value": value.NAME2 },
+                        "178": { "value": value.ORT01 },
+                        "179": { "value": value.EKORG },
+                        "180": { "value": value.ZTERM },
+                        "181": { "value": value.J_1KFTIND },
+                        "182": { "value": value.TEXT },
+                    });
+                    //Fletes                   
+                    arregloT.push({
+                        "16": { "value": value.LIFNR },
+                        "17": { "value": value.LAND1 },
+                        "11": { "value": value.NAME1 },
+                        "18": { "value": value.ORT01 },
+                        "19": { "value": value.EKORG },
+                        "20": { "value": value.ZTERM },
+                        "21": { "value": value.J_1KFTIND },
+                        "22": { "value": value.TEXT },
+                    });
+                }
+                else if (value.KALSK == "Z4") {
                     arregloM.push({
                         "71": { "value": value.LIFNR },
                         "73": { "value": value.LAND1 },
@@ -57,7 +87,7 @@ proveedor.get('/proveedores/:id/:type', (req, res) => {
                         "76": { "value": value.KALSK },
                     });
                 }
-                else if (value.IND_SECTOR == "0008") {
+                else if (value.J_1KFTIND == "Cuadrillas") {
                     arregloC.push({
                         "176": { "value": value.LIFNR },
                         "177": { "value": value.LAND1 },
@@ -66,11 +96,11 @@ proveedor.get('/proveedores/:id/:type', (req, res) => {
                         "178": { "value": value.ORT01 },
                         "179": { "value": value.EKORG },
                         "180": { "value": value.ZTERM },
-                        "181": { "value": value.IND_SECTOR },
+                        "181": { "value": value.J_1KFTIND },
                         "182": { "value": value.TEXT },
                     });
                 }
-                else if (value.IND_SECTOR == "0007") {
+                else if (value.J_1KFTIND == "Fletes") {
                     arregloT.push({
                         "16": { "value": value.LIFNR },
                         "17": { "value": value.LAND1 },
@@ -78,7 +108,7 @@ proveedor.get('/proveedores/:id/:type', (req, res) => {
                         "18": { "value": value.ORT01 },
                         "19": { "value": value.EKORG },
                         "20": { "value": value.ZTERM },
-                        "21": { "value": value.IND_SECTOR },
+                        "21": { "value": value.J_1KFTIND },
                         "22": { "value": value.TEXT },
                     });
                 }
@@ -95,18 +125,29 @@ proveedor.get('/proveedores/:id/:type', (req, res) => {
                 "to": table3,
                 "data": arregloT
             };
-            //res.json(proveedores);
-            const obs1$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata', 'unchangedRecordIds'));
+            //  res.json(proveedores);
+            const obs1$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data')
+            // pluck('response', 'metadata', 'unchangedRecordIds')
+            );
             const obs2$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsCuadrilla }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata', 'unchangedRecordIds'));
             const obs3$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsTransporte }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response'));
             if (id == "1") {
-                obs1$.subscribe(resp => res.json({ creados_modificados: resp }), err => res.json(err.response));
+                // res.render('../views/list-users.hbs',{ usuariosResponse });
+                // const provedorFruta =[{tipo: 'Proveedores de Fruta', creados_modificados: resp }];
+                obs1$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Proveedores de Fruta', creados_modificados: resp }), err => res.json(err.response));
+                // obs1$.subscribe(resp => res.json({ tipo:'Proveedor de Fruta', creados_modificados: resp }), err => res.json(err.response) );
             }
             else if (id == "2") {
-                obs2$.subscribe(resp => res.json({ creados_modificados: resp }), err => res.json(err.response));
+                obs2$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Proveedores de Cuadrillas', creados_modificados: resp }), err => res.json(err.response));
+                //obs2$.subscribe(resp => res.json({ creados_modificados: resp }), err => res.json(err.response) );
             }
             else if (id == "3") {
-                obs3$.subscribe(resp => res.json({ creados_modificados: resp }), err => res.json(err.response));
+                obs3$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Proveedores de Fletes', creados_modificados: resp }), err => res.json(err.response));
+                // obs3$.subscribe(resp => res.json({ creados_modificados: resp }), err => res.json(err.response) );
+            }
+            else if (id == "4") {
+                obs2$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Proveedores de Cuadrillas y Fletes', creados_modificados: resp }), err => res.json(err.response));
+                obs3$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Proveedores de Fletes y Cuadrillas', creados_modificados: resp }), err => res.json(err.response));
             }
         }));
     }));

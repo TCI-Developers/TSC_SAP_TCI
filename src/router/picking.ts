@@ -6,6 +6,11 @@ import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
 import { detallesEmbarque } from "../interfaces/interfaces";
 
+import path from "path";
+
+
+const pathViews = path.resolve(__dirname,'../views');
+
 const picking = Router();
 
 picking.get('/picking/:fecha/:idEmbarque/:type', (req:Request, res:Response) => {
@@ -35,6 +40,7 @@ picking.get('/picking/:fecha/:idEmbarque/:type', (req:Request, res:Response) => 
             await err ? res.json({ ok: false, message: err }) : null;
 
             let embarques:detallesEmbarque[]  = await result["IT_PICKING"];
+            //res.json({ embarques });
 
             embarques = embarques.filter(val => val.EMBARQUE === idEmbarque);
 
@@ -45,6 +51,7 @@ picking.get('/picking/:fecha/:idEmbarque/:type', (req:Request, res:Response) => 
                 let dia  = value.FEC_EMB.substring(6,8);
 
                 arregloM.push({
+                
                     "20": { "value": value.DET_VTA },
                     "19": { "value": value.DET_EMB },
                     "6" : { "value": value.CANT_EMB },
@@ -71,12 +78,15 @@ picking.get('/picking/:fecha/:idEmbarque/:type', (req:Request, res:Response) => 
             };
 
             // res.json(argsVentas);
+           // res.json({ arregloM });
 
             ajax({ createXHR, url, method: 'POST', headers, body: argsVentas }).pipe(
                 timeout(60000),
                 retry(5),
                 pluck('response', 'metadata')
-            ).subscribe(resp => res.json( { registros_creados : resp} ), err => res.json(err.response) );
+            ).subscribe(resp => res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Picking', creados_modificados: resp }), err => res.json(err.response) );
+           // res.json( { registros_creados : resp } )
+           
         });
     }); 
 

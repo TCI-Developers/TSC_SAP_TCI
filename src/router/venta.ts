@@ -5,6 +5,10 @@ import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
 import { Venta } from "../interfaces/interfaces";
+import path from "path";
+
+
+const pathViews = path.resolve(__dirname,'../views');
 
 const venta = Router();
 
@@ -58,7 +62,7 @@ venta.get('/venta/:fecha/:type', (req:Request, res:Response) => {
                 timeout(60000),
                 retry(5),
                 pluck('response', 'metadata')
-            ).subscribe(resp => res.json( { registros_creados : resp} ), err => res.json(err.response) );
+            ).subscribe(resp => res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Ventas', creados_modificados: resp }), err => res.json(err.response) );
         });
     }); 
 

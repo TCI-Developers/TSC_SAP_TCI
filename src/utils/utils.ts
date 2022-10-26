@@ -1,4 +1,4 @@
-import { XMLHttpRequest } from 'xmlhttprequest';
+const { XMLHttpRequest } = require('xmlhttprequest');
 import { Client } from "node-rfc";
 import { abapSystem } from "../sap/sap";
 
@@ -67,4 +67,34 @@ export const headers = {
 
     "T_Lotes_SAP_prod" : "bq82myqch",
     "T_Lotes_SAP_test" : "brxztym37",
+
+    "T_Forecast_SAP_prod" : "",
+    "T_Forecast_SAP_test" : "bsk5gasgk",
+
+    "T_KPICostos_SAP_prod" : "bqhds58u2",
+    "T_KPICostos_SAP_test" : "brxztymzw",
   }
+
+  export const mensajesAcuerdo:any[]  = [
+    
+    { acuerdo:{ tipo: 'Acuerdo',value: 'No hay acuerdos que mandar' }},
+    { fecha:{ tipo: 'Fecha', value: 'La fecha no fue enviada' }},
+    { usuario:{ tipo: 'Usuario', value: 'El usuario no fue enviado' }},
+    { proveedor:{ tipo: 'Proveedor', value: 'El proveedor no fue enviado' } },
+    { operacion:{ tipo: 'Operacion', value: 'La operacion no fue enviada' }},
+    { precio:{ tipo: 'Precio', value: 'El precio no fue enviado' }},
+    { moneda:{ tipo: 'Moneda', value: 'La moneda no fue enviada' }},
+   
+] ;
+
+export const codigosExito:any[]  = [
+    
+  { acuerdo:{ tipo: '100',value: 'No hay acuerdos que mandar' }},
+  { fecha:{ tipo: '101', value: 'La fecha no fue enviada' }},
+  { usuario:{ tipo: '200', value: 'El usuario no fue enviado' }},
+  { proveedor:{ tipo: '201', value: 'El proveedor no fue enviado' } },
+  { operacion:{ tipo: '202', value: 'La operacion no fue enviada' }},
+  { precio:{ tipo: '300', value: 'El precio no fue enviado' }},
+  { moneda:{ tipo: '301', value: 'La moneda no fue enviada' }},
+ 
+];

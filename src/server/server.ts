@@ -3,6 +3,8 @@ import path from "path";
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
+
+
 export default class Server {
 
     public app:express.Application;
@@ -13,6 +15,7 @@ export default class Server {
         this.app = express();
         this.app.use(bodyParser.json());
         this.app.use(cors());
+        this.app.set('view engine', 'hbs');
     }
 
     static init (port:number) {

@@ -4,6 +4,7 @@ import matareiales from './router/materiales';
 import proveedor from './router/proveedores';
 import facturador from './router/facturadores';
 import agranel from './router/agranel';
+//import flete from './router/flete';
 import flete from './router/flete';
 import flotilla from './router/flotilla';
 import vinculacion from './router/vinculacion';
@@ -17,6 +18,11 @@ import picking from './router/picking';
 import cliente from './router/cliente';
 import resultadoCorrida from './router/resultadoCorrida';
 import ordenesGastos from './router/ordenesGastos';
+import forecast from './router/forecast';
+import kpicostos from './router/kpi-costos-cortes';
+import tonrecibidas from './router/toneladas-recibidas';
+import comparativas from './router/comparativa-calibres';
+
 require('dotenv').config();
 
  const port = process.env.PORT || 3005;
@@ -40,6 +46,11 @@ require('dotenv').config();
  server.app.use(cliente);
  server.app.use(resultadoCorrida);
  server.app.use(ordenesGastos);
+ server.app.use(forecast);
+ server.app.use(kpicostos);
+ server.app.use(tonrecibidas);
+ server.app.use(comparativas);
+
 
  server.start( () =>{
      console.log('Servidor corriendo '+port);

@@ -19,45 +19,46 @@ const utils_1 = require("../utils/utils");
 const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const path_1 = __importDefault(require("path"));
-//client.invoke("Z_RFC_ENTRY_VA_FRESH", { 'IT_POSTING_BOX': [body] }, async (err:any, result:any) => {
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const facturador = express_1.Router();
-facturador.get('/facturadores/:type', (req, res) => {
+const forecast = express_1.Router();
+forecast.get('/forecast/:type', (req, res) => {
+    // res.json({ msg: 'Get Forecast' } );
     const url = 'https://api.quickbase.com/v1/records';
     const type = req.params.type;
     let table = '';
     let client = null;
     type == 'prod' ?
-        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Benefeciarios_prod)) :
+        (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Forecast_SAP_prod)) :
         type == 'test' ?
-            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Benefeciarios_test)) : null;
+            (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Forecast_SAP_test)) : null;
     let arregloM = [];
     client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
         (yield err) ? res.json({ ok: false, message: err }) : null;
-        client.invoke('Z_RFC_TBL_CATALOG_PRO', {}, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
+        client.invoke('Z_RFC_TBL_CATALOG_FORE_REQ', {}, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
             (yield err) ? res.json({ ok: false, message: err }) : null;
-            let facturadores = yield result["IT_FACTURADORES"];
-            facturadores.forEach((value) => __awaiter(void 0, void 0, void 0, function* () {
+            let forecastResult = yield result["IT_FORECAST"];
+            forecastResult.forEach((value) => __awaiter(void 0, void 0, void 0, function* () {
+                let anio = value.DAT00.substring(0, 4);
+                let mes = value.DAT00.substring(4, 6);
+                let dia = value.DAT00.substring(6, 8);
                 arregloM.push({
-                    "6": { "value": value.LIFN2 },
-                    "40": { "value": value.LAND1 },
-                    "7": { "value": value.NAME1 },
-                    "43": { "value": value.NAME2 },
-                    "45": { "value": value.ORT01 },
-                    "42": { "value": value.EKORG },
-                    "39": { "value": value.LIFNR },
-                    "41": { "value": value.PARVW },
-                    "44": { "value": value.DEFPA },
+                    "6": { "value": value.MATNR },
+                    "8": { "value": value.MENGE },
+                    "10": { "value": value.VBELN },
+                    "11": { "value": value.POSNR },
+                    "12": { "value": value.PLNUM },
+                    "13": { "value": anio + "-" + mes + "-" + dia },
                 });
             }));
-            const argsFacturadores = {
+            const argsForescast = {
                 "to": table,
                 "data": arregloM
             };
-            const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata', 'unchangedRecordIds'));
-            obs$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Facturadores', creados_modificados: resp }), err => res.json(err.response));
-            // obs$.subscribe(resp => res.json({ creados_modificados: resp }), err => res.json(err.response) );
+            // res.json( argsForescast );
+            const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsForescast }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
+            obs$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Forecast', creados_modificados: resp }), err => res.json(err.response));
+            //    obs$.subscribe(resp =>  res.json( {  creados_modificados: resp }), err => res.json(err.response) );
         }));
     }));
 });
-exports.default = facturador;
+exports.default = forecast;

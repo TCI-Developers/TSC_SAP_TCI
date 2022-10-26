@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const ajax_1 = require("rxjs/ajax");
@@ -15,6 +18,8 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
+const path_1 = __importDefault(require("path"));
+const pathViews = path_1.default.resolve(__dirname, '../views');
 const agranel = express_1.Router();
 agranel.get('/agranel/:record/:type', (req, res) => {
     const record = req.params.record;
@@ -63,12 +68,11 @@ agranel.get('/agranel/:record/:type', (req, res) => {
                         'TIPO_CORTE': iterator['59']['value']
                     }]
             };
-            //res.json(IT_DATA);
             client.connect((result, err) => {
                 client.invoke("Z_RFC_VA_ENTRADAAGRANEL", IT_DATA, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
                     err ? res.json(err) : null;
                     //res.json(result);
-                    String(result['E_ORDEN_COMPRA']).length > 0 ? postOrdenCompraTCI(res, result, recordHuerta, table, tableSAP) : res.json(result);
+                    String(result['E_ORDEN_COMPRA']).length > 0 ? postOrdenCompraTCI(res, result, recordHuerta, table, tableSAP) : res.render(`${pathViews}/flotillas.hbs`, { tipo: 'WARNING', respuesta: result['IT_MESSAGE_WARNING'] }); // res.json(result['IT_MESSAGE_WARNING']);
                 }));
             });
         }
@@ -88,15 +92,15 @@ function postBanderaTCI(res, result, record, tableAcuerdo) {
 function postOrdenCompraTCI(res, result, record, table, tableSAP) {
     const url = 'https://api.quickbase.com/v1/records';
     const lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" ");
+    //res.json({SAP: result });
     const args = {
         "to": table,
         "data": [{
                 "3": { "value": record },
                 "35": { "value": result.E_ORDEN_COMPRA },
-                "61": { "value": lote[2] }
+                "61": { "value": lote[5] }
             }]
     };
-    //res.json({SAP: result, TCI: resp.response.metadata})
     ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5)).subscribe(resp => postLoteSAP(res, lote[2], record, result, tableSAP), err => res.json(err.response));
 }
 const postLoteSAP = (res, lote, record, result, tableSAP) => __awaiter(void 0, void 0, void 0, function* () {
@@ -108,6 +112,11 @@ const postLoteSAP = (res, lote, record, result, tableSAP) => __awaiter(void 0, v
                 "7": { "value": record }
             }]
     };
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5)).subscribe(resp => res.json({ SAP: result, TCI: resp.response.metadata }), err => res.json(err.response));
+    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5)).subscribe(resp => res.render(`${pathViews}/flotillas.hbs`, { tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response));
+    //subscribe(resp =>  res.json({SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp.response.metadata }), err => res.json(err.response) );
 });
+//vpn.villaavocado.proatech.mx
+//tci01@vpn.villaavocado.proatech.mx
+//tci01
+//NOqcyzGQ
 exports.default = agranel;

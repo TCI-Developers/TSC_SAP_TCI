@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const node_rfc_1 = require("node-rfc");
@@ -6,6 +9,8 @@ const sap_1 = require("../sap/sap");
 const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
+const path_1 = __importDefault(require("path"));
+const pathViews = path_1.default.resolve(__dirname, '../views');
 const act = express_1.Router();
 act.get('/actualizarPrecio/:record/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -56,6 +61,7 @@ function validacionActualizarPreicon(record, result, res) {
         headers: utils_1.headers,
         body: argsActualizarPrecio
     }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
-    obs$.subscribe(resu => res.json(result['E_MESSAGE']));
+    const statusUpdate = [{ tipo: 'Update', value: result['E_MESSAGE'] }];
+    obs$.subscribe(resu => res.render(`${pathViews}/acuerdos.hbs`, { mensaje: statusUpdate })); // res.json(result['E_MESSAGE']));
 }
 exports.default = act;

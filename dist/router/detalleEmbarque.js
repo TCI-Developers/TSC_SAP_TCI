@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const ajax_1 = require("rxjs/ajax");
@@ -15,6 +18,8 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
+const path_1 = __importDefault(require("path"));
+const pathViews = path_1.default.resolve(__dirname, '../views');
 const detalleEmbarque = express_1.Router();
 detalleEmbarque.get('/detalleEmbarque/:fecha/:idEmbarque/:type', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let fecha = req.params.fecha;
@@ -53,12 +58,15 @@ function postDetalleEmbarque(result, idEmbarque, res, table) {
         "data": arregloM
     };
     if (arregloM.length < 1) {
-        res.redirect('http://54.208.145.186:4005/cliente/' + idEmbarque);
+        //res.redirect('http://54.208.145.186:4005/cliente/' + idEmbarque);
+        res.json({ mgs: 'No se encontro informacion relacionada al embarque' + idEmbarque });
     }
     else {
         ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => {
             if (resp) {
-                res.redirect('http://54.208.145.186:4005/cliente/' + idEmbarque);
+                // res.json(resp);
+                res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Detalles de embarque', creados_modificados: resp });
+                // res.redirect('http://54.208.145.186:4005/cliente/' + idEmbarque);
             }
         }, err => res.json(err.response));
     }

@@ -4,6 +4,10 @@ import { pluck, timeout, retry } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
+import path from "path";
+
+
+const pathViews = path.resolve(__dirname,'../views');
 
 const agranel = Router();
 
@@ -41,6 +45,8 @@ agranel.get('/agranel/:record/:type', (req:Request, res:Response) => {
         pluck('response', 'data')
     ).subscribe((resp:any[]) => {
 
+       
+         
         for (const iterator of resp) {
         let recordHuerta =  iterator['3']['value'];
 
@@ -66,15 +72,16 @@ agranel.get('/agranel/:record/:type', (req:Request, res:Response) => {
             }]
         };
 
-          //res.json(IT_DATA);
-
+          
+         
+         
             client.connect( (result:any, err:any) => {
                 client.invoke("Z_RFC_VA_ENTRADAAGRANEL", IT_DATA, async (err:any, result:any) => {
                     err ? res.json(err) : null;
                     //res.json(result);
-                    String(result['E_ORDEN_COMPRA']).length > 0 ? postOrdenCompraTCI(res, result, recordHuerta, table, tableSAP ) : res.json(result);
+                    String(result['E_ORDEN_COMPRA']).length > 0 ? postOrdenCompraTCI(res, result, recordHuerta, table, tableSAP ) :  res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'WARNING', respuesta: result['IT_MESSAGE_WARNING'] }); // res.json(result['IT_MESSAGE_WARNING']);
                 });
-            });
+            }); 
         }
     });
 });
@@ -99,23 +106,27 @@ function postBanderaTCI(res:Response, result:any, record:any, tableAcuerdo:strin
 function postOrdenCompraTCI(res:Response, result:any, record:any, table:string, tableSAP:string) {
     const url = 'https://api.quickbase.com/v1/records';
     const lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" ");
+    
+    //res.json({SAP: result });
+    
        
     const args = {
         "to"  : table,
         "data": [{
             "3"  : { "value":  record },
             "35" : { "value":  result.E_ORDEN_COMPRA },
-            "61" : { "value":  lote[2] }
+            "61" : { "value":  lote[5] }
         }]
     };
     
-    //res.json({SAP: result, TCI: resp.response.metadata})
+    
 
     ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
         timeout(60000),
         retry(5),
         //pluck('response', 'metadata')
     ).subscribe(resp => postLoteSAP(res, lote[2], record, result, tableSAP), err => res.json(err.response) );
+
 }
 
 const postLoteSAP = async (res:Response, lote:any, record:any, result:any, tableSAP:string) => {
@@ -133,7 +144,14 @@ const postLoteSAP = async (res:Response, lote:any, record:any, result:any, table
         timeout(60000),
         retry(5),
         //pluck('response', 'metadata')
-    ).subscribe(resp =>  res.json({SAP: result, TCI: resp.response.metadata}), err => res.json(err.response) ); 
+    ).subscribe(resp => res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response) );
+    //subscribe(resp =>  res.json({SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp.response.metadata }), err => res.json(err.response) );
+     
 }
+
+//vpn.villaavocado.proatech.mx
+//tci01@vpn.villaavocado.proatech.mx
+//tci01
+//NOqcyzGQ
 
 export default agranel;

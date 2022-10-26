@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const node_rfc_1 = require("node-rfc");
@@ -15,6 +18,8 @@ const sap_1 = require("../sap/sap");
 const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
+const path_1 = __importDefault(require("path"));
+const pathViews = path_1.default.resolve(__dirname, '../views');
 const materiales = express_1.Router();
 materiales.get('/materiales/:type', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let client = null;
@@ -55,7 +60,8 @@ materiales.get('/materiales/:type', (req, res) => __awaiter(void 0, void 0, void
                 headers: utils_1.headers,
                 body: args
             }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
-            obs$.subscribe((respuesta) => res.json({ creados_modificados: respuesta }), (err) => res.json(err));
+            obs$.subscribe((respuesta) => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Materiales', creados_modificados: respuesta }), (err) => res.json(err));
+            //obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
         }));
     }));
 }));

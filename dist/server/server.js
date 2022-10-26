@@ -13,6 +13,7 @@ class Server {
         this.app = express();
         this.app.use(body_parser_1.default.json());
         this.app.use(cors_1.default());
+        this.app.set('view engine', 'hbs');
     }
     static init(port) {
         return new Server(port);

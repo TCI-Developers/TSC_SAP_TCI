@@ -7,8 +7,20 @@ export interface Proveedores {
   EKORG: string;
   ZTERM: string;
   KALSK: string;
-  IND_SECTOR  :string;
+  J_1KFTIND  :string;
   TEXT        :string;
+}
+
+export interface Forecast {
+  MATNR: string;
+  MAKTX: string;
+  MENGE: string;
+  MEINS: string;
+  VBELN: string;
+  POSNR: string;
+  PLNUM: string;
+  DAT00: string;
+ 
 }
 
 export interface Cuadrillas {
@@ -20,7 +32,7 @@ export interface Cuadrillas {
   EKORG       :string;
   ZTERM       :string;
   KALSK       :string;
-  IND_SECTOR  :string;
+  J_1KFTIND   :string;
   TEXT        :string;
 }
 
@@ -137,3 +149,105 @@ export interface Cliente {
   CALLE : string;
   NUM   : string;
 }
+
+export interface KPICostosCortes {
+  Sagarpa            : number | string;
+  Huerta             : number | string;
+  Acuerdo            : number | string;
+  Detalle_corte      : number | string;
+  Proveedor          : number | string;
+  Productor          : number | string;
+  Fecha              : number | string;
+  Kilos_recibidos    : number | string;
+  Monto              : number | string;
+  Ordenes_cuadrillas : number | string;
+  Ordenes_fletes     : number | string;
+
+
+
+}
+
+export interface Toneladas {
+  Fecha              : number | string;
+  Kilos_recibidos    : number | string;
+  Huerta             : number | string;
+  Lote               : number | string;
+  Kilos_empaque      : number | string;
+  Kilos_proveedor    : number | string;
+  Ordenes_cuadrillas : number | string;
+  Ordenes_fletes     : number | string;
+ 
+
+}
+export interface Corrida {
+  Acuerdo : number | string;
+  Detalles_Acuerdo : number | string;
+  Lote : number | string;
+  Orden_agranel : number | string;
+  Sagarpa : number | string;
+  Huerta :  number | string;
+  Kilos_agranel : number | string;
+  Calibre32 : RCalibres;
+  Calibre36 : RCalibres;
+  Calibre40 : RCalibres;
+  Calibre48 : RCalibres;
+  Calibre60 : RCalibres;
+  Calibre70 : RCalibres;
+  Calibre84 : RCalibres;
+  Categoria1 : Categorias;
+  Categoria2 : Categorias;
+
+}
+
+
+
+export interface RCalibres {
+  
+  Visita: number;
+  Corrida: number;
+  Error: number;
+  Material: string;
+  Descripcion: string;
+  
+}
+
+
+export interface Categorias {
+  
+  Visita: number;
+  Corrida: number;
+  Error: number;
+
+  
+}
+
+
+export interface KPICostos {
+  data:     { [key: string]: Valor }[];
+ 
+}
+
+export interface ToneladasRecibidas {
+  data:     { [key: string]: Valor }[];
+ 
+}
+
+ interface Valor {
+  value: number | string;
+}
+
+export interface ResponseQuick {
+  data:     { [key: string]: Data }[];
+ 
+}
+
+ interface Data {
+  value: number | string;
+}
+
+
+
+
+
+
+ 

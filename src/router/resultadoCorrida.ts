@@ -4,6 +4,10 @@ import { abapSystem, abapSystemTest } from "../sap/sap";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
+import path from "path";
+
+
+const pathViews = path.resolve(__dirname,'../views');
 
 const resultadoCorrida = Router();
 
@@ -69,6 +73,8 @@ function postResultado(res:Response, result:any[], table:string) {
         retry(5),
         //pluck('response', 'metadata')
     ).subscribe(resp => res.json({SAP: result, TCI: resp.response.metadata}) ); 
+
+    
 }
 
 export default resultadoCorrida;

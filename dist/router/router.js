@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const node_rfc_1 = require("node-rfc");
@@ -15,6 +18,8 @@ const sap_1 = require("../sap/sap");
 const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
+const path_1 = __importDefault(require("path"));
+const pathViews = path_1.default.resolve(__dirname, '../views');
 let arregloAll = [];
 const router = express_1.Router();
 /*router.get('/acuerdo/:fecha', (req:Request, res:Response) => {
@@ -92,12 +97,18 @@ router.get('/acuerdo1/:record/:type', (req, res) => {
     };
     const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsAcuerdos }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data'));
     obs$.subscribe((result) => {
+        const resultMenssage = [{ tipo: 'Acuerdo', value: 'No hay acuerdos que mandar' }];
         //return res.json(result);
-        result.length < 1 ? res.json('No hay acuerdos que mandar') : null;
+        //result.length < 1 ? res.json('No hay acuerdos que mandar') : null;
+        result.length < 1 ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[0] }) : null;
         result.forEach(value => {
-            value['677']['value'] === '1' ? postAcuerdo(value, argsValidacionAcuerdo, res, client) :
-                value['677']['value'] === '0' ? postBandeado(value, res, client, tableBanda) :
-                    value['677']['value'] === '2' ? postPrecioXCorte(value, res, client, tableBanda) : null;
+            value['677']['value'] === '2' ? postAcuerdo(value, argsValidacionAcuerdo, res, client, table, record) :
+                value['677']['value'] === '3' ? postBandeado(value, res, client, tableBanda) : null;
+            /**
+             * value['677']['value'] === '1' ?  postAcuerdo(value, argsValidacionAcuerdo, res, client) :
+               value['677']['value'] === '0' ?  postBandeado(value, res, client, tableBanda) :
+               value['677']['value'] === '2' ?  postPrecioXCorte(value, res, client, tableBanda) : null;
+             */
         });
     }, errors => {
         res.json(errors);
@@ -135,25 +146,32 @@ function postBandeado(value, res, client, tableBanda) {
             ORG_COMPRAS: String(value['719']['value']),
         };
         //res.json(args);
-        args.FECHA == "" ? res.json('No se mando Fecha') :
-            args.USUARIO == "" ? res.json('No se mando Usuario') :
-                args.PROVEEDOR == "" ? res.json('No se mando Proveedor') :
-                    args.OPERACION == "" ? res.json('No se mando Operacion') :
-                        args.PRECIO == "" ? res.json('No se mando Precio') :
-                            args.MONEDA == "" ? res.json('No se mando Moneda') : null;
+        //referencia mensajes mensajesAcuerdo
+        args.FECHA == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[1] }) :
+            args.USUARIO == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[2] }) :
+                args.PROVEEDOR == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[3] }) :
+                    args.OPERACION == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[4] }) :
+                        args.PRECIO == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[5] }) :
+                            args.MONEDA == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[6] }) : null;
         client.connect((resul, er) => {
             er ? res.json({ ok: false, message: er }) : null;
             client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (error, resultado) => __awaiter(this, void 0, void 0, function* () {
                 error ? res.json({ ok: false, message: error }) : null;
                 const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsValidacion }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
-                String(resultado['MENSAJE']).substring(0, 3) === '200' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) :
-                    String(resultado['MENSAJE']).substring(0, 3) === '201' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) :
-                        String(resultado['MENSAJE']).substring(0, 3) === '202' ? obs$.subscribe(respuesta => res.json(resultado['MENSAJE']), err => res.json(err)) : res.json(resultado);
+                const menssage200 = [{ tipo: '200', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
+                const menssage201 = [{ tipo: '201', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
+                const menssage202 = [{ tipo: '202', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
+                const menssage03 = [{ tipo: 'Warning', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
+                //obs$.subscribe(respuesta => res.json(resultado['MENSAJE'])
+                //res.render(`${pathViews}/acuerdos.hbs` , { mensaje: mensajesAcuerdo[1]}
+                String(resultado['MENSAJE']).substring(0, 3) === '200' ? obs$.subscribe(respuesta => res.render(`${pathViews}/acuerdos.hbs`, { mensaje: menssage200 }), err => res.json(err)) :
+                    String(resultado['MENSAJE']).substring(0, 3) === '201' ? obs$.subscribe(respuesta => res.render(`${pathViews}/acuerdos.hbs`, { mensaje: menssage201 }), err => res.json(err)) :
+                        String(resultado['MENSAJE']).substring(0, 3) === '202' ? obs$.subscribe(respuesta => res.render(`${pathViews}/acuerdos.hbs`, { mensaje: menssage202 }), err => res.json(err)) : res.render(`${pathViews}/acuerdos.hbs`, { mensaje: menssage03 }); //res.json(resultado);
             }));
         });
     });
 }
-function postAcuerdo(value, args2, res, client) {
+function postAcuerdo(value, args2, res, client, table, record) {
     let valor = String(value['29']['value']).split('.');
     let precio = valor[0] + '.' + valor[1] + 0;
     valor.length > 1 ? precio : precio = valor[0];
@@ -171,25 +189,49 @@ function postAcuerdo(value, args2, res, client) {
         CENTRO: String(value['718']['value']),
         ORG_COMPRAS: String(value['719']['value']),
     };
-    args.FECHA == "" ? res.json('No se mando Fecha') :
-        args.USUARIO == "" ? res.json('No se mando Usuario') :
-            args.PROVEEDOR == "" ? res.json('No se mando Proveedor') :
-                args.OPERACION == "" ? res.json('No se mando Operacion') :
-                    args.PRECIO == "" ? res.json('No se mando Precio') :
-                        args.MONEDA == "" ? res.json('No se mando Moneda') : null;
+    args.FECHA == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[1] }) :
+        args.USUARIO == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[2] }) :
+            args.PROVEEDOR == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[3] }) :
+                args.OPERACION == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[4] }) :
+                    args.PRECIO == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[5] }) :
+                        args.MONEDA == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[6] }) : null;
     client.connect((resul, er) => {
         er ? res.json({ ok: false, message: er }) : null;
         client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (error, resultado) => {
             error ? res.json({ ok: false, message: error }) : null;
+            let bodyData = null;
+            const actualizarAcuerdo = {
+                "to": table,
+                "data": [{
+                        "680": {
+                            "value": "false"
+                        },
+                        "3": {
+                            "value": `${record}`
+                        }
+                    }]
+            };
+            if (resultado['LASTRESPONSE'] === 'X') {
+                bodyData = args2;
+            }
+            else {
+                bodyData = actualizarAcuerdo;
+            }
+            //res.json({bodyData});
             const obs$ = ajax_1.ajax({
                 createXHR: utils_1.createXHR,
                 url: 'https://api.quickbase.com/v1/records',
                 method: 'POST',
                 headers: utils_1.headers,
-                body: args2
+                body: bodyData
             }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
-            String(resultado['MENSAJE']).substring(0, 3) === '100' ? obs$.subscribe(resp => res.json(resultado['MENSAJE']), err => res.json(err)) :
-                String(resultado['MENSAJE']).substring(0, 3) === '101' ? obs$.subscribe(resp => res.json(resultado['MENSAJE']), err => res.json(err)) : res.json(resultado);
+            const menssage100 = [{ tipo: '100', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
+            const menssage101 = [{ tipo: '101', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
+            const menssage03 = [{ tipo: 'Warning', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
+            //res.render(`${pathViews}/acuerdos.hbs` , { mensaje: menssage200 })
+            // obs$.subscribe(resp => res.json(resultado['MENSAJE'])
+            String(resultado['MENSAJE']).substring(0, 3) === '100' ? obs$.subscribe(resp => res.render(`${pathViews}/acuerdos.hbs`, { mensaje: menssage100 }), err => res.json(err)) :
+                String(resultado['MENSAJE']).substring(0, 3) === '101' ? obs$.subscribe(resp => res.render(`${pathViews}/acuerdos.hbs`, { mensaje: menssage101 }), err => res.json(err)) : res.render(`${pathViews}/acuerdos.hbs`, { mensaje: menssage03 }); //res.json( resultado );
         });
     });
 }
@@ -222,12 +264,12 @@ function postPrecioXCorte(value, res, client, tableBAnda) {
             CENTRO: String(value['718']['value']),
             ORG_COMPRAS: String(value['719']['value']),
         };
-        args.FECHA == "" ? res.json('No se mando Fecha') :
-            args.USUARIO == "" ? res.json('No se mando Usuario') :
-                args.PROVEEDOR == "" ? res.json('No se mando Proveedor') :
-                    args.OPERACION == "" ? res.json('No se mando Operacion') :
-                        args.PRECIO == "" ? res.json('No se mando Precio') :
-                            args.MONEDA == "" ? res.json('No se mando Moneda') : null;
+        args.FECHA == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[1] }) :
+            args.USUARIO == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[2] }) :
+                args.PROVEEDOR == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[3] }) :
+                    args.OPERACION == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[4] }) :
+                        args.PRECIO == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[5] }) :
+                            args.MONEDA == "" ? res.render(`${pathViews}/acuerdos.hbs`, { mensaje: utils_1.mensajesAcuerdo[6] }) : null;
         client.connect((resul, er) => {
             er ? res.json({ ok: false, message: er }) : null;
             client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (error, resultado) => {
@@ -240,8 +282,13 @@ function postPrecioXCorte(value, res, client, tableBAnda) {
                     body: argsValidacionMateriales
                 }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
                 //obs$.subscribe(resp => res.json({ resp, resultado }) );
-                String(resultado['MENSAJE']).substring(0, 3) === '300' ? obs$.subscribe(resp => res.json({ resp, resultado }), err => res.json(err)) :
-                    String(resultado['MENSAJE']).substring(0, 3) === '301' ? obs$.subscribe(resp => res.json({ resp, resultado }), err => res.json(err)) : res.json(resultado);
+                const menssage300 = [{ tipo: '300', value: resultado['MENSAJE'] }];
+                const menssage301 = [{ tipo: '301', value: resultado['MENSAJE'] }];
+                const menssage03 = [{ tipo: 'Warning', value: resultado['MENSAJE'] }];
+                //res.render(`${pathViews}/acuerdos.hbs` , { mensaje: menssage200 })
+                //obs$.subscribe(resp => res.json({ resp, resultado })
+                String(resultado['MENSAJE']).substring(0, 3) === '300' ? obs$.subscribe(resp => res.render(`${pathViews}/acuerdos.hbs`, { mensaje: menssage300 }), err => res.json(err)) :
+                    String(resultado['MENSAJE']).substring(0, 3) === '301' ? obs$.subscribe(resp => res.render(`${pathViews}/acuerdos.hbs`, { mensaje: menssage301 }), err => res.json(err)) : res.render(`${pathViews}/acuerdos.hbs`, { mensaje: menssage03 }); //res.json( resultado );
             });
         });
     });

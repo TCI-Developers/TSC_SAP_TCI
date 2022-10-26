@@ -6,6 +6,10 @@ import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
 
+import path from "path";
+
+const pathViews = path.resolve(__dirname,'../views');
+
 const materiales = Router();
 
 materiales.get('/materiales/:type', async (req:Request, res:Response) => {
@@ -63,8 +67,9 @@ materiales.get('/materiales/:type', async (req:Request, res:Response) => {
                     retry(5),
                     pluck('response', 'metadata')
                 );
-    
-                obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
+               
+                 obs$.subscribe((respuesta:any) =>  res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Materiales', creados_modificados: respuesta }), (err:any) => res.json(err));
+                //obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
             });
     });
 

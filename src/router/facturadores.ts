@@ -5,7 +5,10 @@ import { Proveedores, Facturadores } from "../interfaces/interfaces";
 import { headers, createXHR, Tables } from "../utils/utils";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
+import path from "path";
 //client.invoke("Z_RFC_ENTRY_VA_FRESH", { 'IT_POSTING_BOX': [body] }, async (err:any, result:any) => {
+
+const pathViews = path.resolve(__dirname,'../views');
 
 const facturador = Router();
 
@@ -54,8 +57,9 @@ facturador.get('/facturadores/:type', (req:Request, res:Response) => {
                 retry(5),
                 pluck('response', 'metadata', 'unchangedRecordIds')
             );
-
-            obs$.subscribe(resp => res.json({ creados_modificados: resp }), err => res.json(err.response) );
+           
+            obs$.subscribe(resp =>  res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Facturadores', creados_modificados: resp }), err => res.json(err.response) );
+           // obs$.subscribe(resp => res.json({ creados_modificados: resp }), err => res.json(err.response) );
         });
     });   
 });

@@ -6,6 +6,11 @@ import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
 import { Embarque } from "../interfaces/interfaces";
 
+import path from "path";
+
+
+const pathViews = path.resolve(__dirname,'../views');
+
 const detalleEmbarque = Router();
 
 detalleEmbarque.get('/detalleEmbarque/:fecha/:idEmbarque/:type', async (req:Request, res:Response) => {
@@ -57,9 +62,12 @@ function postDetalleEmbarque(result:any, idEmbarque:string, res:Response, table:
         "to"  : table,
         "data": arregloM
     };
+    
 
     if(arregloM.length < 1 ) {
-        res.redirect('http://54.208.145.186:4005/cliente/' + idEmbarque);
+        //res.redirect('http://54.208.145.186:4005/cliente/' + idEmbarque);
+
+        res.json({ mgs:'No se encontro informacion relacionada al embarque' + idEmbarque });
     } else {
         ajax({ createXHR, url, method: 'POST', headers, body: argsVentas }).pipe(
             timeout(60000),
@@ -67,7 +75,9 @@ function postDetalleEmbarque(result:any, idEmbarque:string, res:Response, table:
             pluck('response', 'metadata')
         ).subscribe(resp => {
             if(resp) {
-                res.redirect('http://54.208.145.186:4005/cliente/' + idEmbarque);
+               // res.json(resp);
+                res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Detalles de embarque', creados_modificados: resp })
+               // res.redirect('http://54.208.145.186:4005/cliente/' + idEmbarque);
             }
             }, err => res.json(err.response)
         );

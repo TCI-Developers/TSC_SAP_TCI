@@ -4,6 +4,10 @@ import { abapSystem, abapSystemTest } from "../sap/sap";
 import { ajax } from 'rxjs/ajax';
 import { pluck, timeout, retry } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
+import path from "path";
+
+
+const pathViews = path.resolve(__dirname,'../views');
 
 const act = Router();
 
@@ -72,7 +76,9 @@ function validacionActualizarPreicon(record:string, result:any, res:Response) {
         pluck('response', 'metadata')
     );
 
-    obs$.subscribe(resu => res.json(result['E_MESSAGE']));
+    const statusUpdate = [{ tipo: 'Update', value: result['E_MESSAGE']}];
+
+    obs$.subscribe(resu => res.render(`${ pathViews }/acuerdos.hbs` , { mensaje: statusUpdate })); // res.json(result['E_MESSAGE']));
 }
 
 export default act;

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Tables = exports.createXHR = exports.headers = void 0;
-const xmlhttprequest_1 = require("xmlhttprequest");
+exports.codigosExito = exports.mensajesAcuerdo = exports.Tables = exports.createXHR = exports.headers = void 0;
+const { XMLHttpRequest } = require('xmlhttprequest');
 exports.headers = {
     'QB-Realm-Hostname': 'aortizdemontellanoarevalo.quickbase.com',
     'User-Agent': 'Acuerdos',
@@ -9,7 +9,7 @@ exports.headers = {
     'Content-Type': 'application/json'
 };
 function createXHR() {
-    return new xmlhttprequest_1.XMLHttpRequest();
+    return new XMLHttpRequest();
 }
 exports.createXHR = createXHR;
 exports.Tables = {
@@ -49,4 +49,26 @@ exports.Tables = {
     "T_Ventas_test": "brxztym24",
     "T_Lotes_SAP_prod": "bq82myqch",
     "T_Lotes_SAP_test": "brxztym37",
+    "T_Forecast_SAP_prod": "",
+    "T_Forecast_SAP_test": "bsk5gasgk",
+    "T_KPICostos_SAP_prod": "bqhds58u2",
+    "T_KPICostos_SAP_test": "brxztymzw",
 };
+exports.mensajesAcuerdo = [
+    { acuerdo: { tipo: 'Acuerdo', value: 'No hay acuerdos que mandar' } },
+    { fecha: { tipo: 'Fecha', value: 'La fecha no fue enviada' } },
+    { usuario: { tipo: 'Usuario', value: 'El usuario no fue enviado' } },
+    { proveedor: { tipo: 'Proveedor', value: 'El proveedor no fue enviado' } },
+    { operacion: { tipo: 'Operacion', value: 'La operacion no fue enviada' } },
+    { precio: { tipo: 'Precio', value: 'El precio no fue enviado' } },
+    { moneda: { tipo: 'Moneda', value: 'La moneda no fue enviada' } },
+];
+exports.codigosExito = [
+    { acuerdo: { tipo: '100', value: 'No hay acuerdos que mandar' } },
+    { fecha: { tipo: '101', value: 'La fecha no fue enviada' } },
+    { usuario: { tipo: '200', value: 'El usuario no fue enviado' } },
+    { proveedor: { tipo: '201', value: 'El proveedor no fue enviado' } },
+    { operacion: { tipo: '202', value: 'La operacion no fue enviada' } },
+    { precio: { tipo: '300', value: 'El precio no fue enviado' } },
+    { moneda: { tipo: '301', value: 'La moneda no fue enviada' } },
+];
