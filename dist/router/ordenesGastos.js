@@ -20,7 +20,7 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const ordenesGastos = express_1.Router();
+const ordenesGastos = (0, express_1.Router)();
 ordenesGastos.get('/ordenesGastos/:type', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const type = req.params.type;
     let table = '';
@@ -47,13 +47,13 @@ ordenesGastos.get('/ordenesGastos/:type', (req, res) => __awaiter(void 0, void 0
                 "to": table,
                 "data": arregloM
             };
-            const obs$ = ajax_1.ajax({
+            const obs$ = (0, ajax_1.ajax)({
                 createXHR: utils_1.createXHR,
                 url: 'https://api.quickbase.com/v1/records',
                 method: 'POST',
                 headers: utils_1.headers,
                 body: args
-            }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
+            }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata'));
             obs$.subscribe((respuesta) => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Ordenes de Gastos', creados_modificados: respuesta }), (err) => res.json(err));
             //  obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
         }));

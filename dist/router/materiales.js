@@ -20,7 +20,7 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const materiales = express_1.Router();
+const materiales = (0, express_1.Router)();
 materiales.get('/materiales/:type', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let client = null;
     let data = [];
@@ -32,10 +32,12 @@ materiales.get('/materiales/:type', (req, res) => __awaiter(void 0, void 0, void
         type == 'test' ?
             (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Materiales_test)) : null;
     client.connect((result, err) => __awaiter(void 0, void 0, void 0, function* () {
+        // res.json({ "response": result });
         (yield err) ? res.json({ ok: false, message: err }) : null;
         client.invoke('Z_RFC_TBL_CATALOG_MAT', {}, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
             (yield err) ? res.json({ ok: false, message: err }) : null;
-            //res.json(result);
+            //await  console.log( err);
+            //  res.json(result);
             data = yield result["IT_MATERIALES"];
             // data = data.filter(mat => (mat.MTART == "ZROH" || mat.MTART == "ZUNB" || mat.MTART == "ZHAL") );
             data.forEach((value) => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,15 +55,15 @@ materiales.get('/materiales/:type', (req, res) => __awaiter(void 0, void 0, void
                 "to": table,
                 "data": arregloM
             };
-            const obs$ = ajax_1.ajax({
+            const obs$ = (0, ajax_1.ajax)({
                 createXHR: utils_1.createXHR,
                 url: 'https://api.quickbase.com/v1/records',
                 method: 'POST',
                 headers: utils_1.headers,
                 body: args
-            }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
+            }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata'));
             obs$.subscribe((respuesta) => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Materiales', creados_modificados: respuesta }), (err) => res.json(err));
-            //obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
+            obs$.subscribe((respuesta) => res.json({ creados_modificados: respuesta }), (err) => res.json(err));
         }));
     }));
 }));

@@ -11,7 +11,7 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const act = express_1.Router();
+const act = (0, express_1.Router)();
 act.get('/actualizarPrecio/:record/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records/query';
     const record = req.params.record;
@@ -27,7 +27,7 @@ act.get('/actualizarPrecio/:record/:type', (req, res) => {
         "select": [699, 688],
         "where": `{3.EX.${record}}`
     };
-    const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data'));
+    const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'data'));
     obs$.subscribe(resp => {
         const args = {
             I_FACTURADOR: resp[0]['688']['value'],
@@ -54,13 +54,13 @@ function validacionActualizarPreicon(record, result, res) {
                 }
             }]
     };
-    const obs$ = ajax_1.ajax({
+    const obs$ = (0, ajax_1.ajax)({
         createXHR: utils_1.createXHR,
         url: 'https://api.quickbase.com/v1/records',
         method: 'POST',
         headers: utils_1.headers,
         body: argsActualizarPrecio
-    }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
+    }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata'));
     const statusUpdate = [{ tipo: 'Update', value: result['E_MESSAGE'] }];
     obs$.subscribe(resu => res.render(`${pathViews}/acuerdos.hbs`, { mensaje: statusUpdate })); // res.json(result['E_MESSAGE']));
 }

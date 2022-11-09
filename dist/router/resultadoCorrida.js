@@ -20,7 +20,7 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const resultadoCorrida = express_1.Router();
+const resultadoCorrida = (0, express_1.Router)();
 resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel/:type', (req, res) => {
     const ordenCompra = req.params.ordenCompraAgranel;
     let arregloResult = [];
@@ -64,6 +64,6 @@ function postResultado(res, result, table) {
         "to": table,
         "data": result
     };
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argSResultCorte }).pipe(operators_1.timeout(60000), operators_1.retry(5)).subscribe(resp => res.json({ SAP: result, TCI: resp.response.metadata }));
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argSResultCorte }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5)).subscribe(resp => res.json({ SAP: result, TCI: resp.response.metadata }));
 }
 exports.default = resultadoCorrida;

@@ -20,7 +20,7 @@ const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
 const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const venta = express_1.Router();
+const venta = (0, express_1.Router)();
 venta.get('/venta/:fecha/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records';
     let fecha = req.params.fecha;
@@ -58,7 +58,7 @@ venta.get('/venta/:fecha/:type', (req, res) => {
                 "data": arregloM
             };
             // res.json(argsVentas);
-            ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Ventas', creados_modificados: resp }), err => res.json(err.response));
+            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Ventas', creados_modificados: resp }), err => res.json(err.response));
         }));
     }));
 });

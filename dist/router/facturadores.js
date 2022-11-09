@@ -21,7 +21,7 @@ const operators_1 = require("rxjs/operators");
 const path_1 = __importDefault(require("path"));
 //client.invoke("Z_RFC_ENTRY_VA_FRESH", { 'IT_POSTING_BOX': [body] }, async (err:any, result:any) => {
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const facturador = express_1.Router();
+const facturador = (0, express_1.Router)();
 facturador.get('/facturadores/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records';
     const type = req.params.type;
@@ -54,7 +54,7 @@ facturador.get('/facturadores/:type', (req, res) => {
                 "to": table,
                 "data": arregloM
             };
-            const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata', 'unchangedRecordIds'));
+            const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata', 'unchangedRecordIds'));
             obs$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Facturadores', creados_modificados: resp }), err => res.json(err.response));
             // obs$.subscribe(resp => res.json({ creados_modificados: resp }), err => res.json(err.response) );
         }));

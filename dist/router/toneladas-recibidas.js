@@ -6,7 +6,7 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
-const tonrecibidas = express_1.Router();
+const tonrecibidas = (0, express_1.Router)();
 tonrecibidas.get('/tonrecibidas/:type', (req, res) => {
     const type = req.params.type;
     let table = '';
@@ -22,7 +22,7 @@ tonrecibidas.get('/tonrecibidas/:type', (req, res) => {
     };
     const url = 'https://api.quickbase.com/v1/records/query';
     //res.json({msg: body });
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response')).subscribe((resp) => {
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response')).subscribe((resp) => {
         for (const item of resp.data) {
             tonrecibidas.push({
                 Fecha: item['18'].value,

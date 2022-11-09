@@ -15,7 +15,7 @@ const sap_1 = require("../sap/sap");
 const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
-const cliente = express_1.Router();
+const cliente = (0, express_1.Router)();
 cliente.get('/cliente/:embarque/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records';
     const embarque = req.params.embarque;
@@ -49,7 +49,7 @@ cliente.get('/cliente/:embarque/:type', (req, res) => {
                 "to": table,
                 "data": arregloM
             };
-            ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => res.json({ registros_creados: resp }), err => res.json(err.response));
+            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.json({ registros_creados: resp }), err => res.json(err.response));
         }));
     }));
 });

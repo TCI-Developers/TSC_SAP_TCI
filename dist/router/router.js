@@ -21,7 +21,7 @@ const utils_1 = require("../utils/utils");
 const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
 let arregloAll = [];
-const router = express_1.Router();
+const router = (0, express_1.Router)();
 /*router.get('/acuerdo/:fecha', (req:Request, res:Response) => {
     const fecha = req.params.fecha;
     const args1 = {
@@ -95,7 +95,7 @@ router.get('/acuerdo1/:record/:type', (req, res) => {
                 }
             }]
     };
-    const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsAcuerdos }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data'));
+    const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsAcuerdos }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'data'));
     obs$.subscribe((result) => {
         const resultMenssage = [{ tipo: 'Acuerdo', value: 'No hay acuerdos que mandar' }];
         //return res.json(result);
@@ -157,7 +157,7 @@ function postBandeado(value, res, client, tableBanda) {
             er ? res.json({ ok: false, message: er }) : null;
             client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (error, resultado) => __awaiter(this, void 0, void 0, function* () {
                 error ? res.json({ ok: false, message: error }) : null;
-                const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsValidacion }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
+                const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsValidacion }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata'));
                 const menssage200 = [{ tipo: '200', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
                 const menssage201 = [{ tipo: '201', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
                 const menssage202 = [{ tipo: '202', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
@@ -218,13 +218,13 @@ function postAcuerdo(value, args2, res, client, table, record) {
                 bodyData = actualizarAcuerdo;
             }
             //res.json({bodyData});
-            const obs$ = ajax_1.ajax({
+            const obs$ = (0, ajax_1.ajax)({
                 createXHR: utils_1.createXHR,
                 url: 'https://api.quickbase.com/v1/records',
                 method: 'POST',
                 headers: utils_1.headers,
                 body: bodyData
-            }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
+            }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata'));
             const menssage100 = [{ tipo: '100', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
             const menssage101 = [{ tipo: '101', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
             const menssage03 = [{ tipo: 'Warning', value: resultado['MENSAJE'], lastresponse: resultado['LASTRESPONSE'] }];
@@ -274,13 +274,13 @@ function postPrecioXCorte(value, res, client, tableBAnda) {
             er ? res.json({ ok: false, message: er }) : null;
             client.invoke('Z_RFC_VA_PRECIOACUERDO', args, (error, resultado) => {
                 error ? res.json({ ok: false, message: error }) : null;
-                const obs$ = ajax_1.ajax({
+                const obs$ = (0, ajax_1.ajax)({
                     createXHR: utils_1.createXHR,
                     url: 'https://api.quickbase.com/v1/records',
                     method: 'POST',
                     headers: utils_1.headers,
                     body: argsValidacionMateriales
-                }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
+                }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata'));
                 //obs$.subscribe(resp => res.json({ resp, resultado }) );
                 const menssage300 = [{ tipo: '300', value: resultado['MENSAJE'] }];
                 const menssage301 = [{ tipo: '301', value: resultado['MENSAJE'] }];

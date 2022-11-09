@@ -20,7 +20,7 @@ const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
 const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const agranel = express_1.Router();
+const agranel = (0, express_1.Router)();
 agranel.get('/agranel/:record/:type', (req, res) => {
     const record = req.params.record;
     const type = req.params.type;
@@ -44,7 +44,7 @@ agranel.get('/agranel/:record/:type', (req, res) => {
         "where": `{15.EX.${record}}`
     };
     const url = 'https://api.quickbase.com/v1/records/query';
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data')).subscribe((resp) => {
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'data')).subscribe((resp) => {
         for (const iterator of resp) {
             let recordHuerta = iterator['3']['value'];
             let IT_DATA = {
@@ -87,7 +87,7 @@ function postBanderaTCI(res, result, record, tableAcuerdo) {
                 "3": { "value": record }
             }]
     };
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => res.json({ SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp }), err => res.json(err.response));
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.json({ SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp }), err => res.json(err.response));
 }
 function postOrdenCompraTCI(res, result, record, table, tableSAP) {
     const url = 'https://api.quickbase.com/v1/records';
@@ -101,7 +101,7 @@ function postOrdenCompraTCI(res, result, record, table, tableSAP) {
                 "61": { "value": lote[5] }
             }]
     };
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5)).subscribe(resp => postLoteSAP(res, lote[2], record, result, tableSAP), err => res.json(err.response));
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5)).subscribe(resp => postLoteSAP(res, lote[2], record, result, tableSAP), err => res.json(err.response));
 }
 const postLoteSAP = (res, lote, record, result, tableSAP) => __awaiter(void 0, void 0, void 0, function* () {
     const url = 'https://api.quickbase.com/v1/records';
@@ -112,7 +112,7 @@ const postLoteSAP = (res, lote, record, result, tableSAP) => __awaiter(void 0, v
                 "7": { "value": record }
             }]
     };
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5)).subscribe(resp => res.render(`${pathViews}/flotillas.hbs`, { tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response));
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5)).subscribe(resp => res.render(`${pathViews}/flotillas.hbs`, { tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response));
     //subscribe(resp =>  res.json({SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp.response.metadata }), err => res.json(err.response) );
 });
 //vpn.villaavocado.proatech.mx

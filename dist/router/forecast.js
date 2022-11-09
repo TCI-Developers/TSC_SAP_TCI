@@ -20,7 +20,7 @@ const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const forecast = express_1.Router();
+const forecast = (0, express_1.Router)();
 forecast.get('/forecast/:type', (req, res) => {
     // res.json({ msg: 'Get Forecast' } );
     const url = 'https://api.quickbase.com/v1/records';
@@ -55,7 +55,7 @@ forecast.get('/forecast/:type', (req, res) => {
                 "data": arregloM
             };
             // res.json( argsForescast );
-            const obs$ = ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsForescast }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata'));
+            const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsForescast }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata'));
             obs$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Forecast', creados_modificados: resp }), err => res.json(err.response));
             //    obs$.subscribe(resp =>  res.json( {  creados_modificados: resp }), err => res.json(err.response) );
         }));

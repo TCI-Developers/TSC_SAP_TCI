@@ -23,7 +23,7 @@ comparativas.get('/comparativas/:type', (req:Request, res:Response) => {
 
     const body = {
         "from": table,
-        "select": [ 15,51,74,35,6,8,32,117,118,119,120,121,122,123,124,125]
+        "select": [ 15,18,51,74,35,6,8,32,117,118,119,120,121,122,123,124,125]
        
     }
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -42,6 +42,7 @@ comparativas.get('/comparativas/:type', (req:Request, res:Response) => {
             calibreCorrida.push ( {
 
                 Acuerdo         : item['15'].value,
+                Fecha_Corte     : item['18'].value,
                 Detalles_Acuerdo: item['51'].value,
                 Lote            : item['74'].value,
                 Orden_agranel   : item['35'].value,

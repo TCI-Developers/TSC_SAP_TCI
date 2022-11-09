@@ -20,7 +20,7 @@ const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
 const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const flete = express_1.Router();
+const flete = (0, express_1.Router)();
 flete.get('/flete/:record/:type', (req, res) => {
     const record = req.params.record;
     const type = req.params.type;
@@ -37,7 +37,7 @@ flete.get('/flete/:record/:type', (req, res) => {
     };
     const url = 'https://api.quickbase.com/v1/records/query';
     //res.json({msg: body });
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data')).subscribe(resp => {
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'data')).subscribe(resp => {
         const IT_DATA = {
             'I_PROVEEDOR': resp[0]['1046']['value'],
             'I_FECHA_CORTE': resp[0]['1029']['value'],
@@ -81,7 +81,7 @@ function postBanderaTCI(res, result, record, table, tipo) {
                 "1051": { "value": importe },
             }]
     };
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/flotillas.hbs`, { tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response));
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/flotillas.hbs`, { tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response));
     //resp => res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }
 }
 exports.default = flete;

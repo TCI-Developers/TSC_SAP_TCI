@@ -6,7 +6,7 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
-const comparativas = express_1.Router();
+const comparativas = (0, express_1.Router)();
 comparativas.get('/comparativas/:type', (req, res) => {
     const type = req.params.type;
     let table = '';
@@ -18,14 +18,15 @@ comparativas.get('/comparativas/:type', (req, res) => {
             (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_KPICostos_SAP_test)) : null;
     const body = {
         "from": table,
-        "select": [15, 51, 74, 35, 6, 8, 32, 117, 118, 119, 120, 121, 122, 123, 124, 125]
+        "select": [15, 18, 51, 74, 35, 6, 8, 32, 117, 118, 119, 120, 121, 122, 123, 124, 125]
     };
     const url = 'https://api.quickbase.com/v1/records/query';
     //res.json({msg: body });
-    ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response')).subscribe((resp) => {
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response')).subscribe((resp) => {
         for (const item of resp.data) {
             calibreCorrida.push({
                 Acuerdo: item['15'].value,
+                Fecha_Corte: item['18'].value,
                 Detalles_Acuerdo: item['51'].value,
                 Lote: item['74'].value,
                 Orden_agranel: item['35'].value,

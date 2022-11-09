@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
-const pedidos = express_1.Router();
+const pedidos = (0, express_1.Router)();
 pedidos.get('/pedidos/:fecha/:type', (req, res) => {
     const fecha = req.params.fecha;
     const type = req.params.type;

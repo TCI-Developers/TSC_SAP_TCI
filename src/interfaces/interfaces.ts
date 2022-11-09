@@ -181,6 +181,7 @@ export interface Toneladas {
 }
 export interface Corrida {
   Acuerdo : number | string;
+  Fecha_Corte : number | string;
   Detalles_Acuerdo : number | string;
   Lote : number | string;
   Orden_agranel : number | string;

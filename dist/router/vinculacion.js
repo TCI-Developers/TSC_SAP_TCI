@@ -4,7 +4,7 @@ const express_1 = require("express");
 const ajax_1 = require("rxjs/ajax");
 const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
-const vinculacion = express_1.Router();
+const vinculacion = (0, express_1.Router)();
 vinculacion.get('/vinculacion/:idProductor/:nombres', (req, res) => {
     const huertas = req.params.nombres.split(';');
     const record = req.params.idProductor;
@@ -18,7 +18,7 @@ vinculacion.get('/vinculacion/:idProductor/:nombres', (req, res) => {
                     "17": { "value": iterator },
                 }]
         };
-        ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'data')).subscribe(resp => {
+        (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'data')).subscribe(resp => {
             res.json(resp);
         });
     }

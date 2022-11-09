@@ -20,7 +20,7 @@ const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
 const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
-const detalleEmbarque = express_1.Router();
+const detalleEmbarque = (0, express_1.Router)();
 detalleEmbarque.get('/detalleEmbarque/:fecha/:idEmbarque/:type', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let fecha = req.params.fecha;
     let idEmbarque = req.params.idEmbarque;
@@ -62,7 +62,7 @@ function postDetalleEmbarque(result, idEmbarque, res, table) {
         res.json({ mgs: 'No se encontro informacion relacionada al embarque' + idEmbarque });
     }
     else {
-        ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => {
+        (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => {
             if (resp) {
                 // res.json(resp);
                 res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Detalles de embarque', creados_modificados: resp });

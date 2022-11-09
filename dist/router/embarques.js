@@ -15,7 +15,7 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
-const embarque = express_1.Router();
+const embarque = (0, express_1.Router)();
 embarque.get('/embarque/:fecha/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records';
     let fecha = req.params.fecha;
@@ -39,6 +39,11 @@ embarque.get('/embarque/:fecha/:type', (req, res) => {
                 arregloM.push({
                     "74": { "value": value.VBELN },
                     "75": { "value": value.VBELV },
+                    // "76":  { "value": value.POSNV },
+                    // "77":  { "value": value.POSNN },
+                    // "78": { "value": value.VBTYP_N },
+                    // "79": { "value": value.RFMNG },
+                    // "80": { "value": value.MEINS }
                 });
             }));
             const argsVentas = {
@@ -46,7 +51,7 @@ embarque.get('/embarque/:fecha/:type', (req, res) => {
                 "data": arregloM
             };
             // res.json(argsVentas);
-            ajax_1.ajax({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe(operators_1.timeout(60000), operators_1.retry(5), operators_1.pluck('response', 'metadata')).subscribe(resp => res.json({ registros_creados: resp }), err => res.json(err.response));
+            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.json({ registros_creados: resp }), err => res.json(err.response));
         }));
     }));
 });

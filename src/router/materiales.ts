@@ -27,13 +27,19 @@ materiales.get('/materiales/:type', async (req:Request, res:Response) => {
 
     client.connect( async (result:any, err:any) => {
 
-    await err ? res.json({ ok:false, message: err}) : null;
+       // res.json({ "response": result });
 
-    client.invoke('Z_RFC_TBL_CATALOG_MAT', { }, async (err:any, result:any) => {     
+   await  err ? res.json({ ok:false, message: err}) : null;
+
+   client.invoke('Z_RFC_TBL_CATALOG_MAT', { }, async (err:any, result:any) => {  
+        
+        
         
             await err ? res.json({ ok: false, message: err }) : null;
 
-            //res.json(result);
+          //await  console.log( err);
+
+          //  res.json(result);
 
             data = await result["IT_MATERIALES"];
 
@@ -69,8 +75,8 @@ materiales.get('/materiales/:type', async (req:Request, res:Response) => {
                 );
                
                  obs$.subscribe((respuesta:any) =>  res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Materiales', creados_modificados: respuesta }), (err:any) => res.json(err));
-                //obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
-            });
+                obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
+           });
     });
 
 });
