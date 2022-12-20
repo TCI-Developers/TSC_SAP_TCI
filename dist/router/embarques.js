@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const ajax_1 = require("rxjs/ajax");
@@ -15,6 +18,8 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
+const path_1 = __importDefault(require("path"));
+const pathViews = path_1.default.resolve(__dirname, '../views');
 const embarque = (0, express_1.Router)();
 embarque.get('/embarque/:fecha/:type', (req, res) => {
     const url = 'https://api.quickbase.com/v1/records';
@@ -51,7 +56,8 @@ embarque.get('/embarque/:fecha/:type', (req, res) => {
                 "data": arregloM
             };
             // res.json(argsVentas);
-            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.json({ registros_creados: resp }), err => res.json(err.response));
+            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Embarques', registros_creados: resp }), (err) => res.json(err));
+            //subscribe(resp => res.json( { registros_creados : resp} ), err => res.json(err.response) );
         }));
     }));
 });

@@ -63,7 +63,7 @@ materiales.get('/materiales/:type', (req, res) => __awaiter(void 0, void 0, void
                 body: args
             }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata'));
             obs$.subscribe((respuesta) => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Materiales', creados_modificados: respuesta }), (err) => res.json(err));
-            obs$.subscribe((respuesta) => res.json({ creados_modificados: respuesta }), (err) => res.json(err));
+            // obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
         }));
     }));
 }));

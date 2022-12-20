@@ -75,7 +75,7 @@ materiales.get('/materiales/:type', async (req:Request, res:Response) => {
                 );
                
                  obs$.subscribe((respuesta:any) =>  res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Materiales', creados_modificados: respuesta }), (err:any) => res.json(err));
-                obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
+               // obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
            });
     });
 

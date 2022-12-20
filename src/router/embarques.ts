@@ -6,6 +6,11 @@ import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
 import { Embarque } from "../interfaces/interfaces";
 
+import path from "path";
+
+
+const pathViews = path.resolve(__dirname,'../views');
+
 const embarque = Router();
 
 embarque.get('/embarque/:fecha/:type', (req:Request, res:Response) => {
@@ -56,7 +61,8 @@ embarque.get('/embarque/:fecha/:type', (req:Request, res:Response) => {
                 timeout(60000),
                 retry(5),
                 pluck('response', 'metadata')
-            ).subscribe(resp => res.json( { registros_creados : resp} ), err => res.json(err.response) );
+            ).subscribe(resp => res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Embarques', registros_creados: resp }), (err:any) => res.json(err));
+            //subscribe(resp => res.json( { registros_creados : resp} ), err => res.json(err.response) );
         });
     }); 
 

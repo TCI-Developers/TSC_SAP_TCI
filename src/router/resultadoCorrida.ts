@@ -72,8 +72,9 @@ function postResultado(res:Response, result:any[], table:string) {
         timeout(60000),
         retry(5),
         //pluck('response', 'metadata')
-    ).subscribe(resp => res.json({SAP: result, TCI: resp.response.metadata}) ); 
-
+    ).subscribe(resp => res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Resultdo Corrida', creados_modificados: resp }), (err:any) => res.json(err));
+    //subscribe(resp => res.json({SAP: result, TCI: resp.response.metadata}) ); 
+    
     
 }
 
