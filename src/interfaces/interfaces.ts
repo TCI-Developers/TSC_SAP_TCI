@@ -20,6 +20,11 @@ export interface Forecast {
   POSNR: string;
   PLNUM: string;
   DAT00: string;
+  EXTRA: string;                        
+  DELB0: string;                          
+  KUNNR: string;                          
+  MD4KD: string;                          
+  UMDAT: string;                          
  
 }
 

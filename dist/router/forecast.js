@@ -22,7 +22,6 @@ const path_1 = __importDefault(require("path"));
 const pathViews = path_1.default.resolve(__dirname, '../views');
 const forecast = (0, express_1.Router)();
 forecast.get('/forecast/:type', (req, res) => {
-    // res.json({ msg: 'Get Forecast' } );
     const url = 'https://api.quickbase.com/v1/records';
     const type = req.params.type;
     let table = '';
@@ -41,23 +40,33 @@ forecast.get('/forecast/:type', (req, res) => {
                 let anio = value.DAT00.substring(0, 4);
                 let mes = value.DAT00.substring(4, 6);
                 let dia = value.DAT00.substring(6, 8);
+                //FECHA DOS
+                let anioUMDAT = value.UMDAT.substring(0, 4);
+                let mesUMDAT = value.UMDAT.substring(4, 6);
+                let diaUMDAT = value.UMDAT.substring(6, 8);
                 arregloM.push({
                     "6": { "value": value.MATNR },
+                    "25": { "value": value.MAKTX },
                     "8": { "value": value.MENGE },
+                    "26": { "value": value.MEINS },
                     "10": { "value": value.VBELN },
                     "11": { "value": value.POSNR },
                     "12": { "value": value.PLNUM },
                     "13": { "value": anio + "-" + mes + "-" + dia },
+                    "27": { "value": value.EXTRA },
+                    "28": { "value": value.DELB0 },
+                    "29": { "value": value.KUNNR },
+                    "30": { "value": value.MD4KD },
+                    "31": { "value": anioUMDAT + "-" + mesUMDAT + "-" + diaUMDAT },
                 });
             }));
             const argsForescast = {
                 "to": table,
                 "data": arregloM
             };
-            // res.json( argsForescast );
+            //res.json( forecastResult );
             const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsForescast }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata'));
             obs$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Forecast', creados_modificados: resp }), err => res.json(err.response));
-            //    obs$.subscribe(resp =>  res.json( {  creados_modificados: resp }), err => res.json(err.response) );
         }));
     }));
 });
