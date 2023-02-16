@@ -49,7 +49,7 @@ exports.Tables = {
     "T_Ventas_test": "brxztym24",
     "T_Lotes_SAP_prod": "bq82myqch",
     "T_Lotes_SAP_test": "brxztym37",
-    "T_Forecast_SAP_prod": "",
+    "T_Forecast_SAP_prod": "bsr5uqier",
     "T_Forecast_SAP_test": "bsk5gasgk",
     "T_KPICostos_SAP_prod": "bqhds58u2",
     "T_KPICostos_SAP_test": "brxztymzw",

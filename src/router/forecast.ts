@@ -35,7 +35,7 @@ forecast.get('/forecast/:type', (req:Request, res:Response) => {
 
             let forecastResult:Forecast[]  = await result["IT_FORECAST"];
 
-    
+
 
         forecastResult.forEach(async (value) => {
 
@@ -70,7 +70,7 @@ forecast.get('/forecast/:type', (req:Request, res:Response) => {
                 "data": arregloM
             };
 
-            //res.json( forecastResult );
+           // res.json( forecastResult );
             
          
            const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: argsForescast }).pipe(

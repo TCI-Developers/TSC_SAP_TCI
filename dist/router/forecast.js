@@ -64,7 +64,7 @@ forecast.get('/forecast/:type', (req, res) => {
                 "to": table,
                 "data": arregloM
             };
-            //res.json( forecastResult );
+            // res.json( forecastResult );
             const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsForescast }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata'));
             obs$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Forecast', creados_modificados: resp }), err => res.json(err.response));
         }));
