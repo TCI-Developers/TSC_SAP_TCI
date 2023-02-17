@@ -61,7 +61,7 @@ forecast.get('/forecast/:type', (req:Request, res:Response) => {
                     "28": { "value": value.DELB0 },
                     "29": { "value": value.KUNNR },
                     "30": { "value": value.MD4KD },
-                    "31": { "value":  anioUMDAT+"-"+mesUMDAT+"-"+diaUMDAT },     
+                    "32": { "value":  anioUMDAT+"-"+mesUMDAT+"-"+diaUMDAT },     
                 });
             });
          
@@ -70,16 +70,19 @@ forecast.get('/forecast/:type', (req:Request, res:Response) => {
                 "data": arregloM
             };
 
-           // res.json( forecastResult );
+       //res.json( arregloM[0] );
+
             
          
-           const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: argsForescast }).pipe(
+          const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: argsForescast }).pipe(
                 timeout(60000),
                 retry(5),
                 pluck('response', 'metadata')
             );
-
-            obs$.subscribe(resp =>  res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Forecast', creados_modificados: resp }), err => res.json(err.response) );
+            
+            obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
+        
+            //obs$.subscribe(resp =>  res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Forecast', creados_modificados: resp }), err => res.json(err.response) );
                     
 
             });
