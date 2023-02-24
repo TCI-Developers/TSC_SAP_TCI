@@ -78,8 +78,8 @@ agranel.get('/agranel/:record/:type', (req:Request, res:Response) => {
             client.connect( (result:any, err:any) => {
                 client.invoke("Z_RFC_VA_ENTRADAAGRANEL", IT_DATA, async (err:any, result:any) => {
                     err ? res.json(err) : null;
-                    //res.json(result);
-                    String(result['E_ORDEN_COMPRA']).length > 0 ? postOrdenCompraTCI(res, result, recordHuerta, table, tableSAP ) :  res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'WARNING', respuesta: result['IT_MESSAGE_WARNING'] }); // res.json(result['IT_MESSAGE_WARNING']);
+                 
+                   String(result['E_ORDEN_COMPRA']).length > 0 ? postOrdenCompraTCI(res, result, recordHuerta, table, tableSAP ) :  res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'WARNING', respuesta: result['IT_MESSAGE_WARNING'] }); // res.json(result['IT_MESSAGE_WARNING']);
                 });
             }); 
         }
@@ -105,9 +105,22 @@ function postBanderaTCI(res:Response, result:any, record:any, tableAcuerdo:strin
 
 function postOrdenCompraTCI(res:Response, result:any, record:any, table:string, tableSAP:string) {
     const url = 'https://api.quickbase.com/v1/records';
-    const lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" ");
+    var lote: string;
+ // const lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" "); //[2]
+   if (result['IT_MENSAJE_EXITOSOS'].length > 2) {
+        
+         lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" "); //[2]
+         console.log("lote posicion 3", lote);
+         
+
+    }else{
+         lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" "); //[2]
+        console.log("lote posicion 2", lote);
+        
+    }
     
-    //res.json({SAP: result });
+    //res.json({SAP: lote[2] });
+
     
        
     const args = {
@@ -115,7 +128,7 @@ function postOrdenCompraTCI(res:Response, result:any, record:any, table:string, 
         "data": [{
             "3"  : { "value":  record },
             "35" : { "value":  result.E_ORDEN_COMPRA },
-            "61" : { "value":  lote[5] }
+            "61" : { "value":  lote[2] } //[5]
         }]
     };
     

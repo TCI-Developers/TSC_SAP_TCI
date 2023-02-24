@@ -71,7 +71,6 @@ agranel.get('/agranel/:record/:type', (req, res) => {
             client.connect((result, err) => {
                 client.invoke("Z_RFC_VA_ENTRADAAGRANEL", IT_DATA, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
                     err ? res.json(err) : null;
-                    //res.json(result);
                     String(result['E_ORDEN_COMPRA']).length > 0 ? postOrdenCompraTCI(res, result, recordHuerta, table, tableSAP) : res.render(`${pathViews}/flotillas.hbs`, { tipo: 'WARNING', respuesta: result['IT_MESSAGE_WARNING'] }); // res.json(result['IT_MESSAGE_WARNING']);
                 }));
             });
@@ -91,14 +90,23 @@ function postBanderaTCI(res, result, record, tableAcuerdo) {
 }
 function postOrdenCompraTCI(res, result, record, table, tableSAP) {
     const url = 'https://api.quickbase.com/v1/records';
-    const lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" ");
-    //res.json({SAP: result });
+    var lote;
+    // const lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" "); //[2]
+    if (result['IT_MENSAJE_EXITOSOS'].length > 2) {
+        lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" "); //[2]
+        console.log("lote posicion 3", lote);
+    }
+    else {
+        lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" "); //[2]
+        console.log("lote posicion 2", lote);
+    }
+    //res.json({SAP: lote[2] });
     const args = {
         "to": table,
         "data": [{
                 "3": { "value": record },
                 "35": { "value": result.E_ORDEN_COMPRA },
-                "61": { "value": lote[5] }
+                "61": { "value": lote[2] } //[5]
             }]
     };
     (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5)).subscribe(resp => postLoteSAP(res, lote[2], record, result, tableSAP), err => res.json(err.response));
