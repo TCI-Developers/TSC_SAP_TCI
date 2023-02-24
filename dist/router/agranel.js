@@ -93,12 +93,10 @@ function postOrdenCompraTCI(res, result, record, table, tableSAP) {
     var lote;
     // const lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" "); //[2]
     if (result['IT_MENSAJE_EXITOSOS'].length > 2) {
-        lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" "); //[2]
-        console.log("lote posicion 3", lote);
+        lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" ");
     }
     else {
-        lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" "); //[2]
-        console.log("lote posicion 2", lote);
+        lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" ");
     }
     //res.json({SAP: lote[2] });
     const args = {
