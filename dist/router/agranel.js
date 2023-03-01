@@ -90,21 +90,24 @@ function postBanderaTCI(res, result, record, tableAcuerdo) {
 }
 function postOrdenCompraTCI(res, result, record, table, tableSAP) {
     const url = 'https://api.quickbase.com/v1/records';
-    var lote;
-    // const lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" "); //[2]
-    if (result['IT_MENSAJE_EXITOSOS'].length > 2) {
-        lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" ");
-    }
-    else {
-        lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" ");
-    }
+    // var lote: string;
+    const lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" "); //[2]
+    /* if (result['IT_MENSAJE_EXITOSOS'].length > 2) {
+          
+           lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" ");
+           
+  
+      }else{
+           lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" ");
+          
+      }*/
     //res.json({SAP: lote[2] });
     const args = {
         "to": table,
         "data": [{
                 "3": { "value": record },
                 "35": { "value": result.E_ORDEN_COMPRA },
-                "61": { "value": lote[2] } //[5]
+                "61": { "value": lote[5] } //[5]
             }]
     };
     (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5)).subscribe(resp => postLoteSAP(res, lote[2], record, result, tableSAP), err => res.json(err.response));

@@ -105,9 +105,9 @@ function postBanderaTCI(res:Response, result:any, record:any, tableAcuerdo:strin
 
 function postOrdenCompraTCI(res:Response, result:any, record:any, table:string, tableSAP:string) {
     const url = 'https://api.quickbase.com/v1/records';
-    var lote: string;
- // const lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" "); //[2]
-   if (result['IT_MENSAJE_EXITOSOS'].length > 2) {
+   // var lote: string;
+ const lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" "); //[2]
+  /* if (result['IT_MENSAJE_EXITOSOS'].length > 2) {
         
          lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" "); 
          
@@ -115,7 +115,7 @@ function postOrdenCompraTCI(res:Response, result:any, record:any, table:string, 
     }else{
          lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" "); 
         
-    }
+    }*/
     
     //res.json({SAP: lote[2] });
 
@@ -126,7 +126,7 @@ function postOrdenCompraTCI(res:Response, result:any, record:any, table:string, 
         "data": [{
             "3"  : { "value":  record },
             "35" : { "value":  result.E_ORDEN_COMPRA },
-            "61" : { "value":  lote[2] } //[5]
+            "61" : { "value":  lote[5] } //[5]
         }]
     };
     
