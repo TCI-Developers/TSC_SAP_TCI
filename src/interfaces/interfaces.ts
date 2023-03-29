@@ -202,6 +202,8 @@ export interface Corrida {
   Calibre84 : RCalibres;
   Categoria1 : Categorias;
   Categoria2 : Categorias;
+  Nacional : Categorias;
+  Canica : Categorias;
 
 }
 

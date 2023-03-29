@@ -23,7 +23,7 @@ comparativas.get('/comparativas/:type', (req:Request, res:Response) => {
 
     const body = {
         "from": table,
-        "select": [ 15,18,51,74,35,6,8,32,117,118,119,120,121,122,123,124,125]
+        "select": [ 15,18,51,74,35,6,8,32,117,118,119,120,121,122,123,124,125,139,142]
        
     }
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -58,6 +58,8 @@ comparativas.get('/comparativas/:type', (req:Request, res:Response) => {
                 Calibre84       : Calibres(String(item['123'].value )),
                 Categoria1      : Categ(String(item['124'].value )),
                 Categoria2      : Categ(String(item['125'].value )),
+                Nacional        : Categ(String(item['139'].value )),
+                Canica          : Categ(String(item['142'].value )),
 
                 
             });
