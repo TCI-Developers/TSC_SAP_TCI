@@ -41,7 +41,7 @@ agranel.get('/agranel/:record/:type', (req:Request, res:Response) => {
 
     ajax({ createXHR, url, method: 'POST', headers, body }).pipe(
         timeout(60000),
-        retry(5),
+        retry(1),
         pluck('response', 'data')
     ).subscribe((resp:any[]) => {
 
@@ -134,7 +134,7 @@ function postOrdenCompraTCI(res:Response, result:any, record:any, table:string, 
 
     ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
         timeout(60000),
-        retry(5),
+        retry(1),
         //pluck('response', 'metadata')
     ).subscribe(resp => postLoteSAP(res, lote[2], record, result, tableSAP), err => res.json(err.response) );
 
@@ -153,7 +153,7 @@ const postLoteSAP = async (res:Response, lote:any, record:any, result:any, table
     
     ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
         timeout(60000),
-        retry(5),
+        retry(1),
         //pluck('response', 'metadata')
     ).subscribe(resp => res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response) );
     //subscribe(resp =>  res.json({SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp.response.metadata }), err => res.json(err.response) );

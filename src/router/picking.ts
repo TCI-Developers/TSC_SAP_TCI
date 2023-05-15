@@ -82,7 +82,7 @@ picking.get('/picking/:fecha/:idEmbarque/:type', (req:Request, res:Response) => 
 
             ajax({ createXHR, url, method: 'POST', headers, body: argsVentas }).pipe(
                 timeout(60000),
-                retry(5),
+                retry(1),
                 pluck('response', 'metadata')
             ).subscribe(resp => res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Picking', creados_modificados: resp }), err => res.json(err.response) );
            // res.json( { registros_creados : resp } )

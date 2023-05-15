@@ -23,7 +23,7 @@ vinculacion.get('/vinculacion/:idProductor/:nombres', (req:Request, res:Response
         
             ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
                 timeout(60000),
-                retry(5),
+                retry(1),
                 pluck('response', 'data')
             ).subscribe(resp => {
                 res.json(resp);

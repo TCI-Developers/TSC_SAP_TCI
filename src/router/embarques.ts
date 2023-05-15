@@ -59,7 +59,7 @@ embarque.get('/embarque/:fecha/:type', (req:Request, res:Response) => {
 
             ajax({ createXHR, url, method: 'POST', headers, body: argsVentas }).pipe(
                 timeout(60000),
-                retry(5),
+                retry(1),
                 pluck('response', 'metadata')
             ).subscribe(resp => res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Embarques', registros_creados: resp }), (err:any) => res.json(err));
             //subscribe(resp => res.json( { registros_creados : resp} ), err => res.json(err.response) );

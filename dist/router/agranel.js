@@ -44,7 +44,7 @@ agranel.get('/agranel/:record/:type', (req, res) => {
         "where": `{15.EX.${record}}`
     };
     const url = 'https://api.quickbase.com/v1/records/query';
-    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'data')).subscribe((resp) => {
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'data')).subscribe((resp) => {
         for (const iterator of resp) {
             let recordHuerta = iterator['3']['value'];
             let IT_DATA = {
@@ -110,7 +110,7 @@ function postOrdenCompraTCI(res, result, record, table, tableSAP) {
                 "61": { "value": lote[5] } //[5]
             }]
     };
-    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5)).subscribe(resp => postLoteSAP(res, lote[2], record, result, tableSAP), err => res.json(err.response));
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1)).subscribe(resp => postLoteSAP(res, lote[2], record, result, tableSAP), err => res.json(err.response));
 }
 const postLoteSAP = (res, lote, record, result, tableSAP) => __awaiter(void 0, void 0, void 0, function* () {
     const url = 'https://api.quickbase.com/v1/records';
@@ -121,7 +121,7 @@ const postLoteSAP = (res, lote, record, result, tableSAP) => __awaiter(void 0, v
                 "7": { "value": record }
             }]
     };
-    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5)).subscribe(resp => res.render(`${pathViews}/flotillas.hbs`, { tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response));
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1)).subscribe(resp => res.render(`${pathViews}/flotillas.hbs`, { tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response));
     //subscribe(resp =>  res.json({SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp.response.metadata }), err => res.json(err.response) );
 });
 //vpn.villaavocado.proatech.mx

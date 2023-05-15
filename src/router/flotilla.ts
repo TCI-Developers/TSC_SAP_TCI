@@ -33,7 +33,7 @@ flotilla.get('/flotilla/:record/:proveedores/:type', (req:Request, res:Response)
 
     ajax({ createXHR, url, method: 'POST', headers, body }).pipe(
         timeout(60000),
-        retry(5),
+        retry(1),
         pluck('response', 'data')
     ).subscribe((resp:any[]) => {
 
@@ -95,7 +95,7 @@ function postBanderaTCI(res:Response, result:any, ids:any[], table:string) {
         ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
         //ajax({ url, method: 'POST', body: args }).pipe(
             timeout(60000),
-            retry(5),
+            retry(1),
             pluck('response', 'metadata')
         ).subscribe(resp => res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response) );
         //['IT_MENSAJE_EXITOSOS']

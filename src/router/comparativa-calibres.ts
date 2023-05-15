@@ -32,7 +32,7 @@ comparativas.get('/comparativas/:type', (req:Request, res:Response) => {
 
    ajax({ createXHR, url, method: 'POST', headers, body }).pipe(
         timeout(60000),
-        retry(5),
+        retry(1),
         pluck('response')
     ).subscribe((resp:ResponseQuick)  => {
            

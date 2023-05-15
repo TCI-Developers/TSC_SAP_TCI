@@ -70,7 +70,7 @@ function postResultado(res:Response, result:any[], table:string) {
 
     ajax({ createXHR, url, method: 'POST', headers, body: argSResultCorte }).pipe(
         timeout(60000),
-        retry(5),
+        retry(1),
         //pluck('response', 'metadata')
     ).subscribe(resp => res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Resultdo Corrida', creados_modificados: resp }), (err:any) => res.json(err));
     //subscribe(resp => res.json({SAP: result, TCI: resp.response.metadata}) ); 

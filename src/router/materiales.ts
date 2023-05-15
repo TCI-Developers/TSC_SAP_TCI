@@ -70,7 +70,7 @@ materiales.get('/materiales/:type', async (req:Request, res:Response) => {
                     body: args
                 }).pipe(
                     timeout(60000),
-                    retry(5),
+                    retry(1),
                     pluck('response', 'metadata')
                 );
                

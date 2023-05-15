@@ -73,7 +73,7 @@ picking.get('/picking/:fecha/:idEmbarque/:type', (req, res) => {
             };
             // res.json(argsVentas);
             // res.json({ arregloM });
-            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Picking', creados_modificados: resp }), err => res.json(err.response));
+            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Picking', creados_modificados: resp }), err => res.json(err.response));
             // res.json( { registros_creados : resp } )
         }));
     }));

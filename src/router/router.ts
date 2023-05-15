@@ -91,7 +91,7 @@ router.get('/acuerdo1/:record/:type', (req:Request, res:Response) => {
 
     const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: argsAcuerdos }).pipe(
         timeout(60000),
-        retry(5),
+        retry(1),
         pluck('response', 'data')
     );
     
@@ -174,7 +174,7 @@ function postBandeado(value:any, res:Response, client:any, tableBanda:string) {
 
                 const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: argsValidacion }).pipe(
                     timeout(60000),
-                    retry(5),
+                    retry(1),
                     pluck('response', 'metadata')
                 );
                 const menssage200 = [{ tipo: '200', value: resultado['MENSAJE'], lastresponse :  resultado['LASTRESPONSE']}];
@@ -257,7 +257,7 @@ if ( resultado['LASTRESPONSE'] === 'X' ) {
             body: bodyData
         }).pipe(
             timeout(60000),
-            retry(5),
+            retry(1),
             pluck('response', 'metadata')
         );
     
@@ -329,7 +329,7 @@ function postPrecioXCorte(value:any, res:Response, client:any, tableBAnda:string
                 body: argsValidacionMateriales
             }).pipe(
                 timeout(60000),
-                retry(5),
+                retry(1),
                 pluck('response', 'metadata')
             );
 

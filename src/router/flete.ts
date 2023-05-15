@@ -31,7 +31,7 @@ flete.get('/flete/:record/:type', (req:Request, res:Response) => {
 
     ajax({ createXHR, url, method: 'POST', headers, body }).pipe(
         timeout(60000),
-        retry(5),
+        retry(1),
         pluck('response', 'data')
     ).subscribe(resp => {
         
@@ -90,7 +90,7 @@ function postBanderaTCI(res:Response, result:any, record:any, table:string, tipo
     
     ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
         timeout(60000),
-        retry(5),
+        retry(1),
         pluck('response', 'metadata')
     ).subscribe(resp => res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response) );
     //resp => res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }

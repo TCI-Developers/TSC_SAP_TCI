@@ -71,7 +71,7 @@ function postDetalleEmbarque(result:any, idEmbarque:string, res:Response, table:
     } else {
         ajax({ createXHR, url, method: 'POST', headers, body: argsVentas }).pipe(
             timeout(60000),
-            retry(5),
+            retry(1),
             pluck('response', 'metadata')
         ).subscribe(resp => {
             if(resp) {

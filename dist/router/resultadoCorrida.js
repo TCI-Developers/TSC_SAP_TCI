@@ -64,7 +64,7 @@ function postResultado(res, result, table) {
         "to": table,
         "data": result
     };
-    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argSResultCorte }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5)).subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Resultdo Corrida', creados_modificados: resp }), (err) => res.json(err));
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argSResultCorte }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1)).subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Resultdo Corrida', creados_modificados: resp }), (err) => res.json(err));
     //subscribe(resp => res.json({SAP: result, TCI: resp.response.metadata}) ); 
 }
 exports.default = resultadoCorrida;
