@@ -200,6 +200,13 @@ export interface Corrida {
   Calibre60 : RCalibres;
   Calibre70 : RCalibres;
   Calibre84 : RCalibres;
+  Calibre32B : RCalibres;
+  Calibre36B : RCalibres;
+  Calibre40B : RCalibres;
+  Calibre48B : RCalibres;
+  Calibre60B : RCalibres;
+  Calibre70B : RCalibres;
+  Calibre84B : RCalibres;
   Categoria1 : Categorias;
   Categoria2 : Categorias;
   Nacional : Categorias;

@@ -18,7 +18,7 @@ comparativas.get('/comparativas/:type', (req, res) => {
             (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_KPICostos_SAP_test)) : null;
     const body = {
         "from": table,
-        "select": [15, 18, 51, 74, 35, 6, 8, 32, 117, 118, 119, 120, 121, 122, 123, 124, 125, 139, 142]
+        "select": [15, 18, 51, 74, 35, 6, 8, 32, 117, 118, 119, 120, 121, 122, 123, , 175, 176, 177, 178, 179, 180, 181, 124, 125, 139, 182]
     };
     const url = 'https://api.quickbase.com/v1/records/query';
     //res.json({msg: body });
@@ -40,10 +40,17 @@ comparativas.get('/comparativas/:type', (req, res) => {
                 Calibre60: Calibres(String(item['121'].value)),
                 Calibre70: Calibres(String(item['122'].value)),
                 Calibre84: Calibres(String(item['123'].value)),
+                Calibre32B: Calibres(String(item['175'].value)),
+                Calibre36B: Calibres(String(item['176'].value)),
+                Calibre40B: Calibres(String(item['177'].value)),
+                Calibre48B: Calibres(String(item['178'].value)),
+                Calibre60B: Calibres(String(item['179'].value)),
+                Calibre70B: Calibres(String(item['180'].value)),
+                Calibre84B: Calibres(String(item['181'].value)),
                 Categoria1: Categ(String(item['124'].value)),
                 Categoria2: Categ(String(item['125'].value)),
                 Nacional: Categ(String(item['139'].value)),
-                Canica: Categ(String(item['142'].value)),
+                Canica: Categ(String(item['182'].value)),
             });
         }
         res.json({ corridas: calibreCorrida });
