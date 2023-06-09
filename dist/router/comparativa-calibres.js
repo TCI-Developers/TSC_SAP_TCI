@@ -12,6 +12,7 @@ comparativas.get('/comparativas/:type', (req, res) => {
     let table = '';
     let client = null;
     let calibreCorrida = [];
+    let categoria1 = [];
     type == 'prod' ?
         (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_KPICostos_SAP_prod)) :
         type == 'test' ?
@@ -24,36 +25,65 @@ comparativas.get('/comparativas/:type', (req, res) => {
     //res.json({msg: body });
     (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response')).subscribe((resp) => {
         for (const item of resp.data) {
-            calibreCorrida.push({
-                Acuerdo: item['15'].value,
-                Fecha_Corte: item['18'].value,
-                Detalles_Acuerdo: item['51'].value,
-                Lote: item['74'].value,
-                Orden_agranel: item['35'].value,
-                Sagarpa: item['6'].value,
-                Huerta: item['8'].value,
-                Kilos_agranel: item['32'].value,
-                Calibre32: Calibres(String(item['117'].value)),
-                Calibre36: Calibres(String(item['118'].value)),
-                Calibre40: Calibres(String(item['119'].value)),
-                Calibre48: Calibres(String(item['120'].value)),
-                Calibre60: Calibres(String(item['121'].value)),
-                Calibre70: Calibres(String(item['122'].value)),
-                Calibre84: Calibres(String(item['123'].value)),
-                Calibre32B: Calibres(String(item['175'].value)),
-                Calibre36B: Calibres(String(item['176'].value)),
-                Calibre40B: Calibres(String(item['177'].value)),
-                Calibre48B: Calibres(String(item['178'].value)),
-                Calibre60B: Calibres(String(item['179'].value)),
-                Calibre70B: Calibres(String(item['180'].value)),
-                Calibre84B: Calibres(String(item['181'].value)),
-                Categoria1: Categ(String(item['124'].value)),
-                Categoria2: Categ(String(item['125'].value)),
-                Nacional: Categ(String(item['139'].value)),
-                Canica: Categ(String(item['182'].value)),
-            });
+            if (type == "prod") {
+                calibreCorrida.push({
+                    Acuerdo: item['15'].value,
+                    Fecha_Corte: item['18'].value,
+                    Detalles_Acuerdo: item['51'].value,
+                    Lote: item['74'].value,
+                    Orden_agranel: item['35'].value,
+                    Sagarpa: item['6'].value,
+                    Huerta: item['8'].value,
+                    Kilos_agranel: item['32'].value,
+                    Calibre32: Calibres(String(item['117'].value)),
+                    Calibre36: Calibres(String(item['118'].value)),
+                    Calibre40: Calibres(String(item['119'].value)),
+                    Calibre48: Calibres(String(item['120'].value)),
+                    Calibre60: Calibres(String(item['121'].value)),
+                    Calibre70: Calibres(String(item['122'].value)),
+                    Calibre84: Calibres(String(item['123'].value)),
+                    Calibre32B: Calibres(String(item['175'].value)),
+                    Calibre36B: Calibres(String(item['176'].value)),
+                    Calibre40B: Calibres(String(item['177'].value)),
+                    Calibre48B: Calibres(String(item['178'].value)),
+                    Calibre60B: Calibres(String(item['179'].value)),
+                    Calibre70B: Calibres(String(item['180'].value)),
+                    Calibre84B: Calibres(String(item['181'].value)),
+                    Categoria1: Categ(String(item['124'].value)),
+                    Categoria2: Categ(String(item['125'].value)),
+                    Nacional: Categ(String(item['139'].value)),
+                    Canica: Categ(String(item['182'].value)),
+                });
+            }
+            else if (type == 'test') {
+                categoria1.push({
+                    Acuerdo: item['15'].value,
+                    Fecha_Corte: item['18'].value,
+                    Detalles_Acuerdo: item['51'].value,
+                    Lote: item['74'].value,
+                    Orden_agranel: item['35'].value,
+                    Sagarpa: item['6'].value,
+                    Huerta: item['8'].value,
+                    Kilos_agranel: item['32'].value,
+                    Calibre32: Calibres(String(item['117'].value)),
+                    Calibre36: Calibres(String(item['118'].value)),
+                    Calibre40: Calibres(String(item['119'].value)),
+                    Calibre48: Calibres(String(item['120'].value)),
+                    Calibre60: Calibres(String(item['121'].value)),
+                    Calibre70: Calibres(String(item['122'].value)),
+                    Calibre84: Calibres(String(item['123'].value)),
+                    Categoria1: Categ(String(item['124'].value)),
+                    Categoria2: Categ(String(item['125'].value)),
+                    Nacional: Categ(String(item['139'].value)),
+                    Canica: Categ(String(item['182'].value)),
+                });
+            }
         }
-        res.json({ corridas: calibreCorrida });
+        type == 'prod' ?
+            res.json({ corridas: calibreCorrida }) :
+            type == 'test' ?
+                res.json({ corridas: categoria1 }) : null;
+        //res.json({ corridas : calibreCorrida });
     });
 });
 function Calibres(calibreCorrida) {

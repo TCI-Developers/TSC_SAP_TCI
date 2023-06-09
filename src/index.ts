@@ -22,6 +22,8 @@ import forecast from './router/forecast';
 import kpicostos from './router/kpi-costos-cortes';
 import tonrecibidas from './router/toneladas-recibidas';
 import comparativas from './router/comparativa-calibres';
+import huertas from './router/huertas';
+
 
 require('dotenv').config();
 
@@ -50,6 +52,8 @@ require('dotenv').config();
  server.app.use(kpicostos);
  server.app.use(tonrecibidas);
  server.app.use(comparativas);
+ server.app.use(huertas);
+
 
 
  server.start( () =>{

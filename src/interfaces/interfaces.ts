@@ -215,6 +215,30 @@ export interface Corrida {
 }
 
 
+export interface Categoria1 {
+  Acuerdo : number | string;
+  Fecha_Corte : number | string;
+  Detalles_Acuerdo : number | string;
+  Lote : number | string;
+  Orden_agranel : number | string;
+  Sagarpa : number | string;
+  Huerta :  number | string;
+  Kilos_agranel : number | string;
+  Calibre32 : RCalibres;
+  Calibre36 : RCalibres;
+  Calibre40 : RCalibres;
+  Calibre48 : RCalibres;
+  Calibre60 : RCalibres;
+  Calibre70 : RCalibres;
+  Calibre84 : RCalibres;
+  Categoria1 : Categorias;
+  Categoria2 : Categorias;
+  Nacional : Categorias;
+  Canica : Categorias;
+
+}
+
+
 
 export interface RCalibres {
   
@@ -259,6 +283,15 @@ export interface ResponseQuick {
  interface Data {
   value: number | string;
 }
+
+export interface Huertas {
+  
+  Nombre    : number | string;
+  Localidad : number | string;
+  Sagarpa   : number | string;
+  Municipio : number | string;
+  Organico  : number | string;
+ }
 
 
 

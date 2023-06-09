@@ -73,6 +73,11 @@ export const headers = {
 
     "T_KPICostos_SAP_prod" : "bqhds58u2",
     "T_KPICostos_SAP_test" : "brxztymzw",
+
+    "T_Huertas_SAP_prod" : "bqdcp8m3t",
+    "T_Huertas_SAP_test" : "brxztykzq",
+
+    
   }
 
   export const mensajesAcuerdo:any[]  = [
