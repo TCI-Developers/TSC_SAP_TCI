@@ -193,6 +193,8 @@ export interface Corrida {
   Sagarpa : number | string;
   Huerta :  number | string;
   Kilos_agranel : number | string;
+  Kilos_estimados : number | string;
+  Tipo_corte : number | string;
   Calibre32 : RCalibres;
   Calibre36 : RCalibres;
   Calibre40 : RCalibres;
@@ -224,6 +226,8 @@ export interface Categoria1 {
   Sagarpa : number | string;
   Huerta :  number | string;
   Kilos_agranel : number | string;
+  Kilos_estimados : number | string;
+  Tipo_corte : number | string;
   Calibre32 : RCalibres;
   Calibre36 : RCalibres;
   Calibre40 : RCalibres;

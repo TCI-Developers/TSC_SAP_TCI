@@ -19,7 +19,7 @@ comparativas.get('/comparativas/:type', (req, res) => {
             (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_KPICostos_SAP_test)) : null;
     const body = {
         "from": table,
-        "select": [15, 18, 51, 74, 35, 6, 8, 32, 117, 118, 119, 120, 121, 122, 123, , 175, 176, 177, 178, 179, 180, 181, 124, 125, 139, 182]
+        "select": [15, 18, 51, 74, 35, 6, 8, 32, 117, 118, 119, 120, 121, 122, 123, , 175, 176, 177, 178, 179, 180, 181, 124, 125, 139, 182, 185, 186]
     };
     const url = 'https://api.quickbase.com/v1/records/query';
     //res.json({msg: body });
@@ -35,6 +35,8 @@ comparativas.get('/comparativas/:type', (req, res) => {
                     Sagarpa: item['6'].value,
                     Huerta: item['8'].value,
                     Kilos_agranel: item['32'].value,
+                    Kilos_estimados: item['186'].value,
+                    Tipo_corte: item['185'].value,
                     Calibre32: Calibres(String(item['117'].value)),
                     Calibre36: Calibres(String(item['118'].value)),
                     Calibre40: Calibres(String(item['119'].value)),
@@ -65,6 +67,8 @@ comparativas.get('/comparativas/:type', (req, res) => {
                     Sagarpa: item['6'].value,
                     Huerta: item['8'].value,
                     Kilos_agranel: item['32'].value,
+                    Kilos_estimados: item['186'].value,
+                    Tipo_corte: item['185'].value,
                     Calibre32: Calibres(String(item['117'].value)),
                     Calibre36: Calibres(String(item['118'].value)),
                     Calibre40: Calibres(String(item['119'].value)),
