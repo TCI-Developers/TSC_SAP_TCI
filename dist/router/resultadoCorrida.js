@@ -55,6 +55,7 @@ resultadoCorrida.get('/resultadoCorrida/:ordenCompraAgranel/:type', (req, res) =
                 });
             });
             postResultado(res, arregloResult, table);
+            //  res.json(arregloResult);
         }));
     }));
 });
