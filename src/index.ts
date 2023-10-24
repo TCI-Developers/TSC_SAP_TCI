@@ -23,6 +23,8 @@ import kpicostos from './router/kpi-costos-cortes';
 import tonrecibidas from './router/toneladas-recibidas';
 import comparativas from './router/comparativa-calibres';
 import huertas from './router/huertas';
+import UAcarreo from './router/utilizacionAcarreo';
+import costoCorte from './router/costoTipoCorte';
 
 
 require('dotenv').config();
@@ -52,7 +54,9 @@ require('dotenv').config();
  server.app.use(kpicostos);
  server.app.use(tonrecibidas);
  server.app.use(comparativas);
+ server.app.use(UAcarreo);
  server.app.use(huertas);
+ server.app.use(costoCorte);
 
 
 

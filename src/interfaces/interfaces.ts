@@ -228,17 +228,35 @@ export interface Categoria1 {
   Kilos_agranel : number | string;
   Kilos_estimados : number | string;
   Tipo_corte : number | string;
-  Calibre32 : RCalibres;
-  Calibre36 : RCalibres;
-  Calibre40 : RCalibres;
-  Calibre48 : RCalibres;
-  Calibre60 : RCalibres;
-  Calibre70 : RCalibres;
-  Calibre84 : RCalibres;
-  Categoria1 : Categorias;
-  Categoria2 : Categorias;
-  Nacional : Categorias;
-  Canica : Categorias;
+  Calibre32? : RCalibres;
+  Calibre36? : RCalibres;
+  Calibre40? : RCalibres;
+  Calibre48? : RCalibres;
+  Calibre60? : RCalibres;
+  Calibre70? : RCalibres;
+  Calibre84? : RCalibres;
+  Categoria1? : Categorias;
+  Categoria2? : Categorias;
+  Nacional? : Categorias;
+  Canica? : Categorias;
+
+  muestreo?: Muestreo | null ;
+
+}
+
+export interface Muestreo {
+
+  Calibre32? : RCalibres;
+  Calibre36? : RCalibres;
+  Calibre40? : RCalibres;
+  Calibre48? : RCalibres;
+  Calibre60? : RCalibres;
+  Calibre70? : RCalibres;
+  Calibre84? : RCalibres;
+  Categoria1? : Categorias;
+  Categoria2? : Categorias;
+  Nacional? : Categorias;
+  Canica? : Categorias;
 
 }
 
@@ -246,20 +264,20 @@ export interface Categoria1 {
 
 export interface RCalibres {
   
-  Visita: number;
-  Corrida: number;
-  Error: number;
-  Material: string;
-  Descripcion: string;
+  Visita?: number;
+  Corrida?: number;
+  Error?: number;
+  Material?: string;
+  Descripcion?: string;
   
 }
 
 
 export interface Categorias {
   
-  Visita: number;
-  Corrida: number;
-  Error: number;
+  Visita?: number;
+  Corrida?: number;
+  Error?: number;
 
   
 }
@@ -297,6 +315,24 @@ export interface Huertas {
   Organico  : number | string;
  }
 
+
+ 
+
+ export interface UtilAcarreo {
+  Fecha           : number | string;
+  TipoTransporte  : number | string;
+  Kilogramos      : number | string;
+  OrdenCompra     : number | string;
+  Capacidad       : number | string;
+  Acuerdo         : number | string;
+  DetalleAcuerdo  : number | string;
+  NumeroCajas     : number | string;
+  CostoCorte      : number | string;
+ 
+
+}
+
+ 
 
 
 

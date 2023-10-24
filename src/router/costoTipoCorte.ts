@@ -5,9 +5,9 @@ import { pluck, timeout, retry } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
-const huertas = Router();
+const costoCorte = Router();
 
-huertas.get('/huertas/:type', (req:Request, res:Response) => {
+costoCorte.get('/costcorte/:type', (req:Request, res:Response) => {
 
 
     const type = req.params.type;
@@ -62,4 +62,4 @@ huertas.get('/huertas/:type', (req:Request, res:Response) => {
 
 
 
-export default huertas;
+export default costoCorte;

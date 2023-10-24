@@ -28,6 +28,8 @@ const kpi_costos_cortes_1 = __importDefault(require("./router/kpi-costos-cortes"
 const toneladas_recibidas_1 = __importDefault(require("./router/toneladas-recibidas"));
 const comparativa_calibres_1 = __importDefault(require("./router/comparativa-calibres"));
 const huertas_1 = __importDefault(require("./router/huertas"));
+const utilizacionAcarreo_1 = __importDefault(require("./router/utilizacionAcarreo"));
+const costoTipoCorte_1 = __importDefault(require("./router/costoTipoCorte"));
 require('dotenv').config();
 const port = process.env.PORT || 3005;
 const server = server_1.default.init(Number(port));
@@ -53,7 +55,9 @@ server.app.use(forecast_1.default);
 server.app.use(kpi_costos_cortes_1.default);
 server.app.use(toneladas_recibidas_1.default);
 server.app.use(comparativa_calibres_1.default);
+server.app.use(utilizacionAcarreo_1.default);
 server.app.use(huertas_1.default);
+server.app.use(costoTipoCorte_1.default);
 server.start(() => {
     console.log('Servidor corriendo ' + port);
 });

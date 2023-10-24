@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { ajax } from 'rxjs/ajax';
-import { ResponseQuick, RCalibres,Corrida,Categorias, Categoria1 } from "../interfaces/interfaces";
+import { ResponseQuick, RCalibres, Corrida, Categorias, Categoria1, Muestreo } from '../interfaces/interfaces';
 import { pluck, timeout, retry } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
@@ -15,7 +15,9 @@ comparativas.get('/comparativas/:type', (req:Request, res:Response) => {
     let client:any = null;
     
    // let calibreCorrida :Categoria1[] = [];
-    let categoria1 :Categoria1[] = [];
+   // let categoria1 :Categoria1[] = [];
+  
+   let argsResults : any[] = [];
 
 
     type == 'prod' ? 
@@ -40,9 +42,56 @@ comparativas.get('/comparativas/:type', (req:Request, res:Response) => {
            
         for ( const item of resp.data ) {
 
+       let   categoria: Categoria1 = {
+
+        Acuerdo         : item['15'].value,
+        Fecha_Corte     : item['18'].value,
+        Detalles_Acuerdo: item['51'].value,
+        Lote            : item['74'].value,
+        Orden_agranel   : item['35'].value,
+        Sagarpa         : item['6'].value,
+        Huerta          : item['8'].value,
+        Kilos_agranel   : item['32'].value,
+        Kilos_estimados : item['186'].value,
+        Tipo_corte      : item['185'].value,
+        
+        muestreo : {
+        Calibre32       : Calibres(String(item['117'].value )),
+        Calibre36       : Calibres(String(item['118'].value )),
+        Calibre40       : Calibres(String(item['119'].value )),
+        Calibre48       : Calibres(String(item['120'].value )),
+        Calibre60       : Calibres(String(item['121'].value )),
+        Calibre70       : Calibres(String(item['122'].value )),
+        Calibre84       : Calibres(String(item['123'].value )),
+
+        Categoria1      : Categ(String(item['124'].value )),
+        Categoria2      : Categ(String(item['125'].value )),
+        Nacional        : Categ(String(item['139'].value )),
+        Canica          : Categ(String(item['182'].value )),
+         }
+       }
+
+
+       const keys = Object.getOwnPropertyNames(categoria.muestreo);
+       const values = Object.values(categoria.muestreo!);
+       let argsCategoria1 :Categoria1[] = [];
+
+       for (let i = 0; i < keys.length; i ++) {
+        
+       let categoriaTemp = {...categoria} as any;
+       delete categoriaTemp.muestreo;
+
+        if (values[i] != "") {
+            categoriaTemp[keys[i]] = values[i];
+            argsCategoria1.push(categoriaTemp);
+        }
+
+         
+       }
+       argsResults.push(argsCategoria1);
 
     
-            categoria1.push ( {
+           /* categoria1.push ( {
 
                     Acuerdo         : item['15'].value,
                     Fecha_Corte     : item['18'].value,
@@ -55,6 +104,7 @@ comparativas.get('/comparativas/:type', (req:Request, res:Response) => {
                     Kilos_estimados : item['186'].value,
                     Tipo_corte      : item['185'].value,
                     
+                    Muestreo : {
                     Calibre32       : Calibres(String(item['117'].value )),
                     Calibre36       : Calibres(String(item['118'].value )),
                     Calibre40       : Calibres(String(item['119'].value )),
@@ -67,13 +117,21 @@ comparativas.get('/comparativas/:type', (req:Request, res:Response) => {
                     Categoria2      : Categ(String(item['125'].value )),
                     Nacional        : Categ(String(item['139'].value )),
                     Canica          : Categ(String(item['182'].value )),
+                    }
     
                     
-                });
+                });*/
                 
             }
+        //  type keys =  keyof typeof   categoria1[0];
+
+          //console.log(keys);
+          
+
+         res.json({ corridas : argsResults });
+
      
-         res.json({ corridas : categoria1 });
+       //  res.json({ corridas : categoria1 });
 
     });
 

@@ -77,6 +77,11 @@ export const headers = {
     "T_Huertas_SAP_prod" : "bqdcp8m3t",
     "T_Huertas_SAP_test" : "brxztykzq",
 
+    "T_DetalleA_SAP_prod" : "bqdcp8ghy",
+    "T_DetalleA_SAP_test" : "bqdcp8ghy",
+
+    
+
     
   }
 

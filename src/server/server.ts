@@ -14,6 +14,7 @@ export default class Server {
         this.port = port;
         this.app = express();
         this.app.use(bodyParser.json());
+        
         this.app.use(cors());
         this.app.set('view engine', 'hbs');
     }

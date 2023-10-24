@@ -12,7 +12,8 @@ comparativas.get('/comparativas/:type', (req, res) => {
     let table = '';
     let client = null;
     // let calibreCorrida :Categoria1[] = [];
-    let categoria1 = [];
+    // let categoria1 :Categoria1[] = [];
+    let argsResults = [];
     type == 'prod' ?
         (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_KPICostos_SAP_prod)) :
         type == 'test' ?
@@ -25,7 +26,7 @@ comparativas.get('/comparativas/:type', (req, res) => {
     //res.json({msg: body });
     (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response')).subscribe((resp) => {
         for (const item of resp.data) {
-            categoria1.push({
+            let categoria = {
                 Acuerdo: item['15'].value,
                 Fecha_Corte: item['18'].value,
                 Detalles_Acuerdo: item['51'].value,
@@ -36,20 +37,67 @@ comparativas.get('/comparativas/:type', (req, res) => {
                 Kilos_agranel: item['32'].value,
                 Kilos_estimados: item['186'].value,
                 Tipo_corte: item['185'].value,
-                Calibre32: Calibres(String(item['117'].value)),
-                Calibre36: Calibres(String(item['118'].value)),
-                Calibre40: Calibres(String(item['119'].value)),
-                Calibre48: Calibres(String(item['120'].value)),
-                Calibre60: Calibres(String(item['121'].value)),
-                Calibre70: Calibres(String(item['122'].value)),
-                Calibre84: Calibres(String(item['123'].value)),
-                Categoria1: Categ(String(item['124'].value)),
-                Categoria2: Categ(String(item['125'].value)),
-                Nacional: Categ(String(item['139'].value)),
-                Canica: Categ(String(item['182'].value)),
-            });
+                muestreo: {
+                    Calibre32: Calibres(String(item['117'].value)),
+                    Calibre36: Calibres(String(item['118'].value)),
+                    Calibre40: Calibres(String(item['119'].value)),
+                    Calibre48: Calibres(String(item['120'].value)),
+                    Calibre60: Calibres(String(item['121'].value)),
+                    Calibre70: Calibres(String(item['122'].value)),
+                    Calibre84: Calibres(String(item['123'].value)),
+                    Categoria1: Categ(String(item['124'].value)),
+                    Categoria2: Categ(String(item['125'].value)),
+                    Nacional: Categ(String(item['139'].value)),
+                    Canica: Categ(String(item['182'].value)),
+                }
+            };
+            const keys = Object.getOwnPropertyNames(categoria.muestreo);
+            const values = Object.values(categoria.muestreo);
+            let argsCategoria1 = [];
+            for (let i = 0; i < keys.length; i++) {
+                let categoriaTemp = Object.assign({}, categoria);
+                delete categoriaTemp.muestreo;
+                if (values[i] != "") {
+                    categoriaTemp[keys[i]] = values[i];
+                    argsCategoria1.push(categoriaTemp);
+                }
+            }
+            argsResults.push(argsCategoria1);
+            /* categoria1.push ( {
+ 
+                     Acuerdo         : item['15'].value,
+                     Fecha_Corte     : item['18'].value,
+                     Detalles_Acuerdo: item['51'].value,
+                     Lote            : item['74'].value,
+                     Orden_agranel   : item['35'].value,
+                     Sagarpa         : item['6'].value,
+                     Huerta          : item['8'].value,
+                     Kilos_agranel   : item['32'].value,
+                     Kilos_estimados : item['186'].value,
+                     Tipo_corte      : item['185'].value,
+                     
+                     Muestreo : {
+                     Calibre32       : Calibres(String(item['117'].value )),
+                     Calibre36       : Calibres(String(item['118'].value )),
+                     Calibre40       : Calibres(String(item['119'].value )),
+                     Calibre48       : Calibres(String(item['120'].value )),
+                     Calibre60       : Calibres(String(item['121'].value )),
+                     Calibre70       : Calibres(String(item['122'].value )),
+                     Calibre84       : Calibres(String(item['123'].value )),
+     
+                     Categoria1      : Categ(String(item['124'].value )),
+                     Categoria2      : Categ(String(item['125'].value )),
+                     Nacional        : Categ(String(item['139'].value )),
+                     Canica          : Categ(String(item['182'].value )),
+                     }
+     
+                     
+                 });*/
         }
-        res.json({ corridas: categoria1 });
+        //  type keys =  keyof typeof   categoria1[0];
+        //console.log(keys);
+        res.json({ corridas: argsResults });
+        //  res.json({ corridas : categoria1 });
     });
 });
 function Calibres(calibreCorrida) {
