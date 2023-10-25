@@ -1,20 +1,20 @@
 import { Router, Request, Response } from "express";
 import { ajax } from 'rxjs/ajax';
-import { ResponseQuick, Huertas, costoxCorte } from '../interfaces/interfaces';
+import { ResponseQuick, Huertas, costoxCorte, salidasEnFalso, Acuerdo } from '../interfaces/interfaces';
 import { pluck, timeout, retry } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
-const costoCorte = Router();
+const salidasEnFalso = Router();
 
-costoCorte.get('/costocorte/:type', (req:Request, res:Response) => {
+salidasEnFalso.get('/salidas-en-falso/:type', (req:Request, res:Response) => {
 
 
     const type = req.params.type;
     let table:string = '';
     let client:any = null;
     
-    let costosC :costoxCorte[] = [];
+    let sfalso :salidasEnFalso[] = [];
 
     type == 'prod' ? 
     (client = new Client(abapSystem), table = String(Tables.T_DetalleA_SAP_prod)) : 
@@ -23,7 +23,7 @@ costoCorte.get('/costocorte/:type', (req:Request, res:Response) => {
 
     const body = {
         "from": table,
-        "select": [ 1009,30,1072,1051,1105,1106,29,19,1108,1109,21]
+        "select": [ 1009,19,1116,1110,1072,1051,1105,1106,1114,1045,1115,1109]
        
     }
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -39,24 +39,25 @@ costoCorte.get('/costocorte/:type', (req:Request, res:Response) => {
         for ( const item of resp.data ) {
 
     
-            costosC.push ( {
+            sfalso.push ( {
 
-                Fecha        : item['1009'].value,
-                CostoFruta     : item['30'].value,
-                OrdenCompra       : item['1072'].value,
-                CostoAcarreo     : item['1051'].value,
-                OrdenCorteCuadrilla      : item['1105'].value,
+                Fecha               : item['1009'].value,
+                Acuerdo             : item['19'].value,
+                Estatus             : item['1116'].value,
+                Incidencia          : item['1110'].value,
+                OrdenCompra         : item['1072'].value,
+                CostoAcarreo        : item['1051'].value,
+                OrdenCorteCuadrilla : item['1105'].value,
                 CostoCuadrilla      : item['1106'].value,
-                TipoCorte      : item['29'].value,
-                Acuerdo      : item['19'].value,
-                Lote      : item['1108'].value,
-                Municipio      : item['1109'].value,
-                Comprador      : item['21'].value,
+                Agricultor          : item['1114'].value,
+                ProveedorAcarreo    : item['1045'].value,
+                ProveeedorCosecha   : item['1115'].value,
+                Zona                : item['1109'].value,
              });
 
         }
     
-         res.json({ costoxCorte : costosC });
+         res.json({ SalidasEnFalso : sfalso });
 
     });
 
@@ -68,4 +69,4 @@ costoCorte.get('/costocorte/:type', (req:Request, res:Response) => {
 
 
 
-export default costoCorte;
+export default salidasEnFalso;

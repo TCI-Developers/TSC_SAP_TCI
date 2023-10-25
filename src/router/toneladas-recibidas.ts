@@ -22,7 +22,7 @@ tonrecibidas.get('/tonrecibidas/:type', (req:Request, res:Response) => {
 
     const body = {
         "from": table,
-        "select": [ 18, 76, 8, 74, 73,77,78,79 ],
+        "select": [ 18, 76, 8, 74, 73,77,78,79,189,10 ],
        
     }
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -49,6 +49,8 @@ tonrecibidas.get('/tonrecibidas/:type', (req:Request, res:Response) => {
                 Kilos_proveedor     : item['77'].value,
                 Ordenes_cuadrillas  : item['78'].value,
                 Ordenes_fletes      : item['79'].value,
+                Comprador           : item['189'].value,
+                Municipio           : item['10'].value,
 
 
                 

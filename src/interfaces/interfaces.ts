@@ -181,6 +181,8 @@ export interface Toneladas {
   Kilos_proveedor    : number | string;
   Ordenes_cuadrillas : number | string;
   Ordenes_fletes     : number | string;
+  Comprador : number | string;
+  Municipio     : number | string;
  
 
 }
@@ -324,10 +326,48 @@ export interface Huertas {
   Kilogramos      : number | string;
   OrdenCompra     : number | string;
   Capacidad       : number | string;
+  Um              : number | string;
   Acuerdo         : number | string;
   DetalleAcuerdo  : number | string;
   NumeroCajas     : number | string;
   CostoCorte      : number | string;
+ 
+
+}
+
+export interface costoxCorte {
+  Fecha               : number | string;
+  CostoFruta          : number | string;
+  OrdenCompra         : number | string;
+  CostoAcarreo        : number | string;
+  OrdenCorteCuadrilla : number | string;
+  CostoCuadrilla      : number | string;
+  TipoCorte           : number | string;
+  Acuerdo             : number | string;
+  Lote                : number | string;
+  Municipio           : number | string;
+  Comprador           : number | string;
+
+ 
+
+}
+
+export interface salidasEnFalso {
+  Fecha               : number | string;
+  Acuerdo             : number | string;
+  Estatus             : number | string;
+  Incidencia          : number | string;
+  OrdenCompra         : number | string;
+  CostoAcarreo        : number | string;
+  OrdenCorteCuadrilla : number | string;
+  CostoCuadrilla      : number | string;
+  Agricultor          : number | string;
+  ProveedorAcarreo    : number | string;
+  ProveeedorCosecha   : number | string;
+  Zona                : number | string;
+
+
+
  
 
 }

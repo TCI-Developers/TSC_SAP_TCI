@@ -30,6 +30,7 @@ const comparativa_calibres_1 = __importDefault(require("./router/comparativa-cal
 const huertas_1 = __importDefault(require("./router/huertas"));
 const utilizacionAcarreo_1 = __importDefault(require("./router/utilizacionAcarreo"));
 const costoTipoCorte_1 = __importDefault(require("./router/costoTipoCorte"));
+const salidasenfalso_1 = __importDefault(require("./router/salidasenfalso"));
 require('dotenv').config();
 const port = process.env.PORT || 3005;
 const server = server_1.default.init(Number(port));
@@ -58,6 +59,7 @@ server.app.use(comparativa_calibres_1.default);
 server.app.use(utilizacionAcarreo_1.default);
 server.app.use(huertas_1.default);
 server.app.use(costoTipoCorte_1.default);
+server.app.use(salidasenfalso_1.default);
 server.start(() => {
     console.log('Servidor corriendo ' + port);
 });

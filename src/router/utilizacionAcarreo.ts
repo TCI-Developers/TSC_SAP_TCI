@@ -9,7 +9,7 @@ import { abapSystem, abapSystemTest } from "../sap/sap";
 
 const utilizacionAcarreo = Router();
 
-utilizacionAcarreo.get('/aucarreo/:type', (req:Request, res:Response) => {
+utilizacionAcarreo.get('/uacarreo/:type', (req:Request, res:Response) => {
 
     const type = req.params.type;
     let table:string = '';
@@ -24,7 +24,7 @@ utilizacionAcarreo.get('/aucarreo/:type', (req:Request, res:Response) => {
 
     const body = {
         "from": table,
-        "select": [ 43, 1043, 93, 1072, 138,19,3,138,1103 ],
+        "select": [ 1009, 1043, 93, 1072, 1111,1113,19,3,138,1103 ],
        
     }
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -43,11 +43,12 @@ utilizacionAcarreo.get('/aucarreo/:type', (req:Request, res:Response) => {
 
             utilAcarreo.push ( {
 
-                Fecha           : item['43'].value,
+                Fecha           : item['1009'].value,
                 TipoTransporte  : item['1043'].value,
                 Kilogramos      : item['93'].value,
                 OrdenCompra     : item['1072'].value,
-                Capacidad       : item['138'].value,
+                Capacidad       : item['1111'].value,
+                Um              : item['1113'].value,
                 Acuerdo         : item['19'].value,
                 DetalleAcuerdo  : item['3'].value,
                 NumeroCajas     : item['138'].value,

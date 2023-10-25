@@ -18,7 +18,7 @@ tonrecibidas.get('/tonrecibidas/:type', (req, res) => {
             (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_KPICostos_SAP_test)) : null;
     const body = {
         "from": table,
-        "select": [18, 76, 8, 74, 73, 77, 78, 79],
+        "select": [18, 76, 8, 74, 73, 77, 78, 79, 189, 10],
     };
     const url = 'https://api.quickbase.com/v1/records/query';
     //res.json({msg: body });
@@ -33,6 +33,8 @@ tonrecibidas.get('/tonrecibidas/:type', (req, res) => {
                 Kilos_proveedor: item['77'].value,
                 Ordenes_cuadrillas: item['78'].value,
                 Ordenes_fletes: item['79'].value,
+                Comprador: item['189'].value,
+                Municipio: item['10'].value,
             });
         }
         res.json({ Tonrecibidas: tonrecibidas });
