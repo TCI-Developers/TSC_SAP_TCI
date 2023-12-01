@@ -26,6 +26,7 @@ import huertas from './router/huertas';
 import uacarreo from './router/utilizacionAcarreo';
 import costocorte from './router/costoTipoCorte';
 import salidasEnFalso from './router/salidasenfalso';
+import lotesCorridas from './router/comparativaV2'
 
 
 
@@ -60,6 +61,7 @@ require('dotenv').config();
  server.app.use(huertas);
  server.app.use(costocorte);
  server.app.use(salidasEnFalso);
+ server.app.use(lotesCorridas);
 
 
 

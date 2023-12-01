@@ -230,6 +230,7 @@ export interface Categoria1 {
   Kilos_agranel : number | string;
   Kilos_estimados : number | string;
   Tipo_corte : number | string;
+  
   Calibre32? : RCalibres;
   Calibre36? : RCalibres;
   Calibre40? : RCalibres;
@@ -244,6 +245,80 @@ export interface Categoria1 {
 
   muestreo?: Muestreo | null ;
 
+}
+
+
+
+export interface Categoria1V2 {
+  Acuerdo : number | string;
+  Fecha_Corte : number | string;
+  Detalles_Acuerdo : number | string;
+  Lote : number | string;
+  Orden_agranel : number | string;
+  Sagarpa : number | string;
+  Huerta :  number | string;
+  Kilos_agranel : number | string;
+  Kilos_estimados : number | string;
+  Tipo_corte : number | string;
+  MateriaSeca : number | string;
+
+  
+  Calibre32? : RCalibres;
+  Calibre36? : RCalibres;
+  Calibre40? : RCalibres;
+  Calibre48? : RCalibres;
+  Calibre60? : RCalibres;
+  Calibre70? : RCalibres;
+  Calibre84? : RCalibres;
+  Categoria1? : Categorias;
+  Categoria2? : Categorias;
+  Nacional? : Categorias;
+  Canica? : Categorias;
+
+  muestreo?: Muestreo | null ;
+
+}
+
+
+export interface HeaderCorrida {
+  Acuerdo : number | string;
+  Fecha_Corte : number | string;
+  Detalles_Acuerdo : number | string;
+  Lote : number | string;
+  Orden_agranel : number | string;
+  Sagarpa : number | string;
+  Huerta :  number | string;
+  Kilos_agranel : number | string;
+  Kilos_estimados : number | string;
+  Tipo_corte : number | string;
+  MateriaSeca : number | string;
+}
+
+
+export interface objFinalCorrida {
+  Acuerdo : number | string;
+  Fecha_Corte : number | string;
+  Detalles_Acuerdo : number | string;
+  Lote : number | string;
+  Orden_agranel : number | string;
+  Sagarpa : number | string;
+  Huerta :  number | string;
+  Kilos_agranel : number | string;
+  Kilos_estimados : number | string;
+  Tipo_corte : number | string;
+  MateriaSeca : number | string;
+  Calibre?: string;
+  Visita?: string;
+  Corrida?: string;
+  ErrorVisita?: string;
+  Calidad?: string;
+  ErrorCalidad: string;
+  Supervisor: string
+  ErrorS: string;
+  Cuadrilla: string;
+  ErrorC: string;
+  Material?: string;
+  Descripcion?: string;
 }
 
 export interface Muestreo {
@@ -263,6 +338,23 @@ export interface Muestreo {
 }
 
 
+export interface MuestreoV2 {
+
+  Calibre32? : RCalibresv2;
+  Calibre36? : RCalibresv2;
+  Calibre40? : RCalibresv2;
+  Calibre48? : RCalibresv2;
+  Calibre60? : RCalibresv2;
+  Calibre70? : RCalibresv2;
+  Calibre84? : RCalibresv2;
+  Categoria1? : CategoriasV2;
+  Categoria2? : CategoriasV2;
+  Nacional? : CategoriasV2;
+  Canica? : CategoriasV2;
+
+}
+
+
 
 export interface RCalibres {
   
@@ -274,6 +366,37 @@ export interface RCalibres {
   
 }
 
+
+export interface RCalibresv2 {
+  Calibre?: number;
+  Visita?: number;
+  Corrida?: number;
+  ErrorVisita?: number;
+  Calidad?: number;
+  ErrorCalidad: number;
+  Supervisor: number
+  ErrorS: number;
+  Cuadrilla: number;
+  ErrorC: number;
+  Material?: string;
+  Descripcion?: string;
+  
+}
+
+export interface CategoriasV2 {
+  Calibre?: number;
+  Visita?: number;
+  Corrida?: number;
+  Error?: number;
+  Calidad?: number;
+  ErrorCalidad?: number;
+  Supervisor?: number;
+  ErrorS?: number;
+  Cuadrilla?: number;
+  ErrorC?: number;
+
+  
+}
 
 export interface Categorias {
   
@@ -301,6 +424,11 @@ export interface ToneladasRecibidas {
 
 export interface ResponseQuick {
   data:     { [key: string]: Data }[];
+ 
+}
+
+export interface ResponseJson {
+  value: String;
  
 }
 
@@ -372,6 +500,25 @@ export interface salidasEnFalso {
 
 }
 
+
+export interface CorridaComparativa {
+  Acuerdo : number | string;
+  Fecha_Corte : number | string;
+  Detalles_Acuerdo : number | string;
+  Lote : number | string;
+  Orden_agranel : number | string;
+  Sagarpa : number | string;
+  Huerta :  number | string;
+  Kilos_agranel : number | string;
+  Kilos_estimados : number | string;
+  Tipo_corte : number | string;
+  Calibre : number;
+  Visita : number;
+  corrida : number;
+  error : number;
+ 
+
+}
  
 
 
