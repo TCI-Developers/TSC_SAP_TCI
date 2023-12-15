@@ -56,7 +56,7 @@ ordenesGastos.get('/ordenesGastos/:type', async (req:Request, res:Response) => {
                     headers,
                     body: args
                 }).pipe(
-                    timeout(60000),
+                    timeout(20000),
                     retry(1),
                     pluck('response', 'metadata')
                 );

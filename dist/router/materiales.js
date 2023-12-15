@@ -55,15 +55,18 @@ materiales.get('/materiales/:type', (req, res) => __awaiter(void 0, void 0, void
                 "to": table,
                 "data": arregloM
             };
+            const test = {
+                "data": arregloM
+            };
             const obs$ = (0, ajax_1.ajax)({
                 createXHR: utils_1.createXHR,
                 url: 'https://api.quickbase.com/v1/records',
                 method: 'POST',
                 headers: utils_1.headers,
                 body: args
-            }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata'));
+            }).pipe((0, operators_1.timeout)(20000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata'));
             obs$.subscribe((respuesta) => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Materiales', creados_modificados: respuesta }), (err) => res.json(err));
-            // obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
+            // obs$.subscribe((respuesta:any) => res.json({ creados_modificados: test }), (err:any) => res.json(err));
         }));
     }));
 }));

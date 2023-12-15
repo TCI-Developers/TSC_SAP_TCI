@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { ajax } from 'rxjs/ajax';
-import { pluck, timeout, retry } from 'rxjs/operators';
+import { pluck, timeout, retry, first } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
@@ -30,7 +30,8 @@ flete.get('/flete/:record/:type', (req:Request, res:Response) => {
     //res.json({msg: body });
 
     ajax({ createXHR, url, method: 'POST', headers, body }).pipe(
-        timeout(60000),
+        first(),
+        timeout(10000),
         retry(1),
         pluck('response', 'data')
     ).subscribe(resp => {
@@ -89,7 +90,7 @@ function postBanderaTCI(res:Response, result:any, record:any, table:string, tipo
     };
     
     ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
-        timeout(60000),
+        timeout(10000),
         retry(1),
         pluck('response', 'metadata')
     ).subscribe(resp => res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response) );

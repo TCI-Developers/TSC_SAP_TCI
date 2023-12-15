@@ -53,7 +53,7 @@ ordenesGastos.get('/ordenesGastos/:type', (req, res) => __awaiter(void 0, void 0
                 method: 'POST',
                 headers: utils_1.headers,
                 body: args
-            }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata'));
+            }).pipe((0, operators_1.timeout)(20000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata'));
             obs$.subscribe((respuesta) => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Ordenes de Gastos', creados_modificados: respuesta }), (err) => res.json(err));
             //  obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
         }));

@@ -39,7 +39,7 @@ flotilla.get('/flotilla/:record/:proveedores/:type', (req, res) => {
             "where": `{14.EX.${record}}AND{651.EX.${item}}AND{676.EX.''}AND{182.EX.''}AND{703.EX.${status}}`
         };
         const url = 'https://api.quickbase.com/v1/records/query';
-        (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'data')).subscribe((resp) => {
+        (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(10000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'data')).subscribe((resp) => {
             //res.json(resp);
             let IT_DATA = null;
             let importe = null;
@@ -86,7 +86,7 @@ function postBanderaTCI(res, result, ids, table) {
         };
         (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe(
         //ajax({ url, method: 'POST', body: args }).pipe(
-        (0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/flotillas.hbs`, { tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response));
+        (0, operators_1.timeout)(10000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/flotillas.hbs`, { tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response));
         //['IT_MENSAJE_EXITOSOS']
         //res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Ventas', creados_modificados: resp })
         // res.json(result['IT_MENSAJE_EXITOSOS'])

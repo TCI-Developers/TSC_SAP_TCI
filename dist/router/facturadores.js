@@ -54,7 +54,7 @@ facturador.get('/facturadores/:type', (req, res) => {
                 "to": table,
                 "data": arregloM
             };
-            const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata', 'unchangedRecordIds'));
+            const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe((0, operators_1.timeout)(10000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata', 'unchangedRecordIds'));
             obs$.subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Facturadores', creados_modificados: resp }), err => res.json(err.response));
             // obs$.subscribe(resp => res.json({ creados_modificados: resp }), err => res.json(err.response) );
         }));

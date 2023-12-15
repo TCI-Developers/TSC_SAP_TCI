@@ -29,7 +29,7 @@ act.get('/actualizarPrecio/:record/:type', (req:Request, res:Response) => {
     }
 
     const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
-        timeout(60000),
+        timeout(10000),
         retry(1),
         pluck('response', 'data')
     );
@@ -71,7 +71,7 @@ function validacionActualizarPreicon(record:string, result:any, res:Response) {
         headers,
         body: argsActualizarPrecio
     }).pipe(
-        timeout(60000),
+        timeout(10000),
         retry(1),
         pluck('response', 'metadata')
     );

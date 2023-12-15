@@ -295,6 +295,36 @@ export interface HeaderCorrida {
 }
 
 
+
+export interface Daños {
+
+  Acuerdo : number | string;
+  Fecha_Corte : number | string;
+  Detalles_Acuerdo : number | string;
+  Lote : number | string;
+  Orden_agranel : number | string;
+  Sagarpa : number | string;
+  Huerta :  number | string;
+  Kilos_agranel : number | string;
+  Kilos_estimados : number | string;
+  Tipo_corte : number | string;
+  MateriaSeca : number | string;
+  Deforme : number | string;
+  Quemadura : number | string;
+  Clavo : number | string;
+  Trips : number | string;
+  Pulpa_exp : number | string;
+  Varicela : number | string;
+  Maduro :  number | string;
+  Mecanico : number | string;
+  Roña : number | string;
+  Gusano : number | string;
+  Sunblotch : number | string;
+  Rozamiento : number | string;
+
+}
+
+
 export interface objFinalCorrida {
   Acuerdo : number | string;
   Fecha_Corte : number | string;
@@ -307,16 +337,28 @@ export interface objFinalCorrida {
   Kilos_estimados : number | string;
   Tipo_corte : number | string;
   MateriaSeca : number | string;
+  Deforme? : number | string;
+  Quemadura? : number | string;
+  Clavo? : number | string;
+  Trips? : number | string;
+  Pulpa_exp? : number | string;
+  Varicela? : number | string;
+  Maduro? :  number | string;
+  Mecanico? : number | string;
+  Roña? : number | string;
+  Gusano? : number | string;
+  Sunblotch? : number | string;
+  Rozamiento? : number | string;
   Calibre?: string;
   Visita?: string;
   Corrida?: string;
   ErrorVisita?: string;
   Calidad?: string;
-  ErrorCalidad: string;
-  Supervisor: string
-  ErrorS: string;
-  Cuadrilla: string;
-  ErrorC: string;
+  ErrorCalidad?: string;
+  Supervisor?: string
+  ErrorS?: string;
+  Cuadrilla?: string;
+  ErrorC?: string;
   Material?: string;
   Descripcion?: string;
 }

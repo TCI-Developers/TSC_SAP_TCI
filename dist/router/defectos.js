@@ -6,13 +6,12 @@ const operators_1 = require("rxjs/operators");
 const utils_1 = require("../utils/utils");
 const node_rfc_1 = require("node-rfc");
 const sap_1 = require("../sap/sap");
-const comparativasV2 = (0, express_1.Router)();
-comparativasV2.get('/comparativas/v2/:type', (req, res) => {
+const defectos = (0, express_1.Router)();
+defectos.get('/defectos/:type', (req, res) => {
     const type = req.params.type;
     let table = '';
     let client = null;
-    var json;
-    let argsResults = [];
+    let indice = 0;
     let resultCorrida = [];
     type == 'prod' ?
         (client = new node_rfc_1.Client(sap_1.abapSystem), table = String(utils_1.Tables.T_Lotes_SAP_prod)) :
@@ -20,7 +19,8 @@ comparativasV2.get('/comparativas/v2/:type', (req, res) => {
             (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Lotes_SAP_prod)) : null;
     const body = {
         "from": table,
-        "select": [55, 14, 68, 6, 18, 12, 57, 20, 118, 70, 120, 71, 72, 73, 74, 75, 76, 77, 117, 113, 114, 115]
+        "select": [55, 14, 68, 6, 18, 12, 57, 20, 118, 70, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 71, 72, 73, 74, 75, 76, 77, 117, 113, 114, 115],
+        "where": `{124.GT.${indice}}`
     };
     const url = 'https://api.quickbase.com/v1/records/query';
     (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.first)(), (0, operators_1.timeout)(20000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response')).subscribe((resp) => {
@@ -36,7 +36,19 @@ comparativasV2.get('/comparativas/v2/:type', (req, res) => {
                 Kilos_agranel: item['20'].value,
                 Kilos_estimados: item['118'].value,
                 Tipo_corte: item['70'].value,
-                MateriaSeca: item['120'].value
+                MateriaSeca: item['120'].value,
+                Deforme: item['121'].value,
+                Quemadura: item['122'].value,
+                Clavo: item['123'].value,
+                Trips: item['124'].value,
+                Pulpa_exp: item['125'].value,
+                Varicela: item['126'].value,
+                Maduro: item['127'].value,
+                Mecanico: item['128'].value,
+                Roña: item['129'].value,
+                Gusano: item['130'].value,
+                Sunblotch: item['131'].value,
+                Rozamiento: item['132'].value,
             };
             resultCorrida.push(Corridas(headerData, String(item['71'].value)));
             resultCorrida.push(Corridas(headerData, String(item['72'].value)));
@@ -51,6 +63,8 @@ comparativasV2.get('/comparativas/v2/:type', (req, res) => {
             resultCorrida.push(Corridas(headerData, String(item['115'].value)));
         }
         res.json({ corridas: resultCorrida });
+        //  res.json({ defectos: jsonTest  }); //test
+        //console.log(argsResults);
     });
 });
 function Corridas(headData, details) {
@@ -67,19 +81,24 @@ function Corridas(headData, details) {
         Kilos_estimados: headData.Kilos_estimados,
         Tipo_corte: headData.Tipo_corte,
         MateriaSeca: headData.MateriaSeca,
+        Deforme: headData.Deforme,
+        Quemadura: headData.Quemadura,
+        Clavo: headData.Clavo,
+        Trips: headData.Trips,
+        Pulpa_exp: headData.Pulpa_exp,
+        Varicela: headData.Varicela,
+        Maduro: headData.Maduro,
+        Mecanico: headData.Mecanico,
+        Roña: headData.Roña,
+        Gusano: headData.Gusano,
+        Sunblotch: headData.Sunblotch,
+        Rozamiento: headData.Rozamiento,
         Calibre: calibre,
-        Visita: visita,
-        Corrida: corrida,
-        ErrorVisita: erV,
         Calidad: calidad,
         ErrorCalidad: erCalidad,
-        Supervisor: supervisor,
-        ErrorS: erS,
-        Cuadrilla: cuadrilla,
-        ErrorC: erC,
         Material: material,
         Descripcion: desc
     };
     return objtFinal;
 }
-exports.default = comparativasV2;
+exports.default = defectos;

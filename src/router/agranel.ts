@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { ajax } from 'rxjs/ajax';
-import { pluck, timeout, retry } from 'rxjs/operators';
+import { pluck, timeout, retry, first } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
@@ -40,7 +40,8 @@ agranel.get('/agranel/:record/:type', (req:Request, res:Response) => {
     
 
     ajax({ createXHR, url, method: 'POST', headers, body }).pipe(
-        timeout(60000),
+        first(),
+        timeout(10000),
         retry(1),
         pluck('response', 'data')
     ).subscribe((resp:any[]) => {
@@ -105,35 +106,21 @@ function postBanderaTCI(res:Response, result:any, record:any, tableAcuerdo:strin
 
 function postOrdenCompraTCI(res:Response, result:any, record:any, table:string, tableSAP:string) {
     const url = 'https://api.quickbase.com/v1/records';
-   // var lote: string;
- const lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" "); //[2]
-  /* if (result['IT_MENSAJE_EXITOSOS'].length > 2) {
-        
-         lote = result.IT_MENSAJE_EXITOSOS[3].MESSAGE.split(" "); 
-         
-
-    }else{
-         lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" "); 
-        
-    }*/
-    
-    //res.json({SAP: lote[2] });
-
-    
+    const lote = result.IT_MENSAJE_EXITOSOS[2].MESSAGE.split(" "); 
        
     const args = {
         "to"  : table,
         "data": [{
             "3"  : { "value":  record },
             "35" : { "value":  result.E_ORDEN_COMPRA },
-            "61" : { "value":  lote[5] } //[5]
+            "61" : { "value":  lote[5] } 
         }]
     };
     
     
 
     ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
-        timeout(60000),
+        timeout(10000),
         retry(1),
         //pluck('response', 'metadata')
     ).subscribe(resp => postLoteSAP(res, lote[2], record, result, tableSAP), err => res.json(err.response) );
@@ -154,15 +141,8 @@ const postLoteSAP = async (res:Response, lote:any, record:any, result:any, table
     ajax({ createXHR, url, method: 'POST', headers, body: args }).pipe(
         timeout(60000),
         retry(1),
-        //pluck('response', 'metadata')
     ).subscribe(resp => res.render(`${pathViews}/flotillas.hbs` ,{ tipo: 'EXITO', respuesta: result['IT_MENSAJE_EXITOSOS'] }), err => res.json(err.response) );
     //subscribe(resp =>  res.json({SAP: result['IT_MENSAJE_EXITOSOS'], TCI: resp.response.metadata }), err => res.json(err.response) );
      
 }
-
-//vpn.villaavocado.proatech.mx
-//tci01@vpn.villaavocado.proatech.mx
-//tci01
-//NOqcyzGQ
-
 export default agranel;

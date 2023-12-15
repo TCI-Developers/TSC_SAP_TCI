@@ -135,20 +135,20 @@ proveedor.get('/proveedores/:id/:type', (req:Request, res:Response) => {
           //  res.json(proveedores);
 
             const obs1$ = ajax({ createXHR, url, method: 'POST', headers, body: argsFacturadores }).pipe(
-                timeout(60000),
+                timeout(20000),
                 retry(1),
                 pluck('response','data')
                // pluck('response', 'metadata', 'unchangedRecordIds')
             );
 
             const obs2$ = ajax({ createXHR, url, method: 'POST', headers, body: argsCuadrilla }).pipe(
-                timeout(60000),
+                timeout(20000),
                 retry(1),
                 pluck('response', 'metadata', 'unchangedRecordIds' )
             );
 
             const obs3$ = ajax({ createXHR, url, method: 'POST', headers, body: argsTransporte }).pipe(
-                timeout(60000),
+                timeout(20000),
                 retry(1),
                 pluck('response' )
              );

@@ -43,7 +43,7 @@ embalaje.get('/embalaje/:type', (req:Request, res:Response) => {
             };
 
             ajax({ createXHR, url: 'https://api.quickbase.com/v1/records', method: 'POST', headers, body: args }).pipe(
-                timeout(60000),
+                timeout(10000),
                 retry(1),
                 pluck('response', 'metadata')
             ).subscribe(respuesta => res.json({ creados_modificados: respuesta }), err => res.json(err));

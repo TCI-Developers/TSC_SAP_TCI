@@ -43,7 +43,7 @@ embalaje.get('/embalaje/:type', (req, res) => {
                 "to": table,
                 "data": arregloM
             };
-            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url: 'https://api.quickbase.com/v1/records', method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata')).subscribe(respuesta => res.json({ creados_modificados: respuesta }), err => res.json(err));
+            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url: 'https://api.quickbase.com/v1/records', method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(10000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata')).subscribe(respuesta => res.json({ creados_modificados: respuesta }), err => res.json(err));
         }));
     }));
 });

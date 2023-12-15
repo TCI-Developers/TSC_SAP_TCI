@@ -53,7 +53,7 @@ facturador.get('/facturadores/:type', (req:Request, res:Response) => {
             };
 
             const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: argsFacturadores }).pipe(
-                timeout(60000),
+                timeout(10000),
                 retry(1),
                 pluck('response', 'metadata', 'unchangedRecordIds')
             );

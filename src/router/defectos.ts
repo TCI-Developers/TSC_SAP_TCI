@@ -1,25 +1,23 @@
 import { Router, Request, Response } from "express";
 import { ajax } from 'rxjs/ajax';
-import { Categoria1, Categorias, CategoriasV2, CorridaComparativa, RCalibres, RCalibresv2, ResponseJson, ResponseQuick, Cuadrillas, Categoria1V2, HeaderCorrida, objFinalCorrida, Acuerdo, Huertas } from '../interfaces/interfaces';
+import { CorridaComparativa,    ResponseQuick,  objFinalCorrida,  Daños } from '../interfaces/interfaces';
 import { pluck, timeout, retry, first } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
-const comparativasV2 = Router();
 
-comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
+const defectos = Router();
 
+
+defectos.get('/defectos/:type', (req:Request, res:Response) => {
 
     const type = req.params.type;
     let table:string = '';
     let client:any = null;
+    let indice: number = 0;
 
-    var json: CorridaComparativa;
-    
+    let resultCorrida: objFinalCorrida[] = [];
 
-  
-   let argsResults : any[] = [];
-   let resultCorrida: objFinalCorrida[] = [];
 
 
     type == 'prod' ? 
@@ -29,10 +27,13 @@ comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
 
     const body = {
         "from": table,
-        "select": [ 55,14,68,6,18,12,57,20,118,70,120,71,72,73,74,75,76,77,117,113,114,115]
+        "select": [ 55,14,68,6,18,12,57,20,118,70,120,121,122,123,124,125,126,127,128,129,130,131,132,71,72,73,74,75,76,77,117,113,114,115],
+        "where": `{124.GT.${indice}}`
+  
        
     }
     const url = 'https://api.quickbase.com/v1/records/query';
+
 
 
    ajax(
@@ -43,10 +44,13 @@ comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
         pluck('response')
         ).subscribe((resp:ResponseQuick)  => {
 
+
+
+             
             for ( const item of resp.data ) {
 
 
-                let   headerData: HeaderCorrida = {
+               let   headerData: Daños = {
          
                     Acuerdo         : item['55'].value,
                     Fecha_Corte     : item['14'].value,
@@ -58,7 +62,21 @@ comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
                     Kilos_agranel   : item['20'].value,
                     Kilos_estimados : item['118'].value,
                     Tipo_corte      : item['70'].value,
-                    MateriaSeca     :  item['120'].value
+                    MateriaSeca     : item['120'].value,
+                    Deforme         : item['121'].value,
+                    Quemadura       : item['122'].value,
+                    Clavo           : item['123'].value,
+                    Trips           : item['124'].value,
+                    Pulpa_exp       : item['125'].value,
+                    Varicela        : item['126'].value,
+                    Maduro          : item['127'].value,
+                    Mecanico        : item['128'].value,
+                    Roña            : item['129'].value,
+                    Gusano          : item['130'].value,
+                    Sunblotch       : item['131'].value,
+                    Rozamiento      : item['132'].value,
+
+
                 }
                 
 
@@ -77,7 +95,6 @@ comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
 
 
 
-
              
          
            
@@ -85,7 +102,8 @@ comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
     }
 
     res.json({ corridas : resultCorrida });
-    
+  //  res.json({ defectos: jsonTest  }); //test
+//console.log(argsResults);
 
 
 });
@@ -93,7 +111,7 @@ comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
 
 });
 
-function Corridas(headData:HeaderCorrida, details: String): objFinalCorrida {
+function Corridas(headData:Daños, details: String): objFinalCorrida {
 
 
     let [calibre,visita,corrida,erV,calidad,erCalidad,supervisor,erS,cuadrilla,erC,material,desc] = details.split('|');
@@ -111,16 +129,21 @@ function Corridas(headData:HeaderCorrida, details: String): objFinalCorrida {
     Kilos_estimados: headData.Kilos_estimados,
     Tipo_corte: headData.Tipo_corte,
     MateriaSeca: headData.MateriaSeca,
+    Deforme: headData.Deforme,
+    Quemadura: headData.Quemadura,
+    Clavo: headData.Clavo,
+    Trips: headData.Trips,
+    Pulpa_exp: headData.Pulpa_exp,
+    Varicela: headData.Varicela,
+    Maduro: headData.Maduro,
+    Mecanico: headData.Mecanico,
+    Roña: headData.Roña,
+    Gusano: headData.Gusano,
+    Sunblotch: headData.Sunblotch,
+    Rozamiento:headData.Rozamiento,
     Calibre: calibre,
-    Visita: visita,
-    Corrida: corrida,
-    ErrorVisita: erV,
     Calidad: calidad,
     ErrorCalidad: erCalidad,
-    Supervisor: supervisor,
-    ErrorS: erS,
-    Cuadrilla: cuadrilla,
-    ErrorC: erC,
     Material: material,
     Descripcion: desc
 
@@ -137,4 +160,4 @@ function Corridas(headData:HeaderCorrida, details: String): objFinalCorrida {
 }
 
 
-export default comparativasV2;
+export default defectos;

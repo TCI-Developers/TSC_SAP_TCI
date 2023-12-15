@@ -3,7 +3,7 @@ import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
 import { Materiales } from "../interfaces/interfaces";
 import { ajax } from 'rxjs/ajax';
-import { pluck, timeout, retry } from 'rxjs/operators';
+import { pluck, timeout, retry, first } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
 
 import path from "path";
@@ -61,6 +61,12 @@ materiales.get('/materiales/:type', async (req:Request, res:Response) => {
                     "to"  : table,
                     "data": arregloM
                 };
+
+
+                const test = {
+                    
+                    "data": arregloM
+                };
     
                 const obs$ = ajax({
                     createXHR,
@@ -69,13 +75,13 @@ materiales.get('/materiales/:type', async (req:Request, res:Response) => {
                     headers,
                     body: args
                 }).pipe(
-                    timeout(60000),
+                    timeout(20000),
                     retry(1),
                     pluck('response', 'metadata')
                 );
                
                  obs$.subscribe((respuesta:any) =>  res.render(`${pathViews}/proveedores.hbs` ,{ tipo:'Materiales', creados_modificados: respuesta }), (err:any) => res.json(err));
-               // obs$.subscribe((respuesta:any) => res.json({ creados_modificados: respuesta }), (err:any) => res.json(err));
+               // obs$.subscribe((respuesta:any) => res.json({ creados_modificados: test }), (err:any) => res.json(err));
            });
     });
 

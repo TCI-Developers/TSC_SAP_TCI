@@ -27,7 +27,7 @@ act.get('/actualizarPrecio/:record/:type', (req, res) => {
         "select": [699, 688],
         "where": `{3.EX.${record}}`
     };
-    const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'data'));
+    const obs$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: args }).pipe((0, operators_1.timeout)(10000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'data'));
     obs$.subscribe(resp => {
         const args = {
             I_FACTURADOR: resp[0]['688']['value'],
@@ -60,7 +60,7 @@ function validacionActualizarPreicon(record, result, res) {
         method: 'POST',
         headers: utils_1.headers,
         body: argsActualizarPrecio
-    }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata'));
+    }).pipe((0, operators_1.timeout)(10000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata'));
     const statusUpdate = [{ tipo: 'Update', value: result['E_MESSAGE'] }];
     obs$.subscribe(resu => res.render(`${pathViews}/acuerdos.hbs`, { mensaje: statusUpdate })); // res.json(result['E_MESSAGE']));
 }

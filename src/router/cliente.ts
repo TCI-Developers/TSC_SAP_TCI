@@ -52,7 +52,7 @@ cliente.get('/cliente/:embarque/:type', (req:Request, res:Response) => {
             };
 
             ajax({ createXHR, url, method: 'POST', headers, body: argsVentas }).pipe(
-                timeout(60000),
+                timeout(10000),
                 retry(1),
                 pluck('response', 'metadata')
             ).subscribe(resp => res.json( { registros_creados : resp} )

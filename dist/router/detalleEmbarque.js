@@ -58,11 +58,10 @@ function postDetalleEmbarque(result, idEmbarque, res, table) {
         "data": arregloM
     };
     if (arregloM.length < 1) {
-        //res.redirect('http://54.208.145.186:4005/cliente/' + idEmbarque);
         res.json({ mgs: 'No se encontro informacion relacionada al embarque' + idEmbarque });
     }
     else {
-        (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => {
+        (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(10000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => {
             if (resp) {
                 // res.json(resp);
                 res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Detalles de embarque', creados_modificados: resp });

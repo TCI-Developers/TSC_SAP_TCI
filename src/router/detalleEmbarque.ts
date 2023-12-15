@@ -65,12 +65,11 @@ function postDetalleEmbarque(result:any, idEmbarque:string, res:Response, table:
     
 
     if(arregloM.length < 1 ) {
-        //res.redirect('http://54.208.145.186:4005/cliente/' + idEmbarque);
 
         res.json({ mgs:'No se encontro informacion relacionada al embarque' + idEmbarque });
     } else {
         ajax({ createXHR, url, method: 'POST', headers, body: argsVentas }).pipe(
-            timeout(60000),
+            timeout(10000),
             retry(1),
             pluck('response', 'metadata')
         ).subscribe(resp => {

@@ -56,7 +56,7 @@ embarque.get('/embarque/:fecha/:type', (req, res) => {
                 "data": arregloM
             };
             // res.json(argsVentas);
-            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Embarques', registros_creados: resp }), (err) => res.json(err));
+            (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsVentas }).pipe((0, operators_1.timeout)(10000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata')).subscribe(resp => res.render(`${pathViews}/proveedores.hbs`, { tipo: 'Embarques', registros_creados: resp }), (err) => res.json(err));
             //subscribe(resp => res.json( { registros_creados : resp} ), err => res.json(err.response) );
         }));
     }));

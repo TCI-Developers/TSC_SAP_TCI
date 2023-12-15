@@ -126,11 +126,11 @@ proveedor.get('/proveedores/:id/:type', (req, res) => {
                 "data": arregloT
             };
             //  res.json(proveedores);
-            const obs1$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'data')
+            const obs1$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsFacturadores }).pipe((0, operators_1.timeout)(20000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'data')
             // pluck('response', 'metadata', 'unchangedRecordIds')
             );
-            const obs2$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsCuadrilla }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata', 'unchangedRecordIds'));
-            const obs3$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsTransporte }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response'));
+            const obs2$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsCuadrilla }).pipe((0, operators_1.timeout)(20000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response', 'metadata', 'unchangedRecordIds'));
+            const obs3$ = (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body: argsTransporte }).pipe((0, operators_1.timeout)(20000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response'));
             if (id == "1") {
                 // res.render('../views/list-users.hbs',{ usuariosResponse });
                 // const provedorFruta =[{tipo: 'Proveedores de Fruta', creados_modificados: resp }];

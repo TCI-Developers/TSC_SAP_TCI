@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
 import { ajax } from 'rxjs/ajax';
-import { pluck, timeout, retry } from 'rxjs/operators';
+import { pluck, timeout, retry, first } from 'rxjs/operators';
 import { headers, createXHR, Tables, mensajesAcuerdo } from "../utils/utils";
 import path from "path";
 
@@ -90,7 +90,7 @@ router.get('/acuerdo1/:record/:type', (req:Request, res:Response) => {
     };
 
     const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: argsAcuerdos }).pipe(
-        timeout(60000),
+        timeout(20000),
         retry(1),
         pluck('response', 'data')
     );
@@ -173,7 +173,8 @@ function postBandeado(value:any, res:Response, client:any, tableBanda:string) {
                 error ? res.json({ ok: false, message: error }) : null;
 
                 const obs$ = ajax({ createXHR, url, method: 'POST', headers, body: argsValidacion }).pipe(
-                    timeout(60000),
+                    first(),
+                    timeout(20000),
                     retry(1),
                     pluck('response', 'metadata')
                 );
@@ -256,7 +257,7 @@ if ( resultado['LASTRESPONSE'] === 'X' ) {
             headers,
             body: bodyData
         }).pipe(
-            timeout(60000),
+            timeout(20000),
             retry(1),
             pluck('response', 'metadata')
         );
@@ -328,7 +329,8 @@ function postPrecioXCorte(value:any, res:Response, client:any, tableBAnda:string
                 headers,
                 body: argsValidacionMateriales
             }).pipe(
-                timeout(60000),
+                first(),
+                timeout(20000),
                 retry(1),
                 pluck('response', 'metadata')
             );

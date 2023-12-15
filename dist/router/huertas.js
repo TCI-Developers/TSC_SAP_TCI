@@ -22,7 +22,7 @@ huertas.get('/huertas/:type', (req, res) => {
     };
     const url = 'https://api.quickbase.com/v1/records/query';
     //res.json({msg: body });
-    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(60000), (0, operators_1.retry)(5), (0, operators_1.pluck)('response')).subscribe((resp) => {
+    (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.timeout)(10000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response')).subscribe((resp) => {
         for (const item of resp.data) {
             huertas.push({
                 Nombre: item['6'].value,
