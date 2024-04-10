@@ -57,6 +57,8 @@ exports.Tables = {
     "T_Huertas_SAP_test": "brxztykzq",
     "T_DetalleA_SAP_prod": "bqdcp8ghy",
     "T_DetalleA_SAP_test": "bqdcp8ghy",
+    "T_Precios_SAP_prod": "btv388giq",
+    "T_Precios_SAP_test": "btv388giq",
 };
 exports.mensajesAcuerdo = [
     { acuerdo: { tipo: 'Acuerdo', value: 'No hay acuerdos que mandar' } },

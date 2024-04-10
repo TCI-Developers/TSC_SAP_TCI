@@ -349,6 +349,7 @@ export interface objFinalCorrida {
   Gusano? : number | string;
   Sunblotch? : number | string;
   Rozamiento? : number | string;
+  Categoria?: string,
   Calibre?: string;
   Visita?: string;
   Corrida?: string;
@@ -361,6 +362,7 @@ export interface objFinalCorrida {
   ErrorC?: string;
   Material?: string;
   Descripcion?: string;
+
 }
 
 export interface Muestreo {
@@ -558,8 +560,30 @@ export interface CorridaComparativa {
   Visita : number;
   corrida : number;
   error : number;
- 
+}
 
+
+export interface preciosStatus{
+  status        : number | string;
+  fecha_inicio  : number | string;
+  fecha_final   : number | string;
+}
+
+
+export interface precios {
+  calibre : number | string;
+  cat_1   : number | string;
+  cat_2   : number | string;
+}
+
+export interface preciosCategorias {
+
+  status        : number | string;
+  fecha_inicio  : number | string;
+  fecha_final   : number | string;
+  calibre  : string;
+  cat_1?   : number ;
+  cat_2?   : number ;
 }
  
 

@@ -28,6 +28,9 @@ import costocorte from './router/costoTipoCorte';
 import salidasEnFalso from './router/salidasenfalso';
 import lotesCorridas from './router/comparativaV2';
 import defectos from './router/defectos';
+import precios from './router/precios_categorias';
+import lotesCorridasv3 from './router/comparativasv3';
+import comparativasV3 from './router/comparativasv3';
 
 
 
@@ -65,7 +68,8 @@ require('dotenv').config();
  server.app.use(salidasEnFalso);
  server.app.use(lotesCorridas);
  server.app.use(defectos);
-
+ server.app.use(precios);
+ server.app.use(comparativasV3);
 
 
 

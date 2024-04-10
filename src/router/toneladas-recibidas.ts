@@ -29,6 +29,9 @@ tonrecibidas.get('/tonrecibidas/:type', (req:Request, res:Response) => {
 
     //res.json({msg: body });
 
+
+    
+
    ajax({ createXHR, url, method: 'POST', headers, body }).pipe(
         timeout(10000),
         retry(1),

@@ -33,6 +33,8 @@ const costoTipoCorte_1 = __importDefault(require("./router/costoTipoCorte"));
 const salidasenfalso_1 = __importDefault(require("./router/salidasenfalso"));
 const comparativaV2_1 = __importDefault(require("./router/comparativaV2"));
 const defectos_1 = __importDefault(require("./router/defectos"));
+const precios_categorias_1 = __importDefault(require("./router/precios_categorias"));
+const comparativasv3_1 = __importDefault(require("./router/comparativasv3"));
 require('dotenv').config();
 const port = process.env.PORT || 3005;
 const server = server_1.default.init(Number(port));
@@ -64,6 +66,8 @@ server.app.use(costoTipoCorte_1.default);
 server.app.use(salidasenfalso_1.default);
 server.app.use(comparativaV2_1.default);
 server.app.use(defectos_1.default);
+server.app.use(precios_categorias_1.default);
+server.app.use(comparativasv3_1.default);
 server.start(() => {
     console.log('Servidor corriendo ' + port);
 });

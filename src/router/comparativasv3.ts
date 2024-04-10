@@ -5,9 +5,9 @@ import { pluck, timeout, retry, first } from 'rxjs/operators';
 import { headers, createXHR, Tables } from "../utils/utils";
 import { Client } from "node-rfc";
 import { abapSystem, abapSystemTest } from "../sap/sap";
-const comparativasV2 = Router();
+const comparativasV3 = Router();
 
-comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
+comparativasV3.get('/comparativas/v3/:type', (req:Request, res:Response) => {
 
 
     const type = req.params.type;
@@ -29,7 +29,7 @@ comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
 
     const body = {
         "from": table,
-        "select": [ 55,14,68,6,18,12,57,20,118,70,120,71,72,73,74,75,76,77,117,113,114,115,145,146,147,148,149,150,151]
+        "select": [ 55,14,68,6,18,12,57,20,118,70,120,71,72,73,74,75,76,77,117,113,114,115]
        
     }
     const url = 'https://api.quickbase.com/v1/records/query';
@@ -69,16 +69,6 @@ comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
                  resultCorrida.push(Corridas(headerData, String(item['75'].value ),'Categoria 1'));
                  resultCorrida.push(Corridas(headerData, String(item['76'].value ),'Categoria 1'));
                  resultCorrida.push(Corridas(headerData, String(item['77'].value ),'Categoria 1'));  
-
-                 resultCorrida.push(Corridas(headerData, String(item['145'].value ),'Categoria 2'));
-                 resultCorrida.push(Corridas(headerData, String(item['146'].value ),'Categoria 2'));
-                 resultCorrida.push(Corridas(headerData, String(item['147'].value ),'Categoria 2'));
-                 resultCorrida.push(Corridas(headerData, String(item['148'].value ),'Categoria 2'));
-                 resultCorrida.push(Corridas(headerData, String(item['149'].value ),'Categoria 2'));
-                 resultCorrida.push(Corridas(headerData, String(item['150'].value ),'Categoria 2'));
-                 resultCorrida.push(Corridas(headerData, String(item['151'].value ),'Categoria 2')); 
-
-
                  resultCorrida.push(Corridas(headerData, String(item['117'].value ),'Canica'));
                  resultCorrida.push(Corridas(headerData, String(item['113'].value ),'T Categoria 1'));
                  resultCorrida.push(Corridas(headerData, String(item['114'].value ),'T Categoria 2'));
@@ -141,15 +131,7 @@ function Corridas(headData:HeaderCorrida, details: String, categoria: String): o
 
    };
 
-    return objtFinal;
-   
-
-
-
-
-
-    
+    return objtFinal;    
 }
 
-
-export default comparativasV2;
+export default comparativasV3;

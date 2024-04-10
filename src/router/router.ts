@@ -107,6 +107,9 @@ router.get('/acuerdo1/:record/:type', (req:Request, res:Response) => {
             value['677']['value'] === '2' ?  postAcuerdo(value, argsValidacionAcuerdo, res, client, table, record) :
             value['677']['value'] === '3' ?  postBandeado(value, res, client, tableBanda) :  null;
 
+
+            
+
             /**
              * value['677']['value'] === '1' ?  postAcuerdo(value, argsValidacionAcuerdo, res, client) :
                value['677']['value'] === '0' ?  postBandeado(value, res, client, tableBanda) : 
