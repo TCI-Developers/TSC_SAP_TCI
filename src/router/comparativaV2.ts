@@ -105,7 +105,7 @@ comparativasV2.get('/comparativas/v2/:type', (req:Request, res:Response) => {
 function Corridas(headData:HeaderCorrida, details: String, categoria: String): objFinalCorrida {
 
     
-    let [calibre,visita,corrida,erV,calidad,erCalidad,supervisor,erS,cuadrilla,erC,material,desc] = details.split('|');
+    let [calibre,visita,corrida,erV,calidad,erCalidad,supervisor,erS,cuadrilla,erC,material,desc,kg] = details.split('|');
 
     
 
@@ -136,20 +136,15 @@ function Corridas(headData:HeaderCorrida, details: String, categoria: String): o
     Material: material,
     Descripcion: desc,
     Categoria: categoria.toString(),
+    Kilogramos: Number(kg),
+
 
 
 
    };
 
     return objtFinal;
-   
-
-
-
-
-
-    
+      
 }
-
 
 export default comparativasV2;

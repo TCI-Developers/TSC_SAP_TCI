@@ -362,6 +362,7 @@ export interface objFinalCorrida {
   ErrorC?: string;
   Material?: string;
   Descripcion?: string;
+  Kilogramos?: number
 
 }
 

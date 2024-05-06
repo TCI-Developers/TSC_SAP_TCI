@@ -61,7 +61,7 @@ comparativasV2.get('/comparativas/v2/:type', (req, res) => {
     });
 });
 function Corridas(headData, details, categoria) {
-    let [calibre, visita, corrida, erV, calidad, erCalidad, supervisor, erS, cuadrilla, erC, material, desc] = details.split('|');
+    let [calibre, visita, corrida, erV, calidad, erCalidad, supervisor, erS, cuadrilla, erC, material, desc, kg] = details.split('|');
     let objtFinal = {
         Acuerdo: headData.Acuerdo,
         Fecha_Corte: headData.Fecha_Corte,
@@ -87,6 +87,7 @@ function Corridas(headData, details, categoria) {
         Material: material,
         Descripcion: desc,
         Categoria: categoria.toString(),
+        Kilogramos: Number(kg),
     };
     return objtFinal;
 }
