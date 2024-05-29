@@ -20,7 +20,7 @@ comparativasV2.get('/comparativas/v2/:type', (req, res) => {
             (client = new node_rfc_1.Client(sap_1.abapSystemTest), table = String(utils_1.Tables.T_Lotes_SAP_prod)) : null;
     const body = {
         "from": table,
-        "select": [55, 14, 68, 6, 18, 12, 57, 20, 118, 70, 120, 71, 72, 73, 74, 75, 76, 77, 117, 113, 114, 115, 145, 146, 147, 148, 149, 150, 151]
+        "select": [55, 14, 68, 6, 18, 12, 57, 20, 118, 70, 120, 71, 72, 73, 74, 75, 76, 77, 117, 113, 114, 115, 145, 146, 147, 148, 149, 150, 151, 227, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279]
     };
     const url = 'https://api.quickbase.com/v1/records/query';
     (0, ajax_1.ajax)({ createXHR: utils_1.createXHR, url, method: 'POST', headers: utils_1.headers, body }).pipe((0, operators_1.first)(), (0, operators_1.timeout)(20000), (0, operators_1.retry)(1), (0, operators_1.pluck)('response')).subscribe((resp) => {
@@ -52,10 +52,22 @@ comparativasV2.get('/comparativas/v2/:type', (req, res) => {
             resultCorrida.push(Corridas(headerData, String(item['149'].value), 'Categoria 2'));
             resultCorrida.push(Corridas(headerData, String(item['150'].value), 'Categoria 2'));
             resultCorrida.push(Corridas(headerData, String(item['151'].value), 'Categoria 2'));
-            resultCorrida.push(Corridas(headerData, String(item['117'].value), 'Canica'));
+            //  resultCorrida.push(Corridas(headerData, String(item['117'].value ),'Canica'));
+            resultCorrida.push(Corridas(headerData, String(item['269'].value), 'Canica'));
+            resultCorrida.push(Corridas(headerData, String(item['270'].value), 'Canica'));
             resultCorrida.push(Corridas(headerData, String(item['113'].value), 'T Categoria 1'));
             resultCorrida.push(Corridas(headerData, String(item['114'].value), 'T Categoria 2'));
-            resultCorrida.push(Corridas(headerData, String(item['115'].value), 'Nacional'));
+            // resultCorrida.push(Corridas(headerData, String(item['115'].value ),'Nacional'));
+            resultCorrida.push(Corridas(headerData, String(item['271'].value), 'Nacional'));
+            resultCorrida.push(Corridas(headerData, String(item['272'].value), 'Nacional'));
+            resultCorrida.push(Corridas(headerData, String(item['273'].value), 'Nacional'));
+            resultCorrida.push(Corridas(headerData, String(item['274'].value), 'Nacional'));
+            resultCorrida.push(Corridas(headerData, String(item['275'].value), 'Nacional'));
+            resultCorrida.push(Corridas(headerData, String(item['276'].value), 'Nacional'));
+            //resultCorrida.push(Corridas(headerData, String(item['227'].value ),'Merma'));
+            resultCorrida.push(Corridas(headerData, String(item['277'].value), 'Merma'));
+            resultCorrida.push(Corridas(headerData, String(item['278'].value), 'Merma'));
+            resultCorrida.push(Corridas(headerData, String(item['279'].value), 'Merma'));
         }
         res.json({ corridas: resultCorrida });
     });
